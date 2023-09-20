@@ -10,6 +10,7 @@ GREY_COLOR = "#3f3f3f"
 def main(page: Page):
     header = create_header()
     date_row = create_date()
+    note_row = create_note()
 
     # define main page properties
     main_page = Container(
@@ -18,7 +19,7 @@ def main(page: Page):
         border_radius=35,
         bgcolor=BG_COLOR,
         padding=padding.only(left=40, top=30, right=40),
-        content=Column(controls=[header, date_row]),
+        content=Column(controls=[header, date_row, note_row]),
     )
 
     page.add(main_page)
@@ -51,7 +52,7 @@ def create_header():
                     button_2,
                 ]
             ),
-            Icon(name=icons.EDIT),
+            Icon(name=icons.EDIT, color="White"),
         ],
     )
     return header
@@ -73,13 +74,14 @@ def create_date():
         alignment="spaceBetween",
         controls=[
             # Create a text widget to display the datetime.datetime.
-            Text(datetime.date.today()),
+            Text(datetime.date.today(), color="white"),
             # Create a row to contain the arrow buttons.
             Row(
                 controls=[
                     # Create an icon button for the previous arrow.
                     IconButton(
                         icon=icons.ARROW_LEFT,
+                        icon_color="White",
                         on_click=lambda event: get_prev_date(
                             date_header.controls[0].value
                         ),
@@ -87,6 +89,7 @@ def create_date():
                     # Create an icon button for the next arrow.
                     IconButton(
                         icon=icons.ARROW_RIGHT,
+                        icon_color=colors.WHITE,
                         on_click=lambda event: get_next_date(
                             date_header.controls[0].value
                         ),
@@ -97,6 +100,25 @@ def create_date():
     )
 
     return date_header
+
+
+def create_note():
+    note_header = Row(
+        alignment="spaceBetween",
+        # spacing=20,
+        controls=[
+            Text("Ghi chú", color="White"),
+            TextField(
+                label="Nhập ghi chú",
+                label_style=TextStyle(color="White"),
+                width=250,
+                border_color="White",
+                color="White",
+            ),
+        ],
+    )
+
+    return note_header
 
 
 app(target=main)
