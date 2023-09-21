@@ -178,16 +178,12 @@ class Input_1(UserControl):
                 spacing=5,
                 run_spacing=5,
                 controls=[
-                    create_category_button("Ăn uống", icons.LOCAL_DINING, "#d78638"),
-                    # create_category_button("Gia dụng", icons.HOME_REPAIR_SERVICE, "#049c4b"),
-                    # create_category_button("Quần áo", icons.CHECKROOM, "#c9ae1d"),
-                    # create_category_button("Y tế", icons.EMERGENCY, "#c1455c"),
-                    # create_category_button("Giáo dục", icons.SCHOOL, "#66bb88"),
-                    # create_category_button("Tiền điện", icons.ELECTRIC_BOLT, "#dddddd"),
-                    # create_category_button("Tiền nhà", icons.HOUSE, "#d89825"),
-                    # create_category_button("Tiền nước", icons.WATER_DROP, "#23bbdc"),
-                    # create_category_button("Đi lại", icons.DIRECTIONS_BUS, "#fbc932"),
-                    # create_category_button("Khác", icons.QUESTION_MARK, "#d78638"),
+                    create_category_button("Tiền lương", icons.ACCOUNT_BALANCE_WALLET, "#d78638"),
+                    create_category_button("Phụ cấp", icons.ATTACH_MONEY, "#049c4b"),
+                    create_category_button("Thưởng", icons.CARD_GIFTCARD, "#c9ae1d"),
+                    create_category_button("Đầu tư", icons.DIAMOND, "#c1455c"),
+                    create_category_button("Làm thêm", icons.WORK, "#66bb88"),
+                    create_category_button("Khác", icons.QUESTION_MARK, "#d78638"),
                 ],
             )
 
