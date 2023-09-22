@@ -1,6 +1,7 @@
 from flet import *
 from pages.input import Input
 from pages.input_1 import Input_1
+from pages.calendar import Calendar
 
 def views_handler(page):
     return {
@@ -14,6 +15,12 @@ def views_handler(page):
             route='/page_2',
             controls=[
                 Input_1(page)
+            ]
+        ),
+        '/calendar':View(
+            route='/calendar',
+            controls=[
+                Calendar(page)
             ]
         ),
     }

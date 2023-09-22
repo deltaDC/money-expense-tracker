@@ -210,10 +210,18 @@ class Input(UserControl):
         def create_navbar():
             nav_bar = NavigationBar(
                 destinations=[
-                    NavigationDestination(icon=icons.EDIT, label="Nhập vào"),
-                    NavigationDestination(icon=icons.CALENDAR_MONTH, label="Lịch"),
-                    NavigationDestination(icon=icons.PIE_CHART,label="Báo cáo"),
-                    NavigationDestination(icon=icons.MORE_HORIZ,label="Khác"),
+                    NavigationDestination(icon=icons.EDIT, label="Nhập vào",
+                        # on_click=lambda e:  self.page.go("/")
+                    ),
+                    NavigationDestination(icon=icons.CALENDAR_MONTH, label="Lịch",
+                        # on_click=lambda e:  self.page.go("/calendar"),
+                    ),
+                    NavigationDestination(icon=icons.PIE_CHART,label="Báo cáo",
+                        # on_click=lambda e:  self.page.go("")
+                    ),
+                    NavigationDestination(icon=icons.MORE_HORIZ,label="Khác",
+                        # on_click=lambda e:  self.page.go("")
+                    ),
                 ],
                 bgcolor=BG_COLOR
             )

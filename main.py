@@ -13,7 +13,7 @@ def main(page: Page):
         )
 
     page.on_route_change = route_change
-    page.go("/page_2")
+    page.go("/")
 
 
 app(target=main)
