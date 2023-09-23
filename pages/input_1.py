@@ -1,6 +1,8 @@
 from flet import *
 from const import *
 import datetime
+from utils.navbar import create_navbar
+
 
 
 class Input_1(UserControl):
@@ -18,12 +20,12 @@ class Input_1(UserControl):
 
             # Create two text buttons.
             button_1 = TextButton(
-                text="Tiền thu", 
+                text="Tiền chi", 
                 style=ButtonStyle(color="White"),
                 on_click= lambda e: (change_button_colors(button_1, button_2), self.page.go("/")),
             ) 
             button_2 = TextButton(
-                text="Tiền chi", 
+                text="Tiền thu", 
                 style=ButtonStyle(color="White", bgcolor=GREY_COLOR),
                 on_click= lambda e: (change_button_colors(button_2, button_1), self.page.go("/page_2")),
             )
@@ -112,16 +114,17 @@ class Input_1(UserControl):
             money_input = Row(
                 alignment="spaceBetween",
                 controls=[
-                    Text("Tiền thu"),
+                    Text("Tiền thu", color="white"),
                     Row(
                         controls=[
                             TextField(
                                 hint_text="Nhập số tiền",
+                                hint_style=TextStyle(color="White", weight=FontWeight.NORMAL, size=14),
                                 border="underline",
                                 width=200,
                                 height=40
                             ),
-                            Text("đ", size=16),
+                            Text("đ", size=16, color="white"),
                         ]
                     ),
                 ],
@@ -141,7 +144,7 @@ class Input_1(UserControl):
                         horizontal_alignment=CrossAxisAlignment.CENTER,
                         controls=[
                             Icon(icon, color=icon_color, size=30),
-                            Text(text),
+                            Text(text, color="white"),
                         ],
                     ),
                     alignment=alignment.center,
@@ -202,27 +205,13 @@ class Input_1(UserControl):
 
             return submit_button
 
-
-        def create_navbar():
-            nav_bar = NavigationBar(
-                destinations=[
-                    NavigationDestination(icon=icons.EDIT, label="Nhập vào"),
-                    NavigationDestination(icon=icons.CALENDAR_MONTH, label="Lịch"),
-                    NavigationDestination(icon=icons.PIE_CHART,label="Báo cáo"),
-                    NavigationDestination(icon=icons.MORE_HORIZ,label="Khác"),
-                ],
-                bgcolor=BG_COLOR
-            )
-
-            return nav_bar
-
         header = create_header()
         date_row = create_date()
         note_row = create_note()
         money_row = create_money_input()
         category_row = create_category()
         submit_row = create_submit()
-        nav_bar_row = create_navbar()
+        nav_bar_row = create_navbar(self.page, 0)
 
         page_1_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),

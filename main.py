@@ -2,11 +2,9 @@ from flet import *
 from const import *
 from views import views_handler
 
-
 # main
 def main(page: Page):
     def route_change(route):
-        print("Route change to " + page.route)
         page.views.clear()
         page.views.append(
             views_handler(page)[page.route]

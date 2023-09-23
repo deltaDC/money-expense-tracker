@@ -388,7 +388,7 @@ class Calendar(UserControl):
         total = details_month(0, 0)
         main_page = Container(
             width=400,
-            height=850,
+            height=712,
             border_radius=35,
             bgcolor=BG_COLOR,
             padding=padding.only(left=40, top=30, right=40),

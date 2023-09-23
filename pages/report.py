@@ -1,6 +1,8 @@
 from flet import *
 import flet as ft
 import datetime
+from utils.navbar import create_navbar
+
 
 BG_COLOR = "#191919"
 GREY_COLOR = "#3f3f3f"
@@ -61,7 +63,7 @@ class Report(UserControl):
                 alignment="spaceBetween",
                 controls=[
                     # Create a text widget to display the datetime.datetime.
-                    Text(datetime.date.today()),
+                    Text(datetime.date.today(), color="white"),
                     # Create a row to contain the arrow buttons.
                     Row(
                         controls=[
@@ -311,19 +313,6 @@ class Report(UserControl):
             )
 
             return chart
-
-        def create_navbar():
-            nav_bar = NavigationBar(
-                destinations=[
-                    NavigationDestination(icon=icons.EDIT, label="Nhập vào"),
-                    NavigationDestination(icon=icons.CALENDAR_MONTH, label="Lịch"),
-                    NavigationDestination(icon=icons.PIE_CHART, label="Báo cáo"),
-                    NavigationDestination(icon=icons.MORE_HORIZ, label="Khác"),
-                ],
-                bgcolor=BG_COLOR,
-            )
-
-            return nav_bar
 
         def create_thongke():
             thongke = ListView(
@@ -619,13 +608,12 @@ class Report(UserControl):
             return thongke
 
         header = create_header()
-
         date_row = create_date()
         chitieu_thunhap = create_chitieu_thunhap()
         thuchi = create_thuchi()
         bieu_do = create_bieudo()
         bieu_do_tron = create_bieudotron()
-        navbar = create_navbar()
+        navbar = create_navbar(self.page, 2)
         thongke1 = create_thongke()
 
         page_3_child_container = Container(
