@@ -3,6 +3,7 @@ from pages.input import Input
 from pages.input_1 import Input_1
 from pages.calendar import Calendar
 from pages.report import Report
+from pages.other import Other
 
 def views_handler(page):
     return {
@@ -28,6 +29,12 @@ def views_handler(page):
             route='/report',
             controls=[
                 Report(page)
+            ]
+        ),
+        '/other':View(
+            route='/other',
+            controls=[
+                Other(page)
             ]
         ),
     }
