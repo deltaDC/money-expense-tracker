@@ -62,7 +62,7 @@ def create_navbar(page: Page, selected_index):
         elif my_index == 2:
             page.go("/report")
         elif my_index == 3:
-            pass
+            page.go("/other")
 
         page.update()
 
