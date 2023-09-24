@@ -1,12 +1,14 @@
 from flet import *
 import calendar
 import datetime
+from utils.navbar import create_navbar
 
 # some constants
 CELL_SIZE = (28, 28)
 CELL_BG_COLOR = "while10"
 TODAY_BG_COLOR = "teal600"
 BG_COLOR = "#000000"
+GREY_COLOR = "#3f3f3f"
 
 
 # let's start
@@ -312,39 +314,72 @@ class details_month(UserControl):
     def build(self):
         return Column(
             alignment=MainAxisAlignment.START,
+            horizontal_alignment=CrossAxisAlignment.START,
             controls=[
-                Row(
-                    alignment=MainAxisAlignment.START,
-                    vertical_alignment=CrossAxisAlignment.CENTER,
-                    controls=[
-                        Text("Thu nhập: "),
-                        TextField(
-                            label="VNĐ",
-                            on_change=self.revenue,
-                        ),
-                    ],
+                Container(
+                    width=340,
+                    height=30,
+                    border_radius=5,
+                    bgcolor=GREY_COLOR,
+                    padding=1,
+                    content=Row(
+                        alignment="spaceBetween",
+                        controls=[
+                            Row(alignment="start", controls=[Text("Thu nhập:")]),
+                            Row(
+                                alignment="end",
+                                controls=[
+                                    Text(
+                                        f"{self.revenue} đ",
+                                        style=TextStyle(color=colors.BLUE_100),
+                                    )
+                                ],
+                            ),
+                        ],
+                    ),
                 ),
-                Row(
-                    alignment=MainAxisAlignment.START,
-                    vertical_alignment=CrossAxisAlignment.CENTER,
-                    controls=[
-                        Text("Chi tiêu: "),
-                        TextField(
-                            label="VNĐ",
-                            on_change=self.spending_money,
-                        ),
-                    ],
+                Container(
+                    width=340,
+                    height=30,
+                    border_radius=5,
+                    bgcolor=GREY_COLOR,
+                    padding=1,
+                    content=Row(
+                        alignment="spaceBetween",
+                        controls=[
+                            Row(alignment="start", controls=[Text("Chi tiêu:")]),
+                            Row(
+                                alignment="end",
+                                controls=[
+                                    Text(
+                                        f"{self.spending_money} đ",
+                                        style=TextStyle(color=colors.RED_100),
+                                    )
+                                ],
+                            ),
+                        ],
+                    ),
                 ),
-                Row(
-                    alignment=MainAxisAlignment.START,
-                    vertical_alignment=CrossAxisAlignment.CENTER,
-                    controls=[
-                        Text("Tổng : "),
-                        TextField(
-                            label="VNĐ",
-                            on_change=self.revenue + self.spending_money,
-                        ),
-                    ],
+                Container(
+                    width=340,
+                    height=30,
+                    border_radius=5,
+                    bgcolor=GREY_COLOR,
+                    content=Row(
+                        alignment="spaceBetween",
+                        controls=[
+                            Row(alignment="start", controls=[Text("Tổng:")]),
+                            Row(
+                                alignment="end",
+                                controls=[
+                                    Text(
+                                        f"{self.revenue + self.spending_money} đ",
+                                        style=TextStyle(color=colors.BLUE_400),
+                                    )
+                                ],
+                            ),
+                        ],
+                    ),
                 ),
             ],
         )
@@ -386,6 +421,7 @@ class Calendar(UserControl):
         cal = SetCalendar()
         date = DataSetup(cal)
         total = details_month(0, 0)
+        navbar = create_navbar(self.page, 1)
         main_page = Container(
             width=400,
             height=712,
@@ -394,7 +430,7 @@ class Calendar(UserControl):
             padding=padding.only(left=40, top=30, right=40),
             content=Column(
                 alignment=MainAxisAlignment.START,
-                controls=[test, date, total],
+                controls=[test, date, total, navbar],
             ),
         )
 
