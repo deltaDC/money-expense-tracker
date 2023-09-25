@@ -1,6 +1,6 @@
 from flet import *
-from pages.input import Input
-from pages.input_1 import Input_1
+from pages.outcome import Outcome
+from pages.income import Income
 from pages.calendar import Calendar
 from pages.report import Report
 from pages.other import Other
@@ -10,13 +10,13 @@ def views_handler(page):
         '/':View(
             route='/',
             controls=[
-                Input(page)
+                Outcome(page)
             ]
         ),
         '/page_2':View(
             route='/page_2',
             controls=[
-                Input_1(page)
+                Income(page)
             ]
         ),
         '/calendar':View(
