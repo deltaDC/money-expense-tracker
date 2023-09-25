@@ -242,7 +242,7 @@ class DataSetup(UserControl):
     # we need a function to expand the stack to see the calendar
     def _get_calendar(self, e: None):
         if self.calendar.height == 45:
-            self.calendar.height = 450
+            self.calendar.height = 400
             self.calendar.update()
         else:
             self.calendar.height = 45
@@ -422,15 +422,29 @@ class Calendar(UserControl):
         date = DataSetup(cal)
         total = details_month(0, 0)
         navbar = create_navbar(self.page, 1)
+
+        main_page_child_container = Container(
+            padding=padding.only(left=30, top=30, right=30),
+            content=Column(
+                controls=[
+                    test, 
+                    date, 
+                    total
+                ]
+            )
+        )
+
         main_page = Container(
             width=400,
             height=712,
             border_radius=35,
             bgcolor=BG_COLOR,
-            padding=padding.only(left=40, top=30, right=40),
             content=Column(
-                alignment=MainAxisAlignment.START,
-                controls=[test, date, total, navbar],
+                alignment="spaceBetween",
+                controls=[
+                    main_page_child_container,
+                    navbar
+                ],
             ),
         )
 
