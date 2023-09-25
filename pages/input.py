@@ -2,6 +2,7 @@ from flet import *
 from const import *
 import datetime
 from utils.navbar import create_navbar
+import sqlite3
 
 
 class Input(UserControl):
@@ -131,11 +132,13 @@ class Input(UserControl):
 
             return money_input
 
+        # category global variables
+        global current_button
+        current_button = None
+        global selected_category
+        selected_category = None
 
         def create_category():
-            global current_button
-            current_button = None
-
             def create_category_button(text, icon, icon_color):
                 category_button = Container(
                     content=Column(
@@ -159,6 +162,7 @@ class Input(UserControl):
 
             def on_button_click(e, button):
                 global current_button
+                global selected_category
                 # Set the border color of the current button to a new color.
                 button.border = border.all(3, "#a9a9a9")
 
@@ -168,6 +172,7 @@ class Input(UserControl):
 
                 # Set the current button to the button that is clicked.
                 current_button = button
+                selected_category = button.content.controls[1].value
                 category.update()
 
             category_header = Text("Danh mục")
@@ -196,17 +201,59 @@ class Input(UserControl):
             category = Column(controls=[category_header, category_content])
             return category
 
-
         def create_submit():
             submit_button = TextButton(
                 text="Nhập Khoản Tiền",
                 style=ButtonStyle(
                     color="White", bgcolor=GREY_COLOR
                 ),
-                width=350
+                width=350,
+                on_click=lambda e: submit(date_row, note_row, money_row)
             )
 
             return submit_button
+
+        def submit(date, note, money):
+            global selected_category
+
+            # print(f"ngay la: {date.controls[0].value}")
+            # print(f"note la: {note.controls[1].value}")
+            # print(f"tien la: {money.controls[1].controls[0].value}")
+            # print(selected_category)
+
+            date_value = date.controls[0].value
+            note_value = note.controls[1].value
+            money_value = money.controls[1].controls[0].value
+            category_value = selected_category
+            cash_flow = "Tiền chi"
+
+            try:
+                # Kết nối đến cơ sở dữ liệu SQLite
+                conn = sqlite3.connect('db/app.db')
+                cursor = conn.cursor()
+
+                # Sử dụng câu lệnh SQL để tạo bảng nếu chưa tồn tại
+                cursor.execute('''CREATE TABLE IF NOT EXISTS financial_transaction (
+                                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                    date TEXT,
+                                    note TEXT,
+                                    money REAL,
+                                    category TEXT,
+                                    cash_flow TEXT
+                                )''')
+
+                # Sử dụng câu lệnh SQL để chèn dữ liệu vào bảng
+                cursor.execute("INSERT INTO financial_transaction (date, note, money, category, cash_flow) VALUES (?, ?, ?, ?, ?)",
+                            (date_value, note_value, money_value, category_value, cash_flow))
+
+                # Lưu thay đổi và đóng kết nối
+                conn.commit()
+                conn.close()
+                print("success")
+                return True  # Trả về True nếu thành công
+            except Exception as e:
+                print("Lỗi khi thực hiện thao tác chèn dữ liệu:", str(e))
+                return False  # Trả về False nếu có lỗi
 
 
         header = create_header()
@@ -216,6 +263,7 @@ class Input(UserControl):
         category_row = create_category()
         submit_row = create_submit()
         nav_bar_row = create_navbar(self.page, 0)
+
 
         page_1_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),
