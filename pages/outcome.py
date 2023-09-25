@@ -227,6 +227,11 @@ class Outcome(UserControl):
             category_value = selected_category
             cash_flow = "Tiền chi"
 
+            note.controls[1].value = ""
+            money.controls[1].controls[0].value = ""
+            note.update()
+            money.update()
+
             try:
                 # Kết nối đến cơ sở dữ liệu SQLite
                 conn = sqlite3.connect('db/app.db')
@@ -250,9 +255,28 @@ class Outcome(UserControl):
                 conn.commit()
                 conn.close()
                 print("success")
+
+                # popup msg
+                dlg = AlertDialog(
+                    title=Text("Ghi nhận thành công"), on_dismiss=lambda e: print("Dialog dismissed!")
+                )
+                def open_dlg():
+                    self.page.dialog = dlg
+                    dlg.open = True
+                    self.page.update()
+                open_dlg()
+
                 return True  # Trả về True nếu thành công
             except Exception as e:
                 print("Lỗi khi thực hiện thao tác chèn dữ liệu:", str(e))
+                dlg = AlertDialog(
+                    title=Text(f"Lỗi {str(e)}"), on_dismiss=lambda e: print("Dialog dismissed!")
+                )
+                def open_dlg():
+                    self.page.dialog = dlg
+                    dlg.open = True
+                    self.page.update()
+                open_dlg()
                 return False  # Trả về False nếu có lỗi
 
 
