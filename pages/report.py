@@ -16,6 +16,40 @@ class Report(UserControl):
         self.page = page
 
     def build(self):
+        def fetch_data_from_db(month=datetime.datetime.now().month):
+            conn = sqlite3.connect('db/app.db')
+            cursor = conn.cursor()
+
+            # Extract the year and month from the input month
+            year = datetime.datetime.now().year
+
+            # Build the SQL query to filter by year and month
+            sql_query = "SELECT * FROM financial_transaction WHERE strftime('%Y-%m', date) = ?"
+            
+            # Execute the query with the provided month and year
+            cursor.execute(sql_query, (f"{year}-{month:02}",))
+            
+            records = cursor.fetchall()
+            result = [row for row in records]
+            conn.close()
+            return result
+
+        global current_month, current_year, data
+        current_month = datetime.date.today().month
+        current_year = datetime.date.today().year
+        data = fetch_data_from_db(month=current_month)
+        # print(f"data is: {data}")
+
+        def update_views():
+            print(data)
+            chitieu_thunhap_thuchi.update()
+            bieu_do_tron.update()
+            thongke1.update()
+            page_3_child_container.update()
+            page_3.update()
+            self.page.update()
+
+
         def create_header():
             # Create a function to change the background color of the buttons.
             def change_button_colors(button_1: TextButton):
@@ -49,46 +83,40 @@ class Report(UserControl):
             return header
 
         def create_date():
-            today = datetime.date.today()
-            current_month = today.month
-            current_year = today.year
-
             def update_date_display():
-        # Định dạng tháng với số 0 trước nếu nhỏ hơn 10
+                # Định dạng tháng với số 0 trước nếu nhỏ hơn 10
                 formatted_month = str(current_month).zfill(2)
-        # Cập nhật ngày tháng trên giao diện
+                # Cập nhật ngày tháng trên giao diện
                 date_header.controls[0].value = f"{formatted_month}/{current_year}"
                 date_header.update()
 
             def get_next_month():
-                nonlocal current_month, current_year
+                global current_month, current_year, data
                 # Tăng tháng
                 current_month += 1
+
                 # Nếu tháng là 13, thì tăng năm và đặt lại tháng về 1
                 if current_month > 12:
                     current_month = 1
                     current_year += 1
+                data = fetch_data_from_db(current_month)
+                # print(data)
                 update_date_display()
+                update_views()
 
             def get_prev_month():
-                nonlocal current_month, current_year
+                global current_month, current_year, data
                 # Giảm tháng
                 current_month -= 1
+
                 # Nếu tháng là 0, thì giảm năm và đặt lại tháng về 12
                 if current_month < 1:
                     current_month = 12
                     current_year -= 1
+                data = fetch_data_from_db(current_month)
+                # print(data)
                 update_date_display()
-
-            def get_prev_month():
-                nonlocal current_month, current_year
-                # Giảm tháng
-                current_month -= 1
-                # Nếu tháng là 0, thì giảm năm và đặt lại tháng về 12
-                if current_month < 1:
-                    current_month = 12
-                    current_year -= 1
-                update_date_display()
+                update_views()
 
             # Create a row to represent the date header.
             date_header = Row(
@@ -116,21 +144,7 @@ class Report(UserControl):
 
             return date_header
 
-        def fetch_data_from_db():
-            conn = sqlite3.connect('db/app.db')
-            cursor = conn.cursor()
-
-           # Thực hiện truy vấn SQL
-            cursor.execute("SELECT * FROM financial_transaction")
-            records = cursor.fetchall()
-            result = [row for row in records]
-            conn.close()
-            return result
-
-
-        def create_chitieu_thunhap_thuchi():
-            # Lấy dữ liệu từ cơ sở dữ liệu
-            data = fetch_data_from_db()
+        def create_chitieu_thunhap_thuchi(month_data):
 
             def change_button_colors(button_1: TextButton, button_2: TextButton):
                 button_1.style.bgcolor = GREY_COLOR
@@ -146,8 +160,8 @@ class Report(UserControl):
             )
 
             # Calculate and format the total expense and income from the data
-            total_expense = sum(row[3] for row in data if row[5] == "Tiền chi")
-            total_income = sum(row[3] for row in data if row[5] == "Tiền thu")
+            total_expense = sum(row[3] for row in month_data if row[5] == "Tiền chi")
+            total_income = sum(row[3] for row in month_data if row[5] == "Tiền thu")
 
             # Add on_click event listeners to the buttons.
             button_1.on_click = lambda event: change_button_colors(button_1, button_2)
@@ -219,7 +233,8 @@ class Report(UserControl):
                 ]
             )
             return chitieuthunhapthuchi
-        def create_bieudo():
+        
+        def create_bieudo_label():
             def change_button_colors(button_1: TextButton, button_2: TextButton):
                 button_1.style.bgcolor = PINK
                 button_2.style.bgcolor = GREY_COLOR
@@ -262,8 +277,7 @@ class Report(UserControl):
 
             return bieudo1
 
-        def create_bieudotron():
-            data = fetch_data_from_db()
+        def create_bieudotron(month_data):
             normal_radius = 50
             hover_radius = 60
             normal_title_style = ft.TextStyle(
@@ -278,17 +292,20 @@ class Report(UserControl):
                 weight=ft.FontWeight.BOLD,
                 shadow=ft.BoxShadow(blur_radius=2, color=ft.colors.BLACK54),
             )
-            total_expense = sum(row[3] for row in data if row[5] == "Tiền chi")
-            anuong="{:.2f}".format(sum(row[3] for row in data if row[4]=='Ăn uống')/total_expense*100)
-            quanao="{:.2f}".format(sum(row[3] for row in data if row[4]=='Quần áo')/total_expense*100)
-            tiennha="{:.2f}".format(sum(row[3] for row in data if row[4]=='Tiền nhà')/total_expense*100)
-            tiendien="{:.2f}".format(sum(row[3] for row in data if row[4]=='Tiền điện')/total_expense*100)
-            giadung="{:.2f}".format(sum(row[3] for row in data if row[4]=='Gia dụng')/total_expense*100)
-            yte="{:.2f}".format(sum(row[3] for row in data if row[4]=='Y tế')/total_expense*100)
-            giaoduc="{:.2f}".format(sum(row[3] for row in data if row[4]=='Giáo dục')/total_expense*100)
-            dilai="{:.2f}".format(sum(row[3] for row in data if row[4]=='Đi lại')/total_expense*100)
-            tiennuoc="{:.2f}".format(sum(row[3] for row in data if row[4]=='Tiền nước')/total_expense*100)
-            khac="{:.2f}".format(sum(row[3] for row in data if row[4]=='Khác')/total_expense*100)
+            total_expense = sum(row[3] for row in month_data if row[5] == "Tiền chi")
+            if total_expense != 0:
+                anuong="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Ăn uống')/total_expense*100)
+                quanao="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Quần áo')/total_expense*100)
+                tiennha="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Tiền nhà')/total_expense*100)
+                tiendien="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Tiền điện')/total_expense*100)
+                giadung="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Gia dụng')/total_expense*100)
+                yte="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Y tế')/total_expense*100)
+                giaoduc="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Giáo dục')/total_expense*100)
+                dilai="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Đi lại')/total_expense*100)
+                tiennuoc="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Tiền nước')/total_expense*100)
+                khac="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Khác')/total_expense*100)
+            else:
+                anuong = quanao = tiennha = tiendien = giadung = yte = giaoduc = dilai = tiennuoc = khac = "0.00"
             
             def on_chart_event(e: ft.PieChartEvent):
                 for idx, section in enumerate(chart.sections):
@@ -381,36 +398,24 @@ class Report(UserControl):
                 
             )
             return chart
-        # def create_navbar():
-        #     nav_bar = NavigationBar(
-        #         destinations=[
-        #             NavigationDestination(icon=icons.EDIT, label="Nhập vào"),
-        #             NavigationDestination(icon=icons.CALENDAR_MONTH, label="Lịch"),
-        #             NavigationDestination(icon=icons.PIE_CHART, label="Báo cáo"),
-        #             NavigationDestination(icon=icons.MORE_HORIZ, label="Khác"),
-        #         ],
-        #         bgcolor=BG_COLOR,
-        #     )
-
-        #     return nav_bar
-        def create_thongke():
-            data = fetch_data_from_db()
+        
+        def create_thongke(month_data):
             thongke = ListView(
                 height=65,
                 width=340,
                 # scroll='auto',
                 spacing=1,
             )
-            anuong=sum(row[3] for row in data if row[4]=='Ăn uống')
-            quanao=sum(row[3] for row in data if row[4]=='Quần áo')
-            tiennha=sum(row[3] for row in data if row[4]=='Tiền nhà')
-            tiendien=sum(row[3] for row in data if row[4]=='Tiền điện')
-            giadung=sum(row[3] for row in data if row[4]=='Gia dụng')
-            yte=sum(row[3] for row in data if row[4]=='Y tế')
-            giaoduc=sum(row[3] for row in data if row[4]=='Giáo dục')
-            dilai=sum(row[3] for row in data if row[4]=='Đi lại')
-            tiennuoc=sum(row[3] for row in data if row[4]=='Tiền nước')
-            khac=sum(row[3] for row in data if row[4]=='Khác')
+            anuong=sum(row[3] for row in month_data if row[4]=='Ăn uống')
+            quanao=sum(row[3] for row in month_data if row[4]=='Quần áo')
+            tiennha=sum(row[3] for row in month_data if row[4]=='Tiền nhà')
+            tiendien=sum(row[3] for row in month_data if row[4]=='Tiền điện')
+            giadung=sum(row[3] for row in month_data if row[4]=='Gia dụng')
+            yte=sum(row[3] for row in month_data if row[4]=='Y tế')
+            giaoduc=sum(row[3] for row in month_data if row[4]=='Giáo dục')
+            dilai=sum(row[3] for row in month_data if row[4]=='Đi lại')
+            tiennuoc=sum(row[3] for row in month_data if row[4]=='Tiền nước')
+            khac=sum(row[3] for row in month_data if row[4]=='Khác')
             thongke.controls.append(
                 Container(
                     width=340,
@@ -700,11 +705,12 @@ class Report(UserControl):
 
         header = create_header()
         date_row = create_date()
-        chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi()
-        bieu_do = create_bieudo()
-        bieu_do_tron = create_bieudotron()
+        chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi(data)
+        bieu_do_label = create_bieudo_label()
+        bieu_do_tron = create_bieudotron(data)
+        thongke1 = create_thongke(data)
         navbar = create_navbar(self.page, 2)
-        thongke1 = create_thongke()
+
 
         page_3_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),
@@ -713,7 +719,7 @@ class Report(UserControl):
                     header,
                     date_row,
                     chitieu_thunhap_thuchi,
-                    bieu_do,
+                    bieu_do_label,
                     bieu_do_tron,
                 ]
             ),
