@@ -42,9 +42,15 @@ class Report(UserControl):
 
         def update_views():
             print(data)
-            chitieu_thunhap_thuchi.update()
-            bieu_do_tron.update()
-            thongke1.update()
+            chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi(data)
+            bieu_do_tron = create_bieudotron(data)
+            thongke1 = create_thongke(data)
+            # chitieu_thunhap_thuchi.update()
+            # bieu_do_tron.update()
+            # thongke1.update()
+            page_3_child_container.content.controls[2] = chitieu_thunhap_thuchi
+            page_3_child_container.content.controls[4] = bieu_do_tron
+            page_3.content.controls[1] = thongke1
             page_3_child_container.update()
             page_3.update()
             self.page.update()
@@ -711,6 +717,7 @@ class Report(UserControl):
         thongke1 = create_thongke(data)
         navbar = create_navbar(self.page, 2)
 
+        
 
         page_3_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),
