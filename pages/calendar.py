@@ -1,3 +1,4 @@
+import sqlite3
 from flet import *
 import calendar
 import datetime
@@ -306,10 +307,35 @@ class BTNPagnation(UserControl):
 
 
 class details_month(UserControl):
-    def __init__(self, revenue, spending_money):
-        self.revenue = revenue
-        self.spending_money = spending_money
+    def __init__(self):
         super().__init__()
+        self.total_income_text = Text(size=12, color=colors.BLUE_100)
+        self.total_expense_text = Text(size=12, color=colors.RED_100)
+        self.total_text = Text(size=12, color=colors.BLUE_400)
+
+    def fetch_data_from_db(self):
+        conn = sqlite3.connect("db/app.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM financial_transaction")
+        records = cursor.fetchall()
+        conn.close()
+        return records
+
+    def update_total_text(self):
+        data = self.fetch_data_from_db()
+        total_expense = sum(
+            float(row[3])
+            for row in filter(lambda row: row[3] != "", data)
+            if row[5] == "Tiền chi"
+        )
+        total_income = sum(
+            float(row[3])
+            for row in filter(lambda row: row[3] != "", data)
+            if row[5] == "Tiền thu"
+        )
+        self.total_income_text.value = f"{total_income} đ"
+        self.total_expense_text.value = f"{total_expense} đ"
+        self.total_text.value = f"{total_income - total_expense} đ"
 
     def build(self):
         return Column(
@@ -328,12 +354,7 @@ class details_month(UserControl):
                             Row(alignment="start", controls=[Text("Thu nhập:")]),
                             Row(
                                 alignment="end",
-                                controls=[
-                                    Text(
-                                        f"{self.revenue} đ",
-                                        style=TextStyle(color=colors.BLUE_100),
-                                    )
-                                ],
+                                controls=[self.total_income_text],
                             ),
                         ],
                     ),
@@ -350,12 +371,7 @@ class details_month(UserControl):
                             Row(alignment="start", controls=[Text("Chi tiêu:")]),
                             Row(
                                 alignment="end",
-                                controls=[
-                                    Text(
-                                        f"{self.spending_money} đ",
-                                        style=TextStyle(color=colors.RED_100),
-                                    )
-                                ],
+                                controls=[self.total_expense_text],
                             ),
                         ],
                     ),
@@ -371,12 +387,7 @@ class details_month(UserControl):
                             Row(alignment="start", controls=[Text("Tổng:")]),
                             Row(
                                 alignment="end",
-                                controls=[
-                                    Text(
-                                        f"{self.revenue + self.spending_money} đ",
-                                        style=TextStyle(color=colors.BLUE_400),
-                                    )
-                                ],
+                                controls=[self.total_text],
                             ),
                         ],
                     ),
@@ -386,6 +397,8 @@ class details_month(UserControl):
 
 
 class Calendar(UserControl):
+    details_month_control = None
+
     def __init__(self, page):
         super().__init__()
         self.page = page
@@ -393,6 +406,9 @@ class Calendar(UserControl):
     def build(self):
         self.page.horizontal_alignment = "center"
         self.page.vertical_alignment = "center"
+        self.details_month_control = details_month()
+        self.details_month_control.update_total_text()
+
         test = SafeArea(
             Column(
                 spacing=10,
@@ -420,18 +436,13 @@ class Calendar(UserControl):
         )
         cal = SetCalendar()
         date = DataSetup(cal)
-        total = details_month(0, 0)
+        total = self.details_month_control
+
         navbar = create_navbar(self.page, 1)
 
         main_page_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),
-            content=Column(
-                controls=[
-                    test, 
-                    date, 
-                    total
-                ]
-            )
+            content=Column(controls=[test, date, total]),
         )
 
         main_page = Container(
@@ -441,10 +452,7 @@ class Calendar(UserControl):
             bgcolor=BG_COLOR,
             content=Column(
                 alignment="spaceBetween",
-                controls=[
-                    main_page_child_container,
-                    navbar
-                ],
+                controls=[main_page_child_container, navbar],
             ),
         )
 
