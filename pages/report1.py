@@ -10,7 +10,7 @@ GREY_COLOR = "#3f3f3f"
 PINK = "#eb06ff"
 
 
-class Report(UserControl):
+class Report1(UserControl):
     def __init__(self, page):
         super().__init__()
         self.page = page
@@ -257,13 +257,11 @@ class Report(UserControl):
 
             # Create two text buttons.
             button_1 = TextButton(
-                text="Chi tiêu", 
-                style=ButtonStyle(color="white",bgcolor=PINK),
+                text="Chi tiêu", style=ButtonStyle(color="white"),
                 on_click= lambda e: (change_button_colors(button_1, button_2), self.page.go("/report")),
             )
             button_2 = TextButton(
-                text="Thu nhập", 
-                style=ButtonStyle(color="White"),
+                text="Thu nhập", style=ButtonStyle(color="White", bgcolor=PINK),
                 on_click= lambda e: (change_button_colors(button_2, button_1), self.page.go("/report_1")),
             )
 
@@ -286,7 +284,7 @@ class Report(UserControl):
                         height=5,
                         border_radius=5,
                         bgcolor="white12",
-                        padding=padding.only(right=170),
+                        padding=padding.only(left=170),
                         content=Container(
                             bgcolor=PINK,
                         ),
@@ -311,66 +309,48 @@ class Report(UserControl):
                 weight=ft.FontWeight.BOLD,
                 shadow=ft.BoxShadow(blur_radius=2, color=ft.colors.BLACK54),
             )
-            total_expense = sum(row[3] for row in month_data if row[5] == "Tiền chi")
-            if total_expense != 0:
-                anuong = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Ăn uống")
-                    / total_expense
+            # total_expense = sum(row[3] for row in month_data if row[5] == "Tiền chi")
+            total_income = sum(row[3] for row in month_data if row[5] == "Tiền thu")
+            if total_income != 0:
+                tienluong = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Tiền lương")
+                    / total_income
                     * 100
                 )
-                quanao = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Quần áo")
-                    / total_expense
+                phucap = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Phụ cấp")
+                    / total_income
                     * 100
                 )
-                tiennha = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Tiền nhà")
-                    / total_expense
+                thuong = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Thưởng")
+                    / total_income
                     * 100
                 )
-                tiendien = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Tiền điện")
-                    / total_expense
+                dautu = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Đầu tư")
+                    / total_income
                     * 100
                 )
-                giadung = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Gia dụng")
-                    / total_expense
-                    * 100
-                )
-                yte = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Y tế")
-                    / total_expense
-                    * 100
-                )
-                giaoduc = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Giáo dục")
-                    / total_expense
-                    * 100
-                )
-                dilai = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Đi lại")
-                    / total_expense
-                    * 100
-                )
-                tiennuoc = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Tiền nước")
-                    / total_expense
+                lamthem = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Làm thêm")
+                    / total_income
                     * 100
                 )
                 khac = "{:.2f}".format(
                     sum(row[3] for row in month_data if row[4] == "Khác")
-                    / total_expense
+                    / total_income
                     * 100
                 )
+                
             else:
-                anuong = (
-                    quanao
+                tienluong = (
+                    phucap
                 ) = (
-                    tiennha
+                    thuong
                 ) = (
-                    tiendien
-                ) = giadung = yte = giaoduc = dilai = tiennuoc = khac = "0.00"
+                    dautu
+                ) = lamthem = khac = "0.00"
 
             def on_chart_event(e: ft.PieChartEvent):
                 for idx, section in enumerate(chart.sections):
@@ -385,66 +365,38 @@ class Report(UserControl):
             chart = ft.PieChart(
                 sections=[
                     ft.PieChartSection(
-                        quanao,
-                        title="Quần áo" + str(f"{quanao}") + "%",
+                        tienluong,
+                        title="Tiền lương" + str(f"{tienluong}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.BLUE,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
-                        tiennha,
-                        title="Tiền nhà" + str(f"{tiennha}") + "%",
+                        phucap,
+                        title="Phụ cấp" + str(f"{phucap}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.YELLOW,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
-                        tiendien,
-                        title="Tiền điện" + str(f"{tiendien}") + "%",
+                        thuong,
+                        title="Thưởng" + str(f"{thuong}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.PURPLE,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
-                        anuong,
-                        title="Ăn uống" + str(f"{anuong}") + "%",
+                        dautu,
+                        title="Đầu tư" + str(f"{dautu}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.GREEN,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
-                        giadung,
-                        title="Gia dụng" + str(f"{giadung}") + "%",
+                        lamthem,
+                        title="Làm thêm" + str(f"{lamthem}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.RED,
-                        radius=normal_radius,
-                    ),
-                    ft.PieChartSection(
-                        yte,
-                        title="Y tế" + str(f"{yte}") + "%",
-                        title_style=normal_title_style2,
-                        color=ft.colors.ORANGE,
-                        radius=normal_radius,
-                    ),
-                    ft.PieChartSection(
-                        giaoduc,
-                        title="Giáo dục" + str(f"{giaoduc}") + "%",
-                        title_style=normal_title_style2,
-                        color=ft.colors.PINK,
-                        radius=normal_radius,
-                    ),
-                    ft.PieChartSection(
-                        tiennuoc,
-                        title="Tiền nước" + str(f"{tiennuoc}") + "%",
-                        title_style=normal_title_style2,
-                        color=ft.colors.BROWN,
-                        radius=normal_radius,
-                    ),
-                    ft.PieChartSection(
-                        dilai,
-                        title="Đi lại" + str(f"{dilai}") + "%",
-                        title_style=normal_title_style2,
-                        color=ft.colors.GREY,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
@@ -470,15 +422,11 @@ class Report(UserControl):
                 # scroll='auto',
                 spacing=1,
             )
-            anuong = sum(row[3] for row in month_data if row[4] == "Ăn uống")
-            quanao = sum(row[3] for row in month_data if row[4] == "Quần áo")
-            tiennha = sum(row[3] for row in month_data if row[4] == "Tiền nhà")
-            tiendien = sum(row[3] for row in month_data if row[4] == "Tiền điện")
-            giadung = sum(row[3] for row in month_data if row[4] == "Gia dụng")
-            yte = sum(row[3] for row in month_data if row[4] == "Y tế")
-            giaoduc = sum(row[3] for row in month_data if row[4] == "Giáo dục")
-            dilai = sum(row[3] for row in month_data if row[4] == "Đi lại")
-            tiennuoc = sum(row[3] for row in month_data if row[4] == "Tiền nước")
+            tienluong = sum(row[3] for row in month_data if row[4] == "Tiền lương")
+            phucap = sum(row[3] for row in month_data if row[4] == "Phụ cấp")
+            thuong = sum(row[3] for row in month_data if row[4] == "Thưởng")
+            dautu = sum(row[3] for row in month_data if row[4] == "Đầu tư")
+            lamthem = sum(row[3] for row in month_data if row[4] == "Làm thêm")
             khac = sum(row[3] for row in month_data if row[4] == "Khác")
 
             def create_thongke_row(category, icon, text, icon_color):
@@ -511,15 +459,11 @@ class Report(UserControl):
                 return thongke_row
 
             thongke.controls.extend([
-                    create_thongke_row(tiennha, icons.HOUSE, "Tiền nhà", "yellow"),
-                    create_thongke_row(tiendien, icons.ELECTRIC_BOLT, "Tiền điện", "purple"),
-                    create_thongke_row(quanao, icons.CHECKROOM, "Quần áo", "blue"),
-                    create_thongke_row(anuong, icons.LOCAL_DINING, "Ăn uống", "green"),
-                    create_thongke_row(giadung, icons.HOME_REPAIR_SERVICE, "Gia dụng", "red"),
-                    create_thongke_row(yte, icons.EMERGENCY, "Y tế", "orange"),
-                    create_thongke_row(giaoduc, icons.SCHOOL, "Giáo dục", "pink"),
-                    create_thongke_row(dilai, icons.DIRECTIONS_BUS, "Đi lại", "grey"),
-                    create_thongke_row(tiennuoc, icons.WATER_DROP, "Tiền nước", "brown"),
+                    create_thongke_row(tienluong, icons.ACCOUNT_BALANCE_WALLET, "Tiền lương", "blue"),
+                    create_thongke_row(phucap, icons.ATTACH_MONEY, "Phụ cấp", "yellow"),
+                    create_thongke_row(thuong, icons.CARD_GIFTCARD, "Thưởng", "purple"),
+                    create_thongke_row(dautu, icons.DIAMOND, "Đầu tư", "green"),
+                    create_thongke_row(lamthem, icons.WORK, "Làm thêm", "red"),
                     create_thongke_row(khac, icons.QUESTION_MARK, "Khác", "black"),
                 ]
             )
