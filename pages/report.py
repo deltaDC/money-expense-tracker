@@ -64,8 +64,8 @@ class Report(UserControl):
                 header.update()
 
             # Create two text buttons.
-            button_1 = TextButton(
-                text="Báo cáo", style=ButtonStyle(color="White", bgcolor=GREY_COLOR)
+            button_1 = Text(
+                "Báo cáo", color="white"
             )
 
             # Add on_click event listeners to the buttons.
@@ -257,7 +257,7 @@ class Report(UserControl):
 
             # Create two text buttons.
             button_1 = TextButton(
-                text="Chi tiêu", style=ButtonStyle(color="white", bgcolor=GREY_COLOR)
+                text="Chi tiêu", style=ButtonStyle(color="white", bgcolor=PINK)
             )
             button_2 = TextButton(
                 text="Thu nhập", style=ButtonStyle(color="White", bgcolor=GREY_COLOR)
