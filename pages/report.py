@@ -17,18 +17,20 @@ class Report(UserControl):
 
     def build(self):
         def fetch_data_from_db(month=datetime.datetime.now().month):
-            conn = sqlite3.connect('db/app.db')
+            conn = sqlite3.connect("db/app.db")
             cursor = conn.cursor()
 
             # Extract the year and month from the input month
             year = datetime.datetime.now().year
 
             # Build the SQL query to filter by year and month
-            sql_query = "SELECT * FROM financial_transaction WHERE strftime('%Y-%m', date) = ?"
-            
+            sql_query = (
+                "SELECT * FROM financial_transaction WHERE strftime('%Y-%m', date) = ?"
+            )
+
             # Execute the query with the provided month and year
             cursor.execute(sql_query, (f"{year}-{month:02}",))
-            
+
             records = cursor.fetchall()
             result = [row for row in records]
             conn.close()
@@ -55,7 +57,6 @@ class Report(UserControl):
             page_3.update()
             self.page.update()
 
-
         def create_header():
             # Create a function to change the background color of the buttons.
             def change_button_colors(button_1: TextButton):
@@ -81,10 +82,7 @@ class Report(UserControl):
                         ]
                     ),
                     # Icon(icons.SEARCH),
-                    IconButton(
-                        icons.SEARCH,
-                        icon_color="white"
-                    ),
+                    IconButton(icons.SEARCH, icon_color="white"),
                 ],
             )
             return header
@@ -154,7 +152,6 @@ class Report(UserControl):
             return date_header
 
         def create_chitieu_thunhap_thuchi(month_data):
-
             def change_button_colors(button_1: TextButton, button_2: TextButton):
                 button_1.style.bgcolor = GREY_COLOR
                 button_2.style.bgcolor = BG_COLOR
@@ -191,7 +188,10 @@ class Report(UserControl):
                         padding=1,
                         content=Row(
                             alignment="spaceBetween",
-                            controls=[button_1, Text(f"{total_expense} đ", color="white")],
+                            controls=[
+                                button_1,
+                                Text(f"{total_expense} đ", color="white"),
+                            ],
                         ),
                     ),
                     Container(
@@ -202,7 +202,10 @@ class Report(UserControl):
                         padding=1,
                         content=Row(
                             alignment="spaceBetween",
-                            controls=[button_2, Text(f"{total_income} đ", color="white")],
+                            controls=[
+                                button_2,
+                                Text(f"{total_income} đ", color="white"),
+                            ],
                         ),
                     ),
                 ],
@@ -230,7 +233,10 @@ class Report(UserControl):
                         padding=1,
                         content=Row(
                             alignment="spaceBetween",
-                            controls=[button_3, Text(f"{total_income-total_expense} đ", color="white")],
+                            controls=[
+                                button_3,
+                                Text(f"{total_income-total_expense} đ", color="white"),
+                            ],
                         ),
                     )
                 ]
@@ -242,7 +248,7 @@ class Report(UserControl):
                 ]
             )
             return chitieuthunhapthuchi
-        
+
         def create_bieudo_label():
             def change_button_colors(button_1: TextButton, button_2: TextButton):
                 button_1.style.bgcolor = PINK
@@ -303,19 +309,65 @@ class Report(UserControl):
             )
             total_expense = sum(row[3] for row in month_data if row[5] == "Tiền chi")
             if total_expense != 0:
-                anuong="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Ăn uống')/total_expense*100)
-                quanao="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Quần áo')/total_expense*100)
-                tiennha="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Tiền nhà')/total_expense*100)
-                tiendien="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Tiền điện')/total_expense*100)
-                giadung="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Gia dụng')/total_expense*100)
-                yte="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Y tế')/total_expense*100)
-                giaoduc="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Giáo dục')/total_expense*100)
-                dilai="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Đi lại')/total_expense*100)
-                tiennuoc="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Tiền nước')/total_expense*100)
-                khac="{:.2f}".format(sum(row[3] for row in month_data if row[4]=='Khác')/total_expense*100)
+                anuong = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Ăn uống")
+                    / total_expense
+                    * 100
+                )
+                quanao = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Quần áo")
+                    / total_expense
+                    * 100
+                )
+                tiennha = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Tiền nhà")
+                    / total_expense
+                    * 100
+                )
+                tiendien = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Tiền điện")
+                    / total_expense
+                    * 100
+                )
+                giadung = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Gia dụng")
+                    / total_expense
+                    * 100
+                )
+                yte = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Y tế")
+                    / total_expense
+                    * 100
+                )
+                giaoduc = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Giáo dục")
+                    / total_expense
+                    * 100
+                )
+                dilai = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Đi lại")
+                    / total_expense
+                    * 100
+                )
+                tiennuoc = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Tiền nước")
+                    / total_expense
+                    * 100
+                )
+                khac = "{:.2f}".format(
+                    sum(row[3] for row in month_data if row[4] == "Khác")
+                    / total_expense
+                    * 100
+                )
             else:
-                anuong = quanao = tiennha = tiendien = giadung = yte = giaoduc = dilai = tiennuoc = khac = "0.00"
-            
+                anuong = (
+                    quanao
+                ) = (
+                    tiennha
+                ) = (
+                    tiendien
+                ) = giadung = yte = giaoduc = dilai = tiennuoc = khac = "0.00"
+
             def on_chart_event(e: ft.PieChartEvent):
                 for idx, section in enumerate(chart.sections):
                     if idx == e.section_index:
@@ -330,70 +382,70 @@ class Report(UserControl):
                 sections=[
                     ft.PieChartSection(
                         quanao,
-                        title="Quần áo"+str(f"{quanao}")+"%",
+                        title="Quần áo" + str(f"{quanao}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.BLUE,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
                         tiennha,
-                        title="Tiền nhà"+str(f"{tiennha}")+"%",
+                        title="Tiền nhà" + str(f"{tiennha}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.YELLOW,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
                         tiendien,
-                        title="Tiền điện"+str(f"{tiendien}")+"%",
+                        title="Tiền điện" + str(f"{tiendien}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.PURPLE,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
                         anuong,
-                        title="Ăn uống"+str(f"{anuong}")+"%",
+                        title="Ăn uống" + str(f"{anuong}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.GREEN,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
                         giadung,
-                        title="Gia dụng"+str(f"{giadung}")+"%",
+                        title="Gia dụng" + str(f"{giadung}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.RED,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
                         yte,
-                        title="Y tế"+str(f"{yte}")+"%",
+                        title="Y tế" + str(f"{yte}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.ORANGE,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
                         giaoduc,
-                        title="Giáo dục"+str(f"{giaoduc}")+"%",
+                        title="Giáo dục" + str(f"{giaoduc}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.PINK,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
                         tiennuoc,
-                        title="Tiền nước"+str(f"{tiennuoc}")+"%",
+                        title="Tiền nước" + str(f"{tiennuoc}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.BROWN,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
                         dilai,
-                        title="Đi lại"+str(f"{dilai}")+"%",
+                        title="Đi lại" + str(f"{dilai}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.GREY,
                         radius=normal_radius,
                     ),
                     ft.PieChartSection(
                         khac,
-                        title="Khác"+str(f"{khac}")+"%",
+                        title="Khác" + str(f"{khac}") + "%",
                         title_style=normal_title_style2,
                         color=ft.colors.BLACK,
                         radius=normal_radius,
@@ -404,10 +456,9 @@ class Report(UserControl):
                 # size=ft.size(150, 150),
                 on_chart_event=on_chart_event,
                 expand=False,
-                
             )
             return chart
-        
+
         def create_thongke(month_data):
             thongke = ListView(
                 height=65,
@@ -415,18 +466,19 @@ class Report(UserControl):
                 # scroll='auto',
                 spacing=1,
             )
-            anuong=sum(row[3] for row in month_data if row[4]=='Ăn uống')
-            quanao=sum(row[3] for row in month_data if row[4]=='Quần áo')
-            tiennha=sum(row[3] for row in month_data if row[4]=='Tiền nhà')
-            tiendien=sum(row[3] for row in month_data if row[4]=='Tiền điện')
-            giadung=sum(row[3] for row in month_data if row[4]=='Gia dụng')
-            yte=sum(row[3] for row in month_data if row[4]=='Y tế')
-            giaoduc=sum(row[3] for row in month_data if row[4]=='Giáo dục')
-            dilai=sum(row[3] for row in month_data if row[4]=='Đi lại')
-            tiennuoc=sum(row[3] for row in month_data if row[4]=='Tiền nước')
-            khac=sum(row[3] for row in month_data if row[4]=='Khác')
-            thongke.controls.append(
-                Container(
+            anuong = sum(row[3] for row in month_data if row[4] == "Ăn uống")
+            quanao = sum(row[3] for row in month_data if row[4] == "Quần áo")
+            tiennha = sum(row[3] for row in month_data if row[4] == "Tiền nhà")
+            tiendien = sum(row[3] for row in month_data if row[4] == "Tiền điện")
+            giadung = sum(row[3] for row in month_data if row[4] == "Gia dụng")
+            yte = sum(row[3] for row in month_data if row[4] == "Y tế")
+            giaoduc = sum(row[3] for row in month_data if row[4] == "Giáo dục")
+            dilai = sum(row[3] for row in month_data if row[4] == "Đi lại")
+            tiennuoc = sum(row[3] for row in month_data if row[4] == "Tiền nước")
+            khac = sum(row[3] for row in month_data if row[4] == "Khác")
+
+            def create_thongke_row(category, icon, text, icon_color):
+                thongke_row = Container(
                     width=340,
                     height=21,
                     border_radius=5,
@@ -438,280 +490,37 @@ class Report(UserControl):
                             Row(
                                 alignment="start",
                                 controls=[
-                                    Icon(name=icons.HOUSE, color="yellow"),
-                                    Text("Tiền nhà:", color="white"),
+                                    Icon(name=icon, color=icon_color),
+                                    Text(text, color="white"),
                                 ],
                             ),
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{tiennha}", color="white"),
+                                    Text(f"{category}", color="white"),
                                     Text("đ", color="white"),
                                 ],
                             ),
                         ],
                     ),
-                ),
+                )
+                return thongke_row
+
+            thongke.controls.extend([
+                    create_thongke_row(tiennha, icons.HOUSE, "Tiền nhà", "yellow"),
+                    create_thongke_row(tiendien, icons.ELECTRIC_BOLT, "Tiền điện", "purple"),
+                    create_thongke_row(quanao, icons.CHECKROOM, "Quần áo", "blue"),
+                    create_thongke_row(anuong, icons.LOCAL_DINING, "Ăn uống", "green"),
+                    create_thongke_row(giadung, icons.HOME_REPAIR_SERVICE, "Gia dụng", "red"),
+                    create_thongke_row(yte, icons.EMERGENCY, "Y tế", "orange"),
+                    create_thongke_row(giaoduc, icons.SCHOOL, "Giáo dục", "pink"),
+                    create_thongke_row(dilai, icons.DIRECTIONS_BUS, "Đi lại", "grey"),
+                    create_thongke_row(tiennuoc, icons.WATER_DROP, "Tiền nước", "brown"),
+                    create_thongke_row(khac, icons.QUESTION_MARK, "Khác", "black"),
+                ]
             )
 
-            thongke.controls.append(
-                Container(
-                    width=340,
-                    height=21,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(
-                                alignment="start",
-                                controls=[
-                                    Icon(icons.ELECTRIC_BOLT, color="PURPLE"),
-                                    Text("Tiền điện:", color="white"),
-                                ],
-                            ),
-                            Row(
-                                alignment="end",
-                                controls=[
-                                    Text(f"{tiendien}", color="white"),
-                                    Text("đ", color="white"),
-                                ],
-                            ),
-                        ],
-                    ),
-                )
-            )
-
-            thongke.controls.append(
-                Container(
-                    width=340,
-                    height=21,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(
-                                alignment="start",
-                                controls=[
-                                    Icon(icons.CHECKROOM, color="blue"),
-                                    Text("Quần áo:", color="white"),
-                                ],
-                            ),
-                            Row(
-                                alignment="end",
-                                controls=[
-                                    Text(f"{quanao}", color="white"),
-                                    Text("đ", color="white"),
-                                ],
-                            ),
-                        ],
-                    ),
-                )
-            )
-
-            thongke.controls.append(
-                Container(
-                    width=340,
-                    height=21,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(
-                                alignment="start",
-                                controls=[
-                                    Icon(icons.LOCAL_DINING, color="green"),
-                                    Text("Ăn uống:", color="white"),
-                                ],
-                            ),
-                            Row(
-                                alignment="end",
-                                controls=[
-                                    Text(f"{anuong}", color="white"),
-                                    Text("đ", color="white"),
-                                ],
-                            ),
-                        ],
-                    ),
-                ),
-            )
-            thongke.controls.append(
-                Container(
-                    width=340,
-                    height=21,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(
-                                alignment="start",
-                                controls=[
-                                    Icon(icons.HOME_REPAIR_SERVICE, color="RED"),
-                                    Text("Gia dụng:", color="white"),
-                                ],
-                            ),
-                            Row(
-                                alignment="end",
-                                controls=[
-                                    Text(f"{giadung}", color="white"),
-                                    Text("đ", color="white"),
-                                ],
-                            ),
-                        ],
-                    ),
-                )
-            )
-
-            thongke.controls.append(
-                Container(
-                    width=340,
-                    height=21,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(
-                                alignment="start",
-                                controls=[
-                                    Icon(icons.EMERGENCY, color="ORANGE"),
-                                    Text("Y tế:", color="white"),
-                                ],
-                            ),
-                            Row(
-                                alignment="end",
-                                controls=[
-                                    Text(f"{yte}", color="white"),
-                                    Text("đ", color="white"),
-                                ],
-                            ),
-                        ],
-                    ),
-                )
-            )
-            thongke.controls.append(
-                Container(
-                    width=340,
-                    height=21,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(
-                                alignment="start",
-                                controls=[
-                                    Icon(icons.SCHOOL, color="PINK"),
-                                    Text("Giáo dục:", color="white"),
-                                ],
-                            ),
-                            Row(
-                                alignment="end",
-                                controls=[
-                                    Text(f"{giaoduc}", color="white"),
-                                    Text("đ", color="white"),
-                                ],
-                            ),
-                        ],
-                    ),
-                )
-            )
-            
-            thongke.controls.append(
-                Container(
-                    width=340,
-                    height=21,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(
-                                alignment="start",
-                                controls=[
-                                    Icon(icons.DIRECTIONS_BUS, color="GREY"),
-                                    Text("Đi lại:", color="white"),
-                                ],
-                            ),
-                            Row(
-                                alignment="end",
-                                controls=[
-                                    Text(f"{dilai}", color="white"),
-                                    Text("đ", color="white"),
-                                ],
-                            ),
-                        ],
-                    ),
-                )
-            )
-            thongke.controls.append(
-                Container(
-                    width=340,
-                    height=21,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(
-                                alignment="start",
-                                controls=[
-                                    Icon(icons.WATER_DROP, color="BROWN"),
-                                    Text("Tiền nước:", color="white"),
-                                ],
-                            ),
-                            Row(
-                                alignment="end",
-                                controls=[
-                                    Text(f"{tiennuoc}", color="white"),
-                                    Text("đ", color="white"),
-                                ],
-                            ),
-                        ],
-                    ),
-                )
-            )
-            thongke.controls.append(
-                Container(
-                    width=340,
-                    height=21,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(
-                                alignment="start",
-                                controls=[
-                                    Icon(icons.QUESTION_MARK, color="BLACK"),
-                                    Text("Khác:", color="white"),
-                                ],
-                            ),
-                            Row(
-                                alignment="end",
-                                controls=[
-                                    Text(f"{khac}", color="white"),
-                                    Text("đ", color="white"),
-                                ],
-                            ),
-                        ],
-                    ),
-                )
-            )
             return thongke
-                
 
         header = create_header()
         date_row = create_date()
@@ -720,8 +529,6 @@ class Report(UserControl):
         bieu_do_tron = create_bieudotron(data)
         thongke1 = create_thongke(data)
         navbar = create_navbar(self.page, 2)
-
-        
 
         page_3_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),
