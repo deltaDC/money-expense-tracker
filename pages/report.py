@@ -83,6 +83,7 @@ class Report(UserControl):
                     # Icon(icons.SEARCH),
                     IconButton(
                         icons.SEARCH,
+                        icon_color="white"
                     ),
                 ],
             )
@@ -129,18 +130,20 @@ class Report(UserControl):
                 alignment="spaceBetween",
                 controls=[
                     # Create a text widget to display the month/year.
-                    Text(datetime.date.today().strftime("%m/%Y")),
+                    Text(datetime.date.today().strftime("%m/%Y"), color="white"),
                     # Create a row to contain the arrow buttons.
                     Row(
                         controls=[
                             # Create an icon button for the previous arrow.
                             IconButton(
                                 icons.ARROW_LEFT,
+                                icon_color="white",
                                 on_click=lambda event: get_prev_month(),
                             ),
                             # Create an icon button for the next arrow.
                             IconButton(
                                 icons.ARROW_RIGHT,
+                                icon_color="white",
                                 on_click=lambda event: get_next_month(),
                             ),
                         ]
@@ -188,7 +191,7 @@ class Report(UserControl):
                         padding=1,
                         content=Row(
                             alignment="spaceBetween",
-                            controls=[button_1, Text(f"{total_expense} đ")],
+                            controls=[button_1, Text(f"{total_expense} đ", color="white")],
                         ),
                     ),
                     Container(
@@ -199,7 +202,7 @@ class Report(UserControl):
                         padding=1,
                         content=Row(
                             alignment="spaceBetween",
-                            controls=[button_2, Text(f"{total_income} đ")],
+                            controls=[button_2, Text(f"{total_income} đ", color="white")],
                         ),
                     ),
                 ],
@@ -227,7 +230,7 @@ class Report(UserControl):
                         padding=1,
                         content=Row(
                             alignment="spaceBetween",
-                            controls=[button_3, Text(f"{total_income-total_expense} đ")],
+                            controls=[button_3, Text(f"{total_income-total_expense} đ", color="white")],
                         ),
                     )
                 ]
@@ -436,14 +439,14 @@ class Report(UserControl):
                                 alignment="start",
                                 controls=[
                                     Icon(name=icons.HOUSE, color="yellow"),
-                                    Text("Tiền nhà:"),
+                                    Text("Tiền nhà:", color="white"),
                                 ],
                             ),
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{tiennha}"),
-                                    Text("đ"),
+                                    Text(f"{tiennha}", color="white"),
+                                    Text("đ", color="white"),
                                 ],
                             ),
                         ],
@@ -465,14 +468,14 @@ class Report(UserControl):
                                 alignment="start",
                                 controls=[
                                     Icon(icons.ELECTRIC_BOLT, color="PURPLE"),
-                                    Text("Tiền điện:"),
+                                    Text("Tiền điện:", color="white"),
                                 ],
                             ),
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{tiendien}"),
-                                    Text("đ"),
+                                    Text(f"{tiendien}", color="white"),
+                                    Text("đ", color="white"),
                                 ],
                             ),
                         ],
@@ -494,14 +497,14 @@ class Report(UserControl):
                                 alignment="start",
                                 controls=[
                                     Icon(icons.CHECKROOM, color="blue"),
-                                    Text("Quần áo:"),
+                                    Text("Quần áo:", color="white"),
                                 ],
                             ),
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{quanao}"),
-                                    Text("đ"),
+                                    Text(f"{quanao}", color="white"),
+                                    Text("đ", color="white"),
                                 ],
                             ),
                         ],
@@ -523,14 +526,14 @@ class Report(UserControl):
                                 alignment="start",
                                 controls=[
                                     Icon(icons.LOCAL_DINING, color="green"),
-                                    Text("Ăn uống:"),
+                                    Text("Ăn uống:", color="white"),
                                 ],
                             ),
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{anuong}"),
-                                    Text("đ"),
+                                    Text(f"{anuong}", color="white"),
+                                    Text("đ", color="white"),
                                 ],
                             ),
                         ],
@@ -551,14 +554,14 @@ class Report(UserControl):
                                 alignment="start",
                                 controls=[
                                     Icon(icons.HOME_REPAIR_SERVICE, color="RED"),
-                                    Text("Gia dụng:"),
+                                    Text("Gia dụng:", color="white"),
                                 ],
                             ),
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{giadung}"),
-                                    Text("đ"),
+                                    Text(f"{giadung}", color="white"),
+                                    Text("đ", color="white"),
                                 ],
                             ),
                         ],
@@ -580,14 +583,14 @@ class Report(UserControl):
                                 alignment="start",
                                 controls=[
                                     Icon(icons.EMERGENCY, color="ORANGE"),
-                                    Text("Y tế:"),
+                                    Text("Y tế:", color="white"),
                                 ],
                             ),
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{yte}"),
-                                    Text("đ"),
+                                    Text(f"{yte}", color="white"),
+                                    Text("đ", color="white"),
                                 ],
                             ),
                         ],
@@ -608,48 +611,21 @@ class Report(UserControl):
                                 alignment="start",
                                 controls=[
                                     Icon(icons.SCHOOL, color="PINK"),
-                                    Text("Giáo dục:"),
+                                    Text("Giáo dục:", color="white"),
                                 ],
                             ),
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{giaoduc}"),
-                                    Text("đ"),
+                                    Text(f"{giaoduc}", color="white"),
+                                    Text("đ", color="white"),
                                 ],
                             ),
                         ],
                     ),
                 )
             )
-            thongke.controls.append(
-                Container(
-                    width=340,
-                    height=21,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(
-                                alignment="start",
-                                controls=[
-                                    Icon(icons.QUESTION_MARK, color="BLACK"),
-                                    Text("Khác:"),
-                                ],
-                            ),
-                            Row(
-                                alignment="end",
-                                controls=[
-                                    Text(f"{khac}"),
-                                    Text("đ"),
-                                ],
-                            ),
-                        ],
-                    ),
-                )
-            )
+            
             thongke.controls.append(
                 Container(
                     width=340,
@@ -664,14 +640,14 @@ class Report(UserControl):
                                 alignment="start",
                                 controls=[
                                     Icon(icons.DIRECTIONS_BUS, color="GREY"),
-                                    Text("Đi lại:"),
+                                    Text("Đi lại:", color="white"),
                                 ],
                             ),
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{dilai}"),
-                                    Text("đ"),
+                                    Text(f"{dilai}", color="white"),
+                                    Text("đ", color="white"),
                                 ],
                             ),
                         ],
@@ -692,14 +668,42 @@ class Report(UserControl):
                                 alignment="start",
                                 controls=[
                                     Icon(icons.WATER_DROP, color="BROWN"),
-                                    Text("Tiền nước:"),
+                                    Text("Tiền nước:", color="white"),
                                 ],
                             ),
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{tiennuoc}"),
-                                    Text("đ"),
+                                    Text(f"{tiennuoc}", color="white"),
+                                    Text("đ", color="white"),
+                                ],
+                            ),
+                        ],
+                    ),
+                )
+            )
+            thongke.controls.append(
+                Container(
+                    width=340,
+                    height=21,
+                    border_radius=5,
+                    bgcolor=GREY_COLOR,
+                    padding=1,
+                    content=Row(
+                        alignment="spaceBetween",
+                        controls=[
+                            Row(
+                                alignment="start",
+                                controls=[
+                                    Icon(icons.QUESTION_MARK, color="BLACK"),
+                                    Text("Khác:", color="white"),
+                                ],
+                            ),
+                            Row(
+                                alignment="end",
+                                controls=[
+                                    Text(f"{khac}", color="white"),
+                                    Text("đ", color="white"),
                                 ],
                             ),
                         ],
