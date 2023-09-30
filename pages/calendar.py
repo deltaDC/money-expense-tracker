@@ -45,7 +45,7 @@ class SetCalendar(UserControl):
         # the below now keeps m1 between 1 and 12, and m2 between 2 and 13.
         self.m1 = min(max(1, self.m1 + delta), 12)
         self.m2 = min(max(2, self.m2 + delta), 13)
-
+        
         # we need to create a new calendar varaible
         new_calendar = self.create_month_calendar(self.current_year)
         self.calendar_grid = new_calendar
@@ -222,7 +222,7 @@ class DataSetup(UserControl):
             height=45,
             bgcolor="#313131",
             border_radius=8,
-            animate=300,
+            animate=400,
             clip_behavior=ClipBehavior.HARD_EDGE,
             alignment=alignment.center,
             content=Column(
@@ -230,7 +230,7 @@ class DataSetup(UserControl):
                 horizontal_alignment=CrossAxisAlignment.CENTER,
                 controls=[
                     # here we can pass in the actual calendar instance plus the buttons
-                    Divider(height=60, color="transparent"),
+                    Divider(height=40, color="transparent"),
                     self.cal_gird,
                     Divider(height=10, color="transparent"),
                     self.btn_container,
@@ -291,7 +291,7 @@ class DataSetup(UserControl):
 class BTNPagnation(UserControl):
     def __init__(self, txt_name, function):
         self.txt_name = txt_name
-        self.function = function
+        self.function = function    
         super().__init__()
 
     def build(self):
