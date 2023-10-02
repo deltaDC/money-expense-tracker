@@ -14,7 +14,7 @@ GREY_COLOR = "#3f3f3f"
 
 # let's start
 class SetCalendar(UserControl):
-    def __init__(self, start_year=datetime.date.today().year):
+    def __init__(self, start_year=datetime.datetime.now().year):
         # we'll need a few class instances up here first
         # this widget will display the 12 months of years 2023. But an additional instance can be added to display other eyars as well
 
@@ -22,13 +22,6 @@ class SetCalendar(UserControl):
 
         self.m1 = datetime.date.today().month  # current month
         self.m2 = self.m1 + 1  # the second month, needed for the calendar module
-
-        self.click_count: list = []  # for tracking clicks
-        self.long_press_count: list = []  # same as above
-
-        self.current_color = "blue"  # highlight color
-
-        self.slected_date = any  # the sleected data from the calendar
 
         self.calendar_grid = Column(
             wrap=True,
@@ -40,15 +33,33 @@ class SetCalendar(UserControl):
 
     # first let's create the ability to paginate the months
     def _change_month(self, delta):
-        # recall that we stored the current month + month2 abvoe as self.m1 and self.m2
-        # we can use hte max and min to make sure the numbers stay between 1 and 13, as per the calendar library
-        # the below now keeps m1 between 1 and 12, and m2 between 2 and 13.
-        self.m1 = min(max(1, self.m1 + delta), 12)
-        self.m2 = min(max(2, self.m2 + delta), 13)
-        
-        # we need to create a new calendar varaible
-        new_calendar = self.create_month_calendar(self.current_year)
-        self.calendar_grid = new_calendar
+        # Lưu trữ giá trị cũ của m1
+        old_m1 = self.m1
+
+        # Kiểm tra nếu đang ở tháng 1 và muốn chuyển đến tháng trước đó
+        if self.m1 == 1 and delta == -1:
+            # Giảm năm xuống một đơn vị
+            self.current_year -= 1
+            self.m1 = 13
+        # Kiểm tra nếu đang ở tháng 12 và muốn chuyển đến tháng tiếp theo
+        elif self.m1 == 13 and delta == 1:
+            # Tăng năm lên một đơn vị
+            self.current_year += 1
+            self.m1 = 1
+        else:
+            # Trong các trường hợp khác, tăng/giảm tháng bình thường
+            self.m1 = min(max(1, self.m1 + delta), 13)
+
+        # Tính toán giá trị mới cho m2 dựa trên m1 mới
+        if self.m1 < 13:
+            self.m2 = self.m1 + 1
+        else:
+            self.m2 = 1
+
+        # Tạo lại lịch với tháng và năm mới nếu m1 đã thay đổi
+        if old_m1 != self.m1:
+            new_calendar = self.create_month_calendar(self.current_year)
+            self.calendar_grid = new_calendar
         self.update()  # this should update the calendar by month
 
     # final we can keep adding more functions to make the widget more complex.Let's highlight the container when it's clicked.
@@ -59,45 +70,9 @@ class SetCalendar(UserControl):
         e.control.update()
         self.update()
 
-    def long_click_date(self, e):
-        # now for multiple dates.
-        # we can set this up so that a user can click two dates and it'll highlight all the dates in between
-
-        # 1. Save the two clicks to a list
-        self.long_press_count.append(e.control.data)
-        # 2. Check to see if there are indeed 2 clicks
-        if len(self.long_press_count) == 2:
-            # 3. Set two dates by unpacking the list
-            date1, date2 = self.long_press_count
-            # 4. Get the absolute distance between them
-            delta = abs(date2 - date1)
-            # 5. Now check to see if it's past selection or future
-            if date1 < date2:
-                dates = [
-                    date1 + datetime.timedelta(days=x) for x in range(delta.days + 1)
-                ]
-            else:
-                dates = [
-                    date2 + datetime.timedelta(days=x) for x in range(delta.days + 1)
-                ]
-
-            # 6. We loop over the calendar matrix and color the boxes
-            for _ in self.calendar_grid.controls[:]:
-                for __ in _.controls[:]:
-                    if isinstance(__, Row):
-                        for box in __.controls[:]:
-                            # 7. Here we check to see if the dates list above matches the dates we created for each container data
-                            if box.data in dates:
-                                box.bgcolor = "blue600"
-                                box.update()
-
-            self.long_press_count = []
-
-        else:
-            pass
-
+    
     # we can now create the logic for calendar
-    def create_month_calendar(self, year):
+    def create_month_calendar(self, year=datetime.datetime.now().year):
         self.current_year = year  # get the current year
         self.calendar_grid.controls: list = []  # clear the calendar grid
 
@@ -163,7 +138,6 @@ class SetCalendar(UserControl):
                                 day=day,
                             ),
                             on_click=lambda e: self.one_click_date(e),
-                            on_long_press=lambda e: self.long_click_date(e),
                             animate=400,
                         )
                     day_label = Text(str(day), size=12)
