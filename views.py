@@ -5,7 +5,8 @@ from pages.calendar import Calendar
 from pages.report import Report
 from pages.report1 import Report1
 from pages.other import Other
-
+from pages.report2 import Report2
+from pages.report3 import Report3
 
 def views_handler(page):
     return {
@@ -43,6 +44,18 @@ def views_handler(page):
             route='/other',
             controls=[
                 Other(page)
+            ]
+        ),
+        '/report_2':View(
+            route='/report_2',
+            controls=[
+                Report2(page)
+            ]
+        ),
+        '/report_3':View(
+            route='/report_3',
+            controls=[
+                Report3(page)
             ]
         ),
     }
