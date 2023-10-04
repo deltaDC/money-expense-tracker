@@ -8,15 +8,19 @@ class Other(UserControl):
         self.page = page
 
     def build(self):
-        def create_row(icon, text):
+        def create_row(icon, text,duongdan):
             row = Container(
                 bgcolor=BG_COLOR,
                 padding=padding.only(30,10,30,10),
                 border=border.only(bottom=border.BorderSide(0.5, "#3c3c3c"), top=border.BorderSide(0.5, "#3c3c3c")),
                 content=Row(
                     controls=[
-                        Icon(icon, color="white"),
-                        Text(text, color="white")
+                        IconButton(icon, icon_color="white",
+                                    on_click=lambda e:self.page.go(duongdan)
+                                   ),
+                        TextButton(text, icon_color="white",
+                                    on_click=lambda e:self.page.go(duongdan)
+                                   )
                     ]
                 )
             )
@@ -25,34 +29,34 @@ class Other(UserControl):
         
 
         buttons = Column(
-            spacing=20,
+            spacing=0,
             controls=[
                 Container(
-                    padding=30,
-                    content=Text("Khác", color="white", size=20),
+                    padding=15,
+                    content=Text("Khác", color="white", size=15),
                 ),
-                create_row(icons.SETTINGS, "Cài đặt cơ bản"),
+                create_row(icons.SETTINGS, "Cài đặt cơ bản",'/report_2'),
                 Column(
                     spacing=0,
                     controls=[
-                        create_row(icons.BAR_CHART, "Báo cáo trong năm"),
-                        create_row(icons.PIE_CHART, "Báo cáo danh mục trong năm"),
-                        create_row(icons.INSERT_CHART_OUTLINED, "Báo cáo toàn kì"),
-                        create_row(icons.PIE_CHART_OUTLINE, "Báo cáo danh mục toàn kì")
+                        create_row(icons.BAR_CHART, "Báo cáo trong năm",'/report_2'),
+                        create_row(icons.PIE_CHART, "Báo cáo danh mục trong năm",'/report_2'),
+                        create_row(icons.INSERT_CHART_OUTLINED, "Báo cáo toàn kì",'/report_2'),
+                        create_row(icons.PIE_CHART_OUTLINE, "Báo cáo danh mục toàn kì",'/report_2')
                     ]
                 ),
                 Column(
                     spacing=0,
                     controls=[
-                        create_row(icons.DOWNLOAD, "Đầu ra dữ liệu"),
-                        create_row(icons.CLOUD_DOWNLOAD, "Sao lưu dữ liệu")
+                        create_row(icons.DOWNLOAD, "Đầu ra dữ liệu",'/report_2'),
+                        create_row(icons.CLOUD_DOWNLOAD, "Sao lưu dữ liệu",'/report_2')
                     ]
                 ),
                 Column(
                     spacing=0,
                     controls=[
-                        create_row(icons.QUESTION_MARK, "Trợ giúp"),
-                        create_row(icons.INFO, "Thông tin ứng dụng")
+                        create_row(icons.QUESTION_MARK, "Trợ giúp",'/report_2'),
+                        create_row(icons.INFO, "Thông tin ứng dụng",'/report_2')
                     ]
                 ),
             ]
