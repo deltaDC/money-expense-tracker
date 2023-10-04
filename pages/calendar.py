@@ -27,7 +27,7 @@ class SetCalendar(UserControl):
         )
 
         super().__init__()
-    
+
     # first let's create the ability to paginate the months
     def _change_month(self, delta):
         # Lưu trữ giá trị cũ của m1
@@ -160,6 +160,7 @@ class SetCalendar(UserControl):
     def build(self):
         return self.create_month_calendar(datetime.datetime.now().year)
 
+
 # let's switch and get to the upper level UI
 class DataSetup(UserControl):
     def __init__(self, cal_gird):
@@ -289,13 +290,11 @@ class details_month(UserControl):
     def fetch_data_from_db(self, month, year):
         conn = sqlite3.connect("db/app.db")
         cursor = conn.cursor()
-        query = (
-            "SELECT * FROM financial_transaction WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ?"
-        )
-        print("SQL Query:", query)  
-        print("Month:", month)  
-        print("Year:", year)    
-        cursor.execute(query, (month, year))
+        query = "SELECT * FROM financial_transaction WHERE strftime('%Y-%m', date) = ?"
+        print("SQL Query:", query)
+        print("Month:", month)
+        print("Year:", year)
+        cursor.execute(query, (f"{year}-{month:02}",))
         records = cursor.fetchall()
         result = [row for row in records]
         conn.close()
@@ -317,8 +316,8 @@ class details_month(UserControl):
             for row in filter(lambda row: row[3] != "", data)
             if row[5] == "Tiền thu"
         )
-        print("Total Income:", total_income)  
-        print("Total Expense:", total_expense)  
+        print("Total Income:", total_income)
+        print("Total Expense:", total_expense)
         self.total_income_text.value = f"{total_income} đ"
         self.total_expense_text.value = f"{total_expense} đ"
         self.total_text.value = f"{total_income - total_expense} đ"
@@ -424,7 +423,9 @@ class Calendar(UserControl):
                 ],
             )
         )
-        cal = SetCalendar(details_month=self.details_month_control, current_year=self.current_year)
+        cal = SetCalendar(
+            details_month=self.details_month_control, current_year=self.current_year
+        )
         date = DataSetup(cal)
         total = self.details_month_control
 
