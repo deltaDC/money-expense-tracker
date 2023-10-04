@@ -2,11 +2,11 @@ from flet import *
 from pages.outcome import Outcome
 from pages.income import Income
 from pages.calendar import Calendar
-from pages.report import Report
-from pages.report1 import Report1
+from pages.reports.report_outcome import Report
+from pages.reports.report_income import Report1
 from pages.other import Other
-from pages.report2 import Report2
-from pages.report3 import Report3
+from pages.reports.report_year_outcome import Report2
+from pages.reports.report_year_income import Report3
 
 def views_handler(page):
     return {
