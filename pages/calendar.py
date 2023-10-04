@@ -14,12 +14,9 @@ GREY_COLOR = "#3f3f3f"
 
 # let's start
 class SetCalendar(UserControl):
-    def __init__(self, start_year=datetime.datetime.now().year):
-        # we'll need a few class instances up here first
-        # this widget will display the 12 months of years 2023. But an additional instance can be added to display other eyars as well
-
-        self.current_year = start_year  # the current year
-
+    def __init__(self, details_month, current_year):
+        self.details_month = details_month
+        self.current_year = current_year
         self.m1 = datetime.date.today().month  # current month
         self.m2 = self.m1 + 1  # the second month, needed for the calendar module
 
@@ -30,7 +27,7 @@ class SetCalendar(UserControl):
         )
 
         super().__init__()
-
+    
     # first let's create the ability to paginate the months
     def _change_month(self, delta):
         # Lưu trữ giá trị cũ của m1
@@ -60,6 +57,8 @@ class SetCalendar(UserControl):
         if old_m1 != self.m1:
             new_calendar = self.create_month_calendar(self.current_year)
             self.calendar_grid = new_calendar
+            self.details_month = details_month(self.m1, self.current_year)
+            self.details_month.update_total_text()
         self.update()  # this should update the calendar by month
 
     # final we can keep adding more functions to make the widget more complex.Let's highlight the container when it's clicked.
@@ -70,7 +69,6 @@ class SetCalendar(UserControl):
         e.control.update()
         self.update()
 
-    
     # we can now create the logic for calendar
     def create_month_calendar(self, year=datetime.datetime.now().year):
         self.current_year = year  # get the current year
@@ -160,8 +158,7 @@ class SetCalendar(UserControl):
         return self.calendar_grid
 
     def build(self):
-        return self.create_month_calendar(self.current_year)
-
+        return self.create_month_calendar(datetime.datetime.now().year)
 
 # let's switch and get to the upper level UI
 class DataSetup(UserControl):
@@ -265,7 +262,7 @@ class DataSetup(UserControl):
 class BTNPagnation(UserControl):
     def __init__(self, txt_name, function):
         self.txt_name = txt_name
-        self.function = function    
+        self.function = function
         super().__init__()
 
     def build(self):
@@ -281,22 +278,35 @@ class BTNPagnation(UserControl):
 
 
 class details_month(UserControl):
-    def __init__(self):
+    def __init__(self, month, year):
+        self.month = month
+        self.year = year
         super().__init__()
         self.total_income_text = Text(size=12, color=colors.BLUE_100)
         self.total_expense_text = Text(size=12, color=colors.RED_100)
         self.total_text = Text(size=12, color=colors.BLUE_400)
 
-    def fetch_data_from_db(self):
+    def fetch_data_from_db(self, month, year):
         conn = sqlite3.connect("db/app.db")
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM financial_transaction")
+        query = (
+            "SELECT * FROM financial_transaction WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ?"
+        )
+        print("SQL Query:", query)  
+        print("Month:", month)  
+        print("Year:", year)    
+        cursor.execute(query, (month, year))
         records = cursor.fetchall()
+        result = [row for row in records]
         conn.close()
+        print("Fetched data:", records)
         return records
 
     def update_total_text(self):
-        data = self.fetch_data_from_db()
+        data = self.fetch_data_from_db(month=self.month, year=self.year)
+        print("Fetched data:", data)
+        print("Month: ", self.month)
+        print("Year: ", self.year)
         total_expense = sum(
             float(row[3])
             for row in filter(lambda row: row[3] != "", data)
@@ -307,11 +317,14 @@ class details_month(UserControl):
             for row in filter(lambda row: row[3] != "", data)
             if row[5] == "Tiền thu"
         )
+        print("Total Income:", total_income)  
+        print("Total Expense:", total_expense)  
         self.total_income_text.value = f"{total_income} đ"
         self.total_expense_text.value = f"{total_expense} đ"
         self.total_text.value = f"{total_income - total_expense} đ"
 
     def build(self):
+        print("Building details_month...")
         return Column(
             alignment=MainAxisAlignment.START,
             horizontal_alignment=CrossAxisAlignment.START,
@@ -380,7 +393,10 @@ class Calendar(UserControl):
     def build(self):
         self.page.horizontal_alignment = "center"
         self.page.vertical_alignment = "center"
-        self.details_month_control = details_month()
+        current_month = datetime.datetime.now().month
+        current_year = datetime.datetime.now().year
+        self.current_year = current_year
+        self.details_month_control = details_month(current_month, current_year)
         self.details_month_control.update_total_text()
 
         test = SafeArea(
@@ -408,7 +424,7 @@ class Calendar(UserControl):
                 ],
             )
         )
-        cal = SetCalendar()
+        cal = SetCalendar(details_month=self.details_month_control, current_year=self.current_year)
         date = DataSetup(cal)
         total = self.details_month_control
 
