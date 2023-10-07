@@ -45,13 +45,10 @@ class Report2(UserControl):
         def update_views():
             print("this is rp2")
             print(data)
-            # chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi(data)
+           
             bieu_do_tron = create_bieudotron(data)
             thongke1 = create_thongke(data)
-            # chitieu_thunhap_thuchi.update()
-            # bieu_do_tron.update()
-            # thongke1.update()
-            # page_3_child_container.content.controls[2] = chitieu_thunhap_thuchi
+            
             page_3_child_container.content.controls[3] = bieu_do_tron
             page_3.content.controls[1] = thongke1
             page_3_child_container.update()
@@ -80,14 +77,7 @@ class Report2(UserControl):
                                icon_color="white",
                                on_click=lambda e:self.page.go('/other')
                                ),
-                    # Row(
-                        
-                    #     controls=[
-                    #         button_1,
-                    #         # button_2,
-                    #     ]
-                    # ),
-                    # Icon(icons.SEARCH),
+                   
                     button_1,
                     IconButton(icons.SEARCH, icon_color="white"),
                     
@@ -159,103 +149,6 @@ class Report2(UserControl):
 
             return date_header
 
-        # def create_chitieu_thunhap_thuchi(year_data):
-        #     def change_button_colors(button_1: TextButton, button_2: TextButton):
-        #         button_1.style.bgcolor = GREY_COLOR
-        #         button_2.style.bgcolor = BG_COLOR
-        #         chitieu_thunhap1.update()
-
-        #     # Create two text buttons.
-        #     button_1 = TextButton(
-        #         text="Chi tiêu", style=ButtonStyle(color="White", bgcolor=GREY_COLOR)
-        #     )
-        #     button_2 = TextButton(
-        #         text="Thu nhập", style=ButtonStyle(color="White", bgcolor=GREY_COLOR)
-        #     )
-
-        #     # Calculate and format the total expense and income from the data
-        #     total_expense = sum(row[3] for row in year_data if row[5] == "Tiền chi")
-        #     total_income = sum(row[3] for row in year_data if row[5] == "Tiền thu")
-
-        #     # Add on_click event listeners to the buttons.
-        #     button_1.on_click = lambda event: change_button_colors(button_1, button_2)
-        #     button_2.on_click = lambda event: change_button_colors(button_2, button_1)
-
-        #     # Update the text on the buttons with the calculated totals
-        #     # button_1.text = f"Chi tiêu: {total_expense}đ"
-        #     # button_2.text = f"Thu nhập: {total_income}đ"
-
-        #     chitieu_thunhap1 = Row(
-        #         alignment="spaceBetween",
-        #         controls=[
-        #             Container(
-        #                 width=168,
-        #                 height=30,
-        #                 border_radius=5,
-        #                 bgcolor=GREY_COLOR,
-        #                 padding=1,
-        #                 content=Row(
-        #                     alignment="spaceBetween",
-        #                     controls=[
-        #                         button_1,
-        #                         Text(f"{total_expense} đ", color="white"),
-        #                     ],
-        #                 ),
-        #             ),
-        #             Container(
-        #                 width=168,
-        #                 height=30,
-        #                 border_radius=5,
-        #                 bgcolor=GREY_COLOR,
-        #                 padding=1,
-        #                 content=Row(
-        #                     alignment="spaceBetween",
-        #                     controls=[
-        #                         button_2,
-        #                         Text(f"{total_income} đ", color="white"),
-        #                     ],
-        #                 ),
-        #             ),
-        #         ],
-        #     )
-
-        #     def change_button_colors1(button_3: TextButton):
-        #         button_3.style.bgcolor = GREY_COLOR
-        #         thu_chi1.update()
-
-        #     # Create two text buttons.
-        #     button_3 = TextButton(
-        #         text="Thu chi", style=ButtonStyle(color="White", bgcolor=GREY_COLOR)
-        #     )
-
-        #     # Add on_click event listeners to the buttons.
-        #     button_3.on_click = lambda event: change_button_colors1(button_3)
-
-        #     thu_chi1 = Row(
-        #         controls=[
-        #             Container(
-        #                 width=340,
-        #                 height=30,
-        #                 border_radius=5,
-        #                 bgcolor=GREY_COLOR,
-        #                 padding=1,
-        #                 content=Row(
-        #                     alignment="spaceBetween",
-        #                     controls=[
-        #                         button_3,
-        #                         Text(f"{total_income-total_expense} đ", color="white"),
-        #                     ],
-        #                 ),
-        #             )
-        #         ]
-        #     )
-        #     chitieuthunhapthuchi = Column(
-        #         controls=[
-        #             chitieu_thunhap1,
-        #             thu_chi1,
-        #         ]
-        #     )
-        #     return chitieuthunhapthuchi
 
         def create_bieudo_label():
             def change_button_colors(button_1: TextButton, button_2: TextButton):
@@ -367,7 +260,7 @@ class Report2(UserControl):
                     * 100
                 )
                 khac = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Khác")
+                    sum(row[3] for row in month_data if row[4] == "Khác" and  row[5] == "Tiền chi")
                     / total_expense
                     * 100
                 )
@@ -487,7 +380,7 @@ class Report2(UserControl):
             giaoduc = sum(row[3] for row in year_data if row[4] == "Giáo dục")
             dilai = sum(row[3] for row in year_data if row[4] == "Đi lại")
             tiennuoc = sum(row[3] for row in year_data if row[4] == "Tiền nước")
-            khac = sum(row[3] for row in year_data if row[4] == "Khác")
+            khac = sum(row[3] for row in year_data if row[4] == "Khác"and  row[5] == "Tiền chi")
 
             def create_thongke_row(category, icon, text, icon_color):
                 thongke_row = Container(
@@ -543,7 +436,7 @@ class Report2(UserControl):
        
 
         page_3_child_container = Container(
-            padding=padding.only(left=30, top=30, right=30),
+            padding=padding.only(left=10, top=30, right=30),
             content=Column(
                 controls=[
                     header,
