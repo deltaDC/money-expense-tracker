@@ -16,12 +16,12 @@ class Report1(UserControl):
         self.page = page
 
     def build(self):
-        def fetch_data_from_db(month=datetime.datetime.now().month):
+        def fetch_data_from_db(year=datetime.datetime.now().year,month=datetime.datetime.now().month):
             conn = sqlite3.connect("db/app.db")
             cursor = conn.cursor()
 
             # Extract the year and month from the input month
-            year = datetime.datetime.now().year
+            # year = datetime.datetime.now().year
 
             # Build the SQL query to filter by year and month
             sql_query = (
@@ -29,7 +29,7 @@ class Report1(UserControl):
             )
 
             # Execute the query with the provided month and year
-            cursor.execute(sql_query, (f"{year}-{month:02}",))
+            cursor.execute(sql_query, (f"{year:04}-{month:02}",))
 
             records = cursor.fetchall()
             result = [row for row in records]
@@ -39,7 +39,7 @@ class Report1(UserControl):
         global current_month, current_year, data
         current_month = datetime.date.today().month
         current_year = datetime.date.today().year
-        data = fetch_data_from_db(month=current_month)
+        data = fetch_data_from_db(year=current_year,month=current_month)
         # print(f"data is: {data}")
 
         def update_views():
@@ -56,6 +56,7 @@ class Report1(UserControl):
             page_3_child_container.update()
             page_3.update()
             self.page.update()
+
 
         def create_header():
             # Create a function to change the background color of the buttons.
@@ -91,8 +92,9 @@ class Report1(UserControl):
             def update_date_display():
                 # Định dạng tháng với số 0 trước nếu nhỏ hơn 10
                 formatted_month = str(current_month).zfill(2)
+                formatted_year = str(current_year).zfill(4)
                 # Cập nhật ngày tháng trên giao diện
-                date_header.controls[0].value = f"{formatted_month}/{current_year}"
+                date_header.controls[0].value = f"{formatted_month}/{formatted_year}"
                 date_header.update()
 
             def get_next_month():
@@ -104,7 +106,7 @@ class Report1(UserControl):
                 if current_month > 12:
                     current_month = 1
                     current_year += 1
-                data = fetch_data_from_db(current_month)
+                data = fetch_data_from_db(current_year,current_month)
                 # print(data)
                 update_date_display()
                 update_views()
@@ -118,7 +120,7 @@ class Report1(UserControl):
                 if current_month < 1:
                     current_month = 12
                     current_year -= 1
-                data = fetch_data_from_db(current_month)
+                data = fetch_data_from_db(current_year,current_month)
                 # print(data)
                 update_date_display()
                 update_views()
@@ -265,16 +267,13 @@ class Report1(UserControl):
                 on_click= lambda e: (change_button_colors(button_2, button_1), self.page.go("/report_1")),
             )
 
-            # Add on_click event listeners to the buttons.
-            # button_1.on_click = lambda event: change_button_colors(button_1, button_2)
-            # button_2.on_click = lambda event: change_button_colors(button_2, button_1)
+            
             bieudo1 = Column(
                 controls=[
                     Row(
                         alignment="spaceAround",
                         controls=[
-                            # Text('Chi tiêu'),
-                            # Text('Thu nhập'),
+                            
                             button_1,
                             button_2,
                         ],
@@ -338,7 +337,7 @@ class Report1(UserControl):
                     * 100
                 )
                 khac = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Khác")
+                    sum(row[3] for row in month_data if row[4] == "Khác" and row[5] == "Tiền thu")
                     / total_income
                     * 100
                 )
@@ -427,7 +426,7 @@ class Report1(UserControl):
             thuong = sum(row[3] for row in month_data if row[4] == "Thưởng")
             dautu = sum(row[3] for row in month_data if row[4] == "Đầu tư")
             lamthem = sum(row[3] for row in month_data if row[4] == "Làm thêm")
-            khac = sum(row[3] for row in month_data if row[4] == "Khác")
+            khac = sum(row[3] for row in month_data if row[4] == "Khác"and row[5] == "Tiền thu")
 
             def create_thongke_row(category, icon, text, icon_color):
                 thongke_row = Container(

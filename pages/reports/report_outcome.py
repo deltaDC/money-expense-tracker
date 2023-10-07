@@ -16,12 +16,12 @@ class Report(UserControl):
         self.page = page
 
     def build(self):
-        def fetch_data_from_db(month=datetime.datetime.now().month):
+        def fetch_data_from_db(year = datetime.datetime.now().year,month=datetime.datetime.now().month):
             conn = sqlite3.connect("db/app.db")
             cursor = conn.cursor()
 
             # Extract the year and month from the input month
-            year = datetime.datetime.now().year
+            
 
             # Build the SQL query to filter by year and month
             sql_query = (
@@ -29,7 +29,7 @@ class Report(UserControl):
             )
 
             # Execute the query with the provided month and year
-            cursor.execute(sql_query, (f"{year}-{month:02}",))
+            cursor.execute(sql_query, (f"{year:04}-{month:02}",))
 
             records = cursor.fetchall()
             result = [row for row in records]
@@ -39,11 +39,11 @@ class Report(UserControl):
         global current_month, current_year, data
         current_month = datetime.date.today().month
         current_year = datetime.date.today().year
-        data = fetch_data_from_db(month=current_month)
+        data = fetch_data_from_db(year=current_year,month=current_month)
         # print(f"data is: {data}")
 
         def update_views():
-            print(data)
+            # print(data)
             chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi(data)
             bieu_do_tron = create_bieudotron(data)
             thongke1 = create_thongke(data)
@@ -91,8 +91,9 @@ class Report(UserControl):
             def update_date_display():
                 # Định dạng tháng với số 0 trước nếu nhỏ hơn 10
                 formatted_month = str(current_month).zfill(2)
+                formatted_year = str(current_year).zfill(4)
                 # Cập nhật ngày tháng trên giao diện
-                date_header.controls[0].value = f"{formatted_month}/{current_year}"
+                date_header.controls[0].value = f"{formatted_month}/{formatted_year}"
                 date_header.update()
 
             def get_next_month():
@@ -104,7 +105,7 @@ class Report(UserControl):
                 if current_month > 12:
                     current_month = 1
                     current_year += 1
-                data = fetch_data_from_db(current_month)
+                data = fetch_data_from_db(current_year,current_month)
                 # print(data)
                 update_date_display()
                 update_views()
@@ -118,7 +119,7 @@ class Report(UserControl):
                 if current_month < 1:
                     current_month = 12
                     current_year -= 1
-                data = fetch_data_from_db(current_month)
+                data = fetch_data_from_db(current_year,current_month)
                 # print(data)
                 update_date_display()
                 update_views()
@@ -359,7 +360,7 @@ class Report(UserControl):
                     * 100
                 )
                 khac = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Khác")
+                    sum(row[3] for row in month_data if row[4] == "Khác" and row[5] == "Tiền chi")
                     / total_expense
                     * 100
                 )
@@ -479,7 +480,7 @@ class Report(UserControl):
             giaoduc = sum(row[3] for row in month_data if row[4] == "Giáo dục")
             dilai = sum(row[3] for row in month_data if row[4] == "Đi lại")
             tiennuoc = sum(row[3] for row in month_data if row[4] == "Tiền nước")
-            khac = sum(row[3] for row in month_data if row[4] == "Khác")
+            khac = sum(row[3] for row in month_data if row[4] == "Khác" and row[5] == "Tiền chi")
 
             def create_thongke_row(category, icon, text, icon_color):
                 thongke_row = Container(
