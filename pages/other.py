@@ -18,7 +18,7 @@ class Other(UserControl):
                         IconButton(icon, icon_color="white",
                                     on_click=lambda e:self.page.go(duongdan)
                                    ),
-                        TextButton(text, icon_color="white",
+                        TextButton(text,icon_color="white",
                                     on_click=lambda e:self.page.go(duongdan)
                                    )
                     ]
@@ -41,8 +41,8 @@ class Other(UserControl):
                     controls=[
                         create_row(icons.BAR_CHART, "Báo cáo trong năm",'/report_2'),
                         create_row(icons.PIE_CHART, "Báo cáo danh mục trong năm",'/report_2'),
-                        create_row(icons.INSERT_CHART_OUTLINED, "Báo cáo toàn kì",'/report_2'),
-                        create_row(icons.PIE_CHART_OUTLINE, "Báo cáo danh mục toàn kì",'/report_2')
+                        create_row(icons.INSERT_CHART_OUTLINED, "Báo cáo toàn kì",'/report_4'),
+                        create_row(icons.PIE_CHART_OUTLINE, "Báo cáo danh mục toàn kì",'/report_5')
                     ]
                 ),
                 Column(
