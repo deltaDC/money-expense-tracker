@@ -1,450 +1,323 @@
 import sqlite3
 from flet import *
-import calendar
 import datetime
+import calendar
 from utils.navbar import create_navbar
 
-# some constants
-CELL_SIZE = (28, 28)
-CELL_BG_COLOR = "while10"
-TODAY_BG_COLOR = "teal600"
-BG_COLOR = "#000000"
+
+BG_COLOR = "#191919"
 GREY_COLOR = "#3f3f3f"
-
-
-# let's start
-class SetCalendar(UserControl):
-    def __init__(self, details_month, current_year):
-        self.details_month = details_month
-        self.current_year = current_year
-        self.m1 = datetime.date.today().month  # current month
-        self.m2 = self.m1 + 1  # the second month, needed for the calendar module
-
-        self.calendar_grid = Column(
-            wrap=True,
-            alignment=MainAxisAlignment.CENTER,
-            horizontal_alignment=CrossAxisAlignment.CENTER,
-        )
-
-        super().__init__()
-
-    # first let's create the ability to paginate the months
-    def _change_month(self, delta):
-        # Lưu trữ giá trị cũ của m1
-        old_m1 = self.m1
-
-        # Kiểm tra nếu đang ở tháng 1 và muốn chuyển đến tháng trước đó
-        if self.m1 == 1 and delta == -1:
-            # Giảm năm xuống một đơn vị
-            self.current_year -= 1
-            self.m1 = 13
-        # Kiểm tra nếu đang ở tháng 12 và muốn chuyển đến tháng tiếp theo
-        elif self.m1 == 13 and delta == 1:
-            # Tăng năm lên một đơn vị
-            self.current_year += 1
-            self.m1 = 1
-        else:
-            # Trong các trường hợp khác, tăng/giảm tháng bình thường
-            self.m1 = min(max(1, self.m1 + delta), 13)
-
-        # Tính toán giá trị mới cho m2 dựa trên m1 mới
-        if self.m1 < 13:
-            self.m2 = self.m1 + 1
-        else:
-            self.m2 = 1
-
-        # Tạo lại lịch với tháng và năm mới nếu m1 đã thay đổi
-        if old_m1 != self.m1:
-            new_calendar = self.create_month_calendar(self.current_year)
-            self.calendar_grid = new_calendar
-            self.details_month = details_month(self.m1, self.current_year)
-            self.details_month.update_total_text()
-        self.update()  # this should update the calendar by month
-
-    # final we can keep adding more functions to make the widget more complex.Let's highlight the container when it's clicked.
-    def one_click_date(self, e):
-        # if we want to change the text title to the highlighted click, we can also do this but it'll requre a third button
-        self.selected_date = e.control.data
-        e.control.bgcolor = "blue600"
-        e.control.update()
-        self.update()
-
-    # we can now create the logic for calendar
-    def create_month_calendar(self, year=datetime.datetime.now().year):
-        self.current_year = year  # get the current year
-        self.calendar_grid.controls: list = []  # clear the calendar grid
-
-        for month in range(self.m1, self.m2):
-            # this gets the month name + year
-            month_label = Text(
-                f"{calendar.month_name[month]} {self.current_year}",
-                size=14,
-                weight="bold",
-            )
-
-            # now we need a month matrix
-            # this gets the days of the month as per the year passed
-            month_matrix = calendar.monthcalendar(self.current_year, month)
-            month_grid = Column(alignment=MainAxisAlignment.CENTER)
-            month_grid.controls.append(
-                Row(
-                    alignment=MainAxisAlignment.START,
-                    controls=[month_label],
-                )
-            )
-
-            # now lets get the weekday labels
-            # this is in the form of list. compr.
-            weekday_labels = [
-                Container(
-                    width=28,
-                    height=28,
-                    alignment=alignment.center,
-                    content=Text(
-                        weekday,
-                        size=12,
-                        color="white54",
-                    ),
-                )
-                for weekday in ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-            ]
-
-            # now put the list of weekenday containers in a row
-            weekday_row = Row(controls=weekday_labels)
-            month_grid.controls.append(weekday_row)
-
-            # now for the days
-            for week in month_matrix:
-                week_container = Row()
-                for day in week:
-                    if day == 0:  # if the day in gird is empty
-                        day_container = Container(
-                            width=28,
-                            height=28,
-                        )
-                    else:
-                        day_container = Container(
-                            width=28,
-                            height=28,
-                            border=border.all(0.5, "white24"),
-                            alignment=alignment.center,
-                            # we need to pass in some additonal paramters to the main day cont.
-                            # we use this data for the above!
-                            data=datetime.date(
-                                year=self.current_year,
-                                month=month,
-                                day=day,
-                            ),
-                            on_click=lambda e: self.one_click_date(e),
-                            animate=400,
-                        )
-                    day_label = Text(str(day), size=12)
-
-                    # we need to make a second check here
-                    if day == 0:
-                        day_label = None
-                    if (
-                        day == datetime.date.today().day
-                        and month == datetime.date.today().month
-                        and self.current_year == datetime.date.today().year
-                    ):
-                        day_container.bgcolor = "teal700"
-                    day_container.content = day_label
-                    week_container.controls.append(day_container)
-                month_grid.controls.append(week_container)
-
-        self.calendar_grid.controls.append(month_grid)
-
-        return self.calendar_grid
-
-    def build(self):
-        return self.create_month_calendar(datetime.datetime.now().year)
-
-
-# let's switch and get to the upper level UI
-class DataSetup(UserControl):
-    def __init__(self, cal_gird):
-        self.cal_gird = cal_gird  # this is the calendar intance
-
-        # we can now create the buttons here
-        self.prev_btn = BTNPagnation("Prev", lambda e: cal_gird._change_month(-1))
-        self.next_btn = BTNPagnation("Next", lambda e: cal_gird._change_month(1))
-
-        self.today = Text(
-            datetime.date.today().strftime("%B %d, %Y"),
-            width=260,
-            size=13,
-            color="white54",
-            weight="w400",
-        )
-
-        # this will hold the pagination button
-        self.btn_container = Row(
-            alignment=MainAxisAlignment.CENTER,
-            controls=[
-                # buttons go in here
-                self.prev_btn,
-                self.next_btn,
-            ],
-        )
-
-        # this container will store the calendar you see to the right
-        self.calendar = Container(
-            width=320,
-            height=45,
-            bgcolor="#313131",
-            border_radius=8,
-            animate=400,
-            clip_behavior=ClipBehavior.HARD_EDGE,
-            alignment=alignment.center,
-            content=Column(
-                alignment=MainAxisAlignment.CENTER,
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[
-                    # here we can pass in the actual calendar instance plus the buttons
-                    Divider(height=40, color="transparent"),
-                    self.cal_gird,
-                    Divider(height=10, color="transparent"),
-                    self.btn_container,
-                ],
-            ),
-        )
-
-        super().__init__()
-
-    # we need a function to expand the stack to see the calendar
-    def _get_calendar(self, e: None):
-        if self.calendar.height == 45:
-            self.calendar.height = 400
-            self.calendar.update()
-        else:
-            self.calendar.height = 45
-            self.calendar.update()
-
-    def build(self):
-        return Stack(
-            # use a stack to stack the controls ontop of each other
-            width=320,
-            controls=[
-                self.calendar,
-                Container(
-                    on_click=lambda e: self._get_calendar(e),
-                    width=320,
-                    height=45,
-                    border_radius=8,
-                    bgcolor="#313131",
-                    padding=padding.only(left=15, right=5),
-                    content=Row(
-                        alignment=MainAxisAlignment.SPACE_BETWEEN,
-                        vertical_alignment=CrossAxisAlignment.CENTER,
-                        controls=[
-                            self.today,
-                            Container(
-                                width=32,
-                                height=32,
-                                border=border.only(
-                                    left=BorderSide(0.9, "white24"),
-                                ),
-                                alignment=alignment.center,
-                                content=Icon(
-                                    name=icons.CALENDAR_MONTH_SHARP,
-                                    size=15,
-                                    opacity=0.65,
-                                ),
-                            ),
-                        ],
-                    ),
-                ),
-            ],
-        )
-
-
-# let's divert quickly and c reate the buttons for pagination
-class BTNPagnation(UserControl):
-    def __init__(self, txt_name, function):
-        self.txt_name = txt_name
-        self.function = function
-        super().__init__()
-
-    def build(self):
-        return IconButton(
-            content=Text(self.txt_name, size=8, weight="bold"),
-            width=56,
-            height=28,
-            on_click=self.function,
-            style=ButtonStyle(
-                shape={"": RoundedRectangleBorder(radius=6)}, bgcolor={"": "teal600"}
-            ),
-        )
-
-
-class details_month(UserControl):
-    def __init__(self, month, year):
-        self.month = month
-        self.year = year
-        super().__init__()
-        self.total_income_text = Text(size=12, color=colors.BLUE_100)
-        self.total_expense_text = Text(size=12, color=colors.RED_100)
-        self.total_text = Text(size=12, color=colors.BLUE_400)
-
-    def fetch_data_from_db(self, month, year):
-        conn = sqlite3.connect("db/app.db")
-        cursor = conn.cursor()
-        query = "SELECT * FROM financial_transaction WHERE strftime('%Y-%m', date) = ?"
-        print("SQL Query:", query)
-        print("Month:", month)
-        print("Year:", year)
-        cursor.execute(query, (f"{year}-{month:02}",))
-        records = cursor.fetchall()
-        result = [row for row in records]
-        conn.close()
-        print("Fetched data:", records)
-        return records
-
-    def update_total_text(self):
-        data = self.fetch_data_from_db(month=self.month, year=self.year)
-        print("Fetched data:", data)
-        print("Month: ", self.month)
-        print("Year: ", self.year)
-        total_expense = sum(
-            float(row[3])
-            for row in filter(lambda row: row[3] != "", data)
-            if row[5] == "Tiền chi"
-        )
-        total_income = sum(
-            float(row[3])
-            for row in filter(lambda row: row[3] != "", data)
-            if row[5] == "Tiền thu"
-        )
-        print("Total Income:", total_income)
-        print("Total Expense:", total_expense)
-        self.total_income_text.value = f"{total_income} đ"
-        self.total_expense_text.value = f"{total_expense} đ"
-        self.total_text.value = f"{total_income - total_expense} đ"
-
-    def build(self):
-        print("Building details_month...")
-        return Column(
-            alignment=MainAxisAlignment.START,
-            horizontal_alignment=CrossAxisAlignment.START,
-            controls=[
-                Container(
-                    width=340,
-                    height=30,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(alignment="start", controls=[Text("Thu nhập:")]),
-                            Row(
-                                alignment="end",
-                                controls=[self.total_income_text],
-                            ),
-                        ],
-                    ),
-                ),
-                Container(
-                    width=340,
-                    height=30,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    padding=1,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(alignment="start", controls=[Text("Chi tiêu:")]),
-                            Row(
-                                alignment="end",
-                                controls=[self.total_expense_text],
-                            ),
-                        ],
-                    ),
-                ),
-                Container(
-                    width=340,
-                    height=30,
-                    border_radius=5,
-                    bgcolor=GREY_COLOR,
-                    content=Row(
-                        alignment="spaceBetween",
-                        controls=[
-                            Row(alignment="start", controls=[Text("Tổng:")]),
-                            Row(
-                                alignment="end",
-                                controls=[self.total_text],
-                            ),
-                        ],
-                    ),
-                ),
-            ],
-        )
+PINK = "#eb06ff"
 
 
 class Calendar(UserControl):
-    details_month_control = None
-
     def __init__(self, page):
         super().__init__()
         self.page = page
 
     def build(self):
-        self.page.horizontal_alignment = "center"
-        self.page.vertical_alignment = "center"
-        current_month = datetime.datetime.now().month
-        current_year = datetime.datetime.now().year
-        self.current_year = current_year
-        self.details_month_control = details_month(current_month, current_year)
-        self.details_month_control.update_total_text()
+        def fetch_data_from_db(year = datetime.datetime.now().year,month=datetime.datetime.now().month):
+            conn = sqlite3.connect("db/app.db")
+            cursor = conn.cursor()
 
-        test = SafeArea(
-            Column(
-                spacing=10,
+            # Extract the year and month from the input month
+            
+
+            # Build the SQL query to filter by year and month
+            sql_query = (
+                "SELECT * FROM financial_transaction WHERE strftime('%Y-%m', date) = ?"
+            )
+
+            # Execute the query with the provided month and year
+            cursor.execute(sql_query, (f"{year:04}-{month:02}",))
+
+            records = cursor.fetchall()
+            result = [row for row in records]
+            conn.close()
+            return result
+
+        global current_month, current_year, data
+        current_month = datetime.date.today().month
+        current_year = datetime.date.today().year
+        data = fetch_data_from_db(year=current_year,month=current_month)
+
+        def update_views():
+            print(data)
+            calendar_new_UI = creat_calendar(data)
+            month_new_report = create_month_report(data)
+            calendar_page_child_container.content.controls[2] = calendar_new_UI
+            # calendar_page_child_container.content.controls[3] = month_new_report
+            calendar_page.content.controls[1] = month_new_report
+            calendar_page_child_container.update()
+            calendar_page.update()
+            self.page.update()
+
+        def create_header():
+            # Create a function to change the background color of the buttons.
+            def change_button_colors(button_1: TextButton):
+                button_1.style.bgcolor = GREY_COLOR
+                header.update()
+
+            # Create two text buttons.
+            button_1 = Text(
+                "Lịch", color="white"
+            )
+
+            # Add on_click event listeners to the buttons.
+            button_1.on_click = lambda event: change_button_colors(button_1)
+
+            # Add the buttons to the page.
+            header = Row(
+                alignment="spaceBetween",
                 controls=[
                     Row(
-                        alignment="spaceBetween",
                         controls=[
-                            Text(
-                                text_align=TextAlign.CENTER,
-                                value="Lịch",
-                                style=TextStyle(
-                                    size=20,
-                                    weight=FontWeight.W_200,
-                                ),
-                            ),
+                            button_1,
+                            # button_2,
+                        ]
+                    ),
+                    # Icon(icons.SEARCH),
+                    IconButton(icons.SEARCH, icon_color="white"),
+                ],
+            )
+            return header
+
+        def create_date():
+            def update_date_display():
+                # Định dạng tháng với số 0 trước nếu nhỏ hơn 10
+                formatted_month = str(current_month).zfill(2)
+                formatted_year = str(current_year).zfill(4)
+                # Cập nhật ngày tháng trên giao diện
+                date_header.controls[0].value = f"{formatted_month}/{formatted_year}"
+                date_header.update()
+
+            def get_next_month():
+                global current_month, current_year, data
+                # Tăng tháng
+                current_month += 1
+
+                # Nếu tháng là 13, thì tăng năm và đặt lại tháng về 1
+                if current_month > 12:
+                    current_month = 1
+                    current_year += 1
+                data = fetch_data_from_db(current_year,current_month)
+                # print(data)
+                update_date_display()
+                update_views()
+
+            def get_prev_month():
+                global current_month, current_year, data
+                # Giảm tháng
+                current_month -= 1
+
+                # Nếu tháng là 0, thì giảm năm và đặt lại tháng về 12
+                if current_month < 1:
+                    current_month = 12
+                    current_year -= 1
+                data = fetch_data_from_db(current_year,current_month)
+                # print(data)
+                update_date_display()
+                update_views()
+
+            # Create a row to represent the date header.
+            date_header = Row(
+                alignment="spaceBetween",
+                controls=[
+                    # Create a text widget to display the month/year.
+                    Text(datetime.date.today().strftime("%m/%Y"), color="white"),
+                    # Create a row to contain the arrow buttons.
+                    Row(
+                        controls=[
+                            # Create an icon button for the previous arrow.
                             IconButton(
-                                icon=icons.SEARCH,
-                                icon_size=20,
-                                tooltip="Search for expenses",
+                                icons.ARROW_LEFT,
+                                icon_color="white",
+                                on_click=lambda event: get_prev_month(),
                             ),
-                        ],
+                            # Create an icon button for the next arrow.
+                            IconButton(
+                                icons.ARROW_RIGHT,
+                                icon_color="white",
+                                on_click=lambda event: get_next_month(),
+                            ),
+                        ]
                     ),
                 ],
             )
-        )
-        cal = SetCalendar(
-            details_month=self.details_month_control, current_year=self.current_year
-        )
-        date = DataSetup(cal)
-        total = self.details_month_control
 
+            return date_header
+
+        def creat_calendar(data):
+            num_days = calendar.monthrange(current_year, current_month)[1]
+
+            # Create a GridView widget with 7 rows and 7 columns.
+            calendar_UI = GridView(
+                runs_count=5, 
+                max_extent=60, 
+                child_aspect_ratio=0.8, 
+                spacing=0, 
+                run_spacing=0,
+            )
+
+            def on_day_widget_click(day):
+                day_income_report_list = []
+                day_outcome_report_list = []
+                for record in data:
+                    if int(record[1][-2:]) == day:
+                        if record[5] == "Tiền chi":
+                            day_outcome_report_list.append(f"{record[4]} {record[3]} `{record[2]}`")
+                        elif record[5] == "Tiền thu":
+                            day_income_report_list.append(f"{record[4]} {record[3]} `{record[2]}`")
+
+                day_income_report_text = "\n ".join(day_income_report_list)
+                day_outcome_report_text = "\n ".join(day_outcome_report_list)
+
+                report_text = f"TIỀN THU:\n {day_income_report_text}\nTIỀN CHI:\n {day_outcome_report_text}"
+
+                dlg = AlertDialog(
+                    title=Text(f"Báo cáo ngày {day}/{current_month}/{current_year}"), 
+                    content=Text(report_text),
+                    on_dismiss=lambda e: print("Dialog dismissed!")
+                )
+                def open_dlg():
+                    self.page.dialog = dlg
+                    dlg.open = True
+                    self.page.update()
+                open_dlg()
+
+            # Create a child widget for each day of the calendar_UI.
+            for day in range(1, num_days + 1):
+                day_widget = Container(
+                    border=border.all(0.5, "white24"),
+                    alignment=alignment.top_left,
+                    padding=2,
+                    content=Column(
+                        controls=[
+                            Text(str(day), size=12),
+                        ]
+                    ),
+                    on_click= lambda e, day=day: on_day_widget_click(day)
+                )
+                one_day_income_money = 0
+                one_day_outcome_money = 0
+
+                for record in data:
+                    if int(record[1][-2:]) == day:
+                        if record[5] == "Tiền chi":
+                            one_day_outcome_money += record[3]
+                        elif record[5] == "Tiền thu":
+                            one_day_income_money += record[3]
+
+
+                if one_day_income_money > 0:
+                    day_widget.content.controls.append(
+                        Text(f"{'{:,}'.format(int(one_day_income_money))}", size=9, color="#50b4d1")
+                    )
+                if one_day_outcome_money > 0:
+                    day_widget.content.controls.append(
+                        Text(f"{'{:,}'.format(int(one_day_outcome_money))}", size=9, color="red")
+                    )
+                
+                calendar_UI.controls.append(day_widget)
+
+            return calendar_UI
+
+        def create_month_report(data):
+            month_income = 0
+            month_outcome = 0
+            for record in data:
+                if record[5] == "Tiền chi":
+                    month_outcome += record[3]
+                elif record[5] == "Tiền thu":
+                    month_income += record[3]
+            
+            month_total = month_income - month_outcome
+
+
+            income_container = Container(
+                padding=padding.only(left=20, right=20),
+                content=Column(
+                    alignment=MainAxisAlignment.CENTER,
+                    horizontal_alignment=CrossAxisAlignment.CENTER,
+                    controls=[
+                        Text("Tiền thu", weight="bold"),
+                        Text(value=f"{month_income}", color="#50b4d1")
+                    ]
+                )
+            )
+
+            outcome_container = Container(
+                content=Column(
+                    alignment=MainAxisAlignment.CENTER,
+                    horizontal_alignment=CrossAxisAlignment.CENTER,
+                    controls=[
+                        Text("Tiền chi", weight="bold"),
+                        Text(value=f"{'{:,}'.format(int(month_outcome))}", color="red")
+                    ]
+                )
+            )
+
+            total_container = Container(
+                padding=padding.only(left=20, right=20),
+                content=Column(
+                    alignment=MainAxisAlignment.CENTER,
+                    horizontal_alignment=CrossAxisAlignment.CENTER,
+                    controls=[
+                        Text("Tổng", weight="bold"),
+                        Text(value=f"{'{:,}'.format(int(month_total))}")
+                    ]
+                )
+            )
+
+            if month_total > 0:
+                total_container.content.controls[1].color = "#50b4d1"
+            else:
+                total_container.content.controls[1].color = "red"
+
+
+            month_report = Row(
+                alignment="spaceBetween",
+                controls=[
+                    income_container, 
+                    outcome_container, 
+                    total_container
+                ]
+            )
+
+            return month_report
+
+        header = create_header()
+        date_row = create_date()
+        calendar_row = creat_calendar(data)
+        month_report_row = create_month_report(data)
         navbar = create_navbar(self.page, 1)
 
-        main_page_child_container = Container(
+        calendar_page_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),
-            content=Column(controls=[test, date, total]),
+            content=Column(
+                controls=[
+                    header,
+                    date_row,
+                    calendar_row,
+                ]
+            ),
         )
 
-        main_page = Container(
+        calendar_page = Container(
             width=400,
             height=712,
             border_radius=35,
             bgcolor=BG_COLOR,
             content=Column(
                 alignment="spaceBetween",
-                controls=[main_page_child_container, navbar],
+                horizontal_alignment=CrossAxisAlignment.CENTER,
+                controls=[
+                    calendar_page_child_container,
+                    month_report_row,
+                    navbar,
+                ],
             ),
         )
 
-        return main_page
+        return calendar_page
+
