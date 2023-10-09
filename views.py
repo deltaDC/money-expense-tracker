@@ -2,14 +2,16 @@ from flet import *
 from pages.outcome import Outcome
 from pages.income import Income
 from pages.calendar import Calendar
-from pages.reports.report_outcome import Report
-from pages.reports.report_income import Report1
+from pages.reports.report_outcome import Report_Outcome
+from pages.reports.report_income import Report_Income
 from pages.other import Other
-from pages.reports.report_year_outcome import Report2
-from pages.reports.report_year_income import Report3
-from pages.reports.report_toanki import Report4
-from pages.reports.report_danhmuctoanki1 import Report5
-from pages.reports.report_danhmuctoanki2 import Report6
+from pages.other_pages.other_report_pages.report_year_outcome import Report_Year_Outcome
+from pages.other_pages.other_report_pages.report_year_income import Report_Year_Income
+from pages.other_pages.other_report_pages.report_all_time import Report_All_Time
+from pages.other_pages.other_report_pages.report_outcome_category_all_time import Report_Outcome_Category_All_Time
+from pages.other_pages.other_report_pages.report_income_category_all_time import Report_Income_Category_All_Time
+from pages.other_pages.settings import Settings
+
 def views_handler(page):
     return {
         '/':View(
@@ -30,16 +32,16 @@ def views_handler(page):
                 Calendar(page)
             ]
         ),
-        '/report':View(
-            route='/report',
+        '/report_outcome':View(
+            route='/report_outcome',
             controls=[
-                Report(page)
+                Report_Outcome(page)
             ]
         ),
-        '/report_1':View(
-            route='/report_1',
+        '/report_income':View(
+            route='/report_income',
             controls=[
-                Report1(page)
+                Report_Income(page)
             ]
         ),
         '/other':View(
@@ -48,34 +50,40 @@ def views_handler(page):
                 Other(page)
             ]
         ),
-        '/report_2':View(
-            route='/report_2',
+        '/report_year_outcome':View(
+            route='/report_year_outcome',
             controls=[
-                Report2(page)
+                Report_Year_Outcome(page)
             ]
         ),
-        '/report_3':View(
-            route='/report_3',
+        '/report_year_income':View(
+            route='/report_year_income',
             controls=[
-                Report3(page)
+                Report_Year_Income(page)
             ]
         ),
-        '/report_4':View(
-            route='/report_4',
+        '/report_all_time':View(
+            route='/report_all_time',
             controls=[
-                Report4(page)
+                Report_All_Time(page)
             ]
         ),
-        '/report_5':View(
-            route='/report_5',
+        '/report_outcome_category_all_time':View(
+            route='/report_outcome_category_all_time',
             controls=[
-                Report5(page)
+                Report_Outcome_Category_All_Time(page)
             ]
         ),
-        '/report_6':View(
-            route='/report_6',
+        '/report_income_category_all_time':View(
+            route='/report_income_category_all_time',
             controls=[
-                Report6(page)
+                Report_Income_Category_All_Time(page)
+            ]
+        ),
+        '/settings':View(
+            route='/settings',
+            controls=[
+                Settings(page)
             ]
         ),
     }
