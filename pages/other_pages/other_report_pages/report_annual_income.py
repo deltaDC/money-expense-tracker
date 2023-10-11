@@ -144,14 +144,14 @@ class Report_During_The_Year_Income(UserControl):
 
         def create_bieudo_label():
             def change_button_colors(button_1: TextButton, button_2: TextButton):
-                button_1.style.bgcolor = PINK
-                button_2.style.bgcolor = PINK
+                button_1.style.bgcolor = GREY_COLOR
+                button_2.style.bgcolor = BG_COLOR
                 # button_3.style.bgcolor = BLUE
                 bieudo.update()
 
             button_1 = TextButton(
                 text="Chi tiêu",
-                style=ButtonStyle(color="white", bgcolor=GREY_COLOR),
+                style=ButtonStyle(color="white", ),
                 on_click=lambda e: (
                     change_button_colors(button_1, button_2),
                     self.page.go("/report_annual_expense"),
@@ -159,7 +159,7 @@ class Report_During_The_Year_Income(UserControl):
             )
             button_2 = TextButton(
                 text="Thu nhập",
-                style=ButtonStyle(color="white", bgcolor=GREY_COLOR),
+                style=ButtonStyle(color="white",bgcolor=GREY_COLOR),
                 on_click=lambda e: (
                     change_button_colors(button_2, button_1),
                     self.page.go("/report_annual_income"),
@@ -456,6 +456,15 @@ class Report_During_The_Year_Income(UserControl):
                         ),
                     ],
                     labels_size=20,
+                ),
+                left_axis=ft.ChartAxis(
+                    labels=[
+                    ft.ChartAxisLabel(value=20, label=ft.Text("2")),  
+                    ft.ChartAxisLabel(value=40, label=ft.Text("4")),
+                    ft.ChartAxisLabel(value=60, label=ft.Text("6")), 
+                    ft.ChartAxisLabel(value=80, label=ft.Text("8")),
+                    ft.ChartAxisLabel(value=100, label=ft.Text("10"))
+                    ],
                 ),
                 horizontal_grid_lines=ft.ChartGridLines(
                     color=ft.colors.GREY_300, width=1, dash_pattern=[3, 3]
