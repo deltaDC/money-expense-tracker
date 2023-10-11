@@ -51,7 +51,6 @@ class Report_During_The_Year_Expense(UserControl):
             baocaotrongnam.update()
             self.page.update()
 
-        
         def create_header():
             # Create a function to change the background color of the buttons.
             def change_button_colors(button_1: TextButton):
@@ -88,7 +87,7 @@ class Report_During_The_Year_Expense(UserControl):
                 date_header.update()
 
             def get_next_year():
-                global  current_year, data
+                global current_year, data
                 # Tăng tháng
                 current_year += 1
 
@@ -203,7 +202,13 @@ class Report_During_The_Year_Expense(UserControl):
 
             def create_money(x, res):
                 month = "{:.2f}".format(
-                    sum(row[3] for row in data if int(row[1][5:7]) == x) / res * 100
+                    sum(
+                        row[3]
+                        for row in data
+                        if int(row[1][5:7]) == x and row[5] == "Tiền chi"
+                    )
+                    / res
+                    * 100
                 )
                 return month
 
@@ -551,6 +556,7 @@ class Report_During_The_Year_Expense(UserControl):
             height=712,
             border_radius=35,
             bgcolor=BG_COLOR,
+            padding=padding.only(left=30, top=30, right=30),
             content=Column(
                 # alignment="spaceBetween",
                 horizontal_alignment=CrossAxisAlignment.CENTER,
