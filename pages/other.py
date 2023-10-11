@@ -34,7 +34,7 @@ class Other(UserControl):
                 Column(
                     spacing=0,
                     controls=[
-                        create_row(icons.BAR_CHART, "Báo cáo trong năm", "/"),
+                        create_row(icons.BAR_CHART, "Báo cáo trong năm", "/report_annual_expense"),
                         create_row(
                             icons.PIE_CHART, "Báo cáo danh mục trong năm", "/report_year_outcome"
                         ),
