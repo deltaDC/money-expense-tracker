@@ -477,7 +477,7 @@ class Report_During_The_Year_Income(UserControl):
 
             def create_money(x):
                 money = "{:.2f}".format(
-                    sum(row[3] for row in data if int(row[1][5:7]) == x)
+                    sum(row[3] for row in data if int(row[1][5:7]) == x and row[5] == "Tiền thu")
                 )
                 return money
 
@@ -552,6 +552,7 @@ class Report_During_The_Year_Income(UserControl):
             height=712,
             border_radius=35,
             bgcolor=BG_COLOR,
+            padding=padding.only(left=30, top=30, right=30),
             content=Column(
                 # alignment="spaceBetween",
                 horizontal_alignment=CrossAxisAlignment.CENTER,
