@@ -16,12 +16,13 @@ class Calendar(UserControl):
         self.page = page
 
     def build(self):
-        def fetch_data_from_db(year = datetime.datetime.now().year,month=datetime.datetime.now().month):
+        def fetch_data_from_db(
+            year=datetime.datetime.now().year, month=datetime.datetime.now().month
+        ):
             conn = sqlite3.connect("db/app.db")
             cursor = conn.cursor()
 
             # Extract the year and month from the input month
-            
 
             # Build the SQL query to filter by year and month
             sql_query = (
@@ -39,7 +40,7 @@ class Calendar(UserControl):
         global current_month, current_year, data
         current_month = datetime.date.today().month
         current_year = datetime.date.today().year
-        data = fetch_data_from_db(year=current_year,month=current_month)
+        data = fetch_data_from_db(year=current_year, month=current_month)
 
         def update_views():
             print(data)
@@ -59,12 +60,7 @@ class Calendar(UserControl):
                 header.update()
 
             # Create two text buttons.
-            button_1 = Text(
-                "Lịch", color="white"
-            )
-
-            # Add on_click event listeners to the buttons.
-            button_1.on_click = lambda event: change_button_colors(button_1)
+            button_1 = Text("Lịch", color="white")
 
             # Add the buttons to the page.
             header = Row(
@@ -73,11 +69,13 @@ class Calendar(UserControl):
                     Row(
                         controls=[
                             button_1,
-                            # button_2,
                         ]
                     ),
-                    # Icon(icons.SEARCH),
-                    IconButton(icons.SEARCH, icon_color="white"),
+                    IconButton(
+                        icons.SEARCH,
+                        icon_color="white",
+                        on_click=lambda e: self.page.go("/search"),
+                    ),
                 ],
             )
             return header
@@ -100,7 +98,7 @@ class Calendar(UserControl):
                 if current_month > 12:
                     current_month = 1
                     current_year += 1
-                data = fetch_data_from_db(current_year,current_month)
+                data = fetch_data_from_db(current_year, current_month)
                 # print(data)
                 update_date_display()
                 update_views()
@@ -114,7 +112,7 @@ class Calendar(UserControl):
                 if current_month < 1:
                     current_month = 12
                     current_year -= 1
-                data = fetch_data_from_db(current_year,current_month)
+                data = fetch_data_from_db(current_year, current_month)
                 # print(data)
                 update_date_display()
                 update_views()
@@ -152,10 +150,10 @@ class Calendar(UserControl):
 
             # Create a GridView widget with 7 rows and 7 columns.
             calendar_UI = GridView(
-                runs_count=5, 
-                max_extent=60, 
-                child_aspect_ratio=0.8, 
-                spacing=0, 
+                runs_count=5,
+                max_extent=60,
+                child_aspect_ratio=0.8,
+                spacing=0,
                 run_spacing=0,
             )
 
@@ -165,9 +163,13 @@ class Calendar(UserControl):
                 for record in data:
                     if int(record[1][-2:]) == day:
                         if record[5] == "Tiền chi":
-                            day_outcome_report_list.append(f" - {record[4]} {record[3]} ({record[2]})")
+                            day_outcome_report_list.append(
+                                f" - {record[4]} {record[3]} ({record[2]})"
+                            )
                         elif record[5] == "Tiền thu":
-                            day_income_report_list.append(f" - {record[4]} {record[3]} ({record[2]})")
+                            day_income_report_list.append(
+                                f" - {record[4]} {record[3]} ({record[2]})"
+                            )
 
                 day_income_report_text = "\n".join(day_income_report_list)
                 day_outcome_report_text = "\n".join(day_outcome_report_list)
@@ -175,14 +177,16 @@ class Calendar(UserControl):
                 report_text = f"TIỀN THU:\n{day_income_report_text}\nTIỀN CHI:\n{day_outcome_report_text}"
 
                 dlg = AlertDialog(
-                    title=Text(f"Báo cáo ngày {day}/{current_month}/{current_year}"), 
+                    title=Text(f"Báo cáo ngày {day}/{current_month}/{current_year}"),
                     content=Text(report_text),
-                    on_dismiss=lambda e: print("Dialog dismissed!")
+                    on_dismiss=lambda e: print("Dialog dismissed!"),
                 )
+
                 def open_dlg():
                     self.page.dialog = dlg
                     dlg.open = True
                     self.page.update()
+
                 open_dlg()
 
             # Create a child widget for each day of the calendar_UI.
@@ -196,7 +200,7 @@ class Calendar(UserControl):
                             Text(str(day), size=12),
                         ]
                     ),
-                    on_click= lambda e, day=day: on_day_widget_click(day)
+                    on_click=lambda e, day=day: on_day_widget_click(day),
                 )
                 one_day_income_money = 0
                 one_day_outcome_money = 0
@@ -208,16 +212,23 @@ class Calendar(UserControl):
                         elif record[5] == "Tiền thu":
                             one_day_income_money += record[3]
 
-
                 if one_day_income_money > 0:
                     day_widget.content.controls.append(
-                        Text(f"{'{:,}'.format(int(one_day_income_money))}", size=9, color="#50b4d1")
+                        Text(
+                            f"{'{:,}'.format(int(one_day_income_money))}",
+                            size=9,
+                            color="#50b4d1",
+                        )
                     )
                 if one_day_outcome_money > 0:
                     day_widget.content.controls.append(
-                        Text(f"{'{:,}'.format(int(one_day_outcome_money))}", size=9, color="red")
+                        Text(
+                            f"{'{:,}'.format(int(one_day_outcome_money))}",
+                            size=9,
+                            color="red",
+                        )
                     )
-                
+
                 calendar_UI.controls.append(day_widget)
 
             return calendar_UI
@@ -230,9 +241,8 @@ class Calendar(UserControl):
                     month_outcome += record[3]
                 elif record[5] == "Tiền thu":
                     month_income += record[3]
-            
-            month_total = month_income - month_outcome
 
+            month_total = month_income - month_outcome
 
             income_container = Container(
                 padding=padding.only(left=20, right=20),
@@ -241,9 +251,9 @@ class Calendar(UserControl):
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls=[
                         Text("Tiền thu", weight="bold"),
-                        Text(value=f"{month_income}", color="#50b4d1")
-                    ]
-                )
+                        Text(value=f"{month_income}", color="#50b4d1"),
+                    ],
+                ),
             )
 
             outcome_container = Container(
@@ -252,8 +262,8 @@ class Calendar(UserControl):
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls=[
                         Text("Tiền chi", weight="bold"),
-                        Text(value=f"{'{:,}'.format(int(month_outcome))}", color="red")
-                    ]
+                        Text(value=f"{'{:,}'.format(int(month_outcome))}", color="red"),
+                    ],
                 )
             )
 
@@ -264,9 +274,9 @@ class Calendar(UserControl):
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls=[
                         Text("Tổng", weight="bold"),
-                        Text(value=f"{'{:,}'.format(int(month_total))}")
-                    ]
-                )
+                        Text(value=f"{'{:,}'.format(int(month_total))}"),
+                    ],
+                ),
             )
 
             if month_total > 0:
@@ -274,14 +284,9 @@ class Calendar(UserControl):
             else:
                 total_container.content.controls[1].color = "red"
 
-
             month_report = Row(
                 alignment="spaceBetween",
-                controls=[
-                    income_container, 
-                    outcome_container, 
-                    total_container
-                ]
+                controls=[income_container, outcome_container, total_container],
             )
 
             return month_report
@@ -320,4 +325,3 @@ class Calendar(UserControl):
         )
 
         return calendar_page
-
