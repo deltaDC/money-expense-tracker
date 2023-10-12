@@ -16,7 +16,9 @@ class Report_Income(UserControl):
         self.page = page
 
     def build(self):
-        def fetch_data_from_db(year=datetime.datetime.now().year,month=datetime.datetime.now().month):
+        def fetch_data_from_db(
+            year=datetime.datetime.now().year, month=datetime.datetime.now().month
+        ):
             conn = sqlite3.connect("db/app.db")
             cursor = conn.cursor()
 
@@ -39,7 +41,7 @@ class Report_Income(UserControl):
         global current_month, current_year, data
         current_month = datetime.date.today().month
         current_year = datetime.date.today().year
-        data = fetch_data_from_db(year=current_year,month=current_month)
+        data = fetch_data_from_db(year=current_year, month=current_month)
         # print(f"data is: {data}")
 
         def update_views():
@@ -57,7 +59,6 @@ class Report_Income(UserControl):
             page_3.update()
             self.page.update()
 
-
         def create_header():
             # Create a function to change the background color of the buttons.
             def change_button_colors(button_1: TextButton):
@@ -65,9 +66,7 @@ class Report_Income(UserControl):
                 header.update()
 
             # Create two text buttons.
-            button_1 = Text(
-                "Báo cáo", color="white"
-            )
+            button_1 = Text("Báo cáo", color="white")
 
             # Add on_click event listeners to the buttons.
             button_1.on_click = lambda event: change_button_colors(button_1)
@@ -82,8 +81,6 @@ class Report_Income(UserControl):
                             # button_2,
                         ]
                     ),
-                    # Icon(icons.SEARCH),
-                    IconButton(icons.SEARCH, icon_color="white"),
                 ],
             )
             return header
@@ -106,7 +103,7 @@ class Report_Income(UserControl):
                 if current_month > 12:
                     current_month = 1
                     current_year += 1
-                data = fetch_data_from_db(current_year,current_month)
+                data = fetch_data_from_db(current_year, current_month)
                 # print(data)
                 update_date_display()
                 update_views()
@@ -120,7 +117,7 @@ class Report_Income(UserControl):
                 if current_month < 1:
                     current_month = 12
                     current_year -= 1
-                data = fetch_data_from_db(current_year,current_month)
+                data = fetch_data_from_db(current_year, current_month)
                 # print(data)
                 update_date_display()
                 update_views()
@@ -259,21 +256,27 @@ class Report_Income(UserControl):
 
             # Create two text buttons.
             button_1 = TextButton(
-                text="Chi tiêu", style=ButtonStyle(color="white"),
-                on_click= lambda e: (change_button_colors(button_1, button_2), self.page.go("/report_outcome")),
+                text="Chi tiêu",
+                style=ButtonStyle(color="white"),
+                on_click=lambda e: (
+                    change_button_colors(button_1, button_2),
+                    self.page.go("/report_outcome"),
+                ),
             )
             button_2 = TextButton(
-                text="Thu nhập", style=ButtonStyle(color="White", bgcolor=PINK),
-                on_click= lambda e: (change_button_colors(button_2, button_1), self.page.go("/report_income")),
+                text="Thu nhập",
+                style=ButtonStyle(color="White", bgcolor=PINK),
+                on_click=lambda e: (
+                    change_button_colors(button_2, button_1),
+                    self.page.go("/report_income"),
+                ),
             )
 
-            
             bieudo1 = Column(
                 controls=[
                     Row(
                         alignment="spaceAround",
                         controls=[
-                            
                             button_1,
                             button_2,
                         ],
@@ -337,19 +340,17 @@ class Report_Income(UserControl):
                     * 100
                 )
                 khac = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Khác" and row[5] == "Tiền thu")
+                    sum(
+                        row[3]
+                        for row in month_data
+                        if row[4] == "Khác" and row[5] == "Tiền thu"
+                    )
                     / total_income
                     * 100
                 )
-                
+
             else:
-                tienluong = (
-                    phucap
-                ) = (
-                    thuong
-                ) = (
-                    dautu
-                ) = lamthem = khac = "0.00"
+                tienluong = phucap = thuong = dautu = lamthem = khac = "0.00"
 
             def on_chart_event(e: ft.PieChartEvent):
                 for idx, section in enumerate(chart.sections):
@@ -426,7 +427,11 @@ class Report_Income(UserControl):
             thuong = sum(row[3] for row in month_data if row[4] == "Thưởng")
             dautu = sum(row[3] for row in month_data if row[4] == "Đầu tư")
             lamthem = sum(row[3] for row in month_data if row[4] == "Làm thêm")
-            khac = sum(row[3] for row in month_data if row[4] == "Khác"and row[5] == "Tiền thu")
+            khac = sum(
+                row[3]
+                for row in month_data
+                if row[4] == "Khác" and row[5] == "Tiền thu"
+            )
 
             def create_thongke_row(category, icon, text, icon_color):
                 thongke_row = Container(
@@ -457,8 +462,11 @@ class Report_Income(UserControl):
                 )
                 return thongke_row
 
-            thongke.controls.extend([
-                    create_thongke_row(tienluong, icons.ACCOUNT_BALANCE_WALLET, "Tiền lương", "blue"),
+            thongke.controls.extend(
+                [
+                    create_thongke_row(
+                        tienluong, icons.ACCOUNT_BALANCE_WALLET, "Tiền lương", "blue"
+                    ),
                     create_thongke_row(phucap, icons.ATTACH_MONEY, "Phụ cấp", "yellow"),
                     create_thongke_row(thuong, icons.CARD_GIFTCARD, "Thưởng", "purple"),
                     create_thongke_row(dautu, icons.DIAMOND, "Đầu tư", "green"),

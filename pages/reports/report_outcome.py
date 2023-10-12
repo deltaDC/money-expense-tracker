@@ -16,12 +16,13 @@ class Report_Outcome(UserControl):
         self.page = page
 
     def build(self):
-        def fetch_data_from_db(year = datetime.datetime.now().year,month=datetime.datetime.now().month):
+        def fetch_data_from_db(
+            year=datetime.datetime.now().year, month=datetime.datetime.now().month
+        ):
             conn = sqlite3.connect("db/app.db")
             cursor = conn.cursor()
 
             # Extract the year and month from the input month
-            
 
             # Build the SQL query to filter by year and month
             sql_query = (
@@ -39,7 +40,7 @@ class Report_Outcome(UserControl):
         global current_month, current_year, data
         current_month = datetime.date.today().month
         current_year = datetime.date.today().year
-        data = fetch_data_from_db(year=current_year,month=current_month)
+        data = fetch_data_from_db(year=current_year, month=current_month)
         # print(f"data is: {data}")
 
         def update_views():
@@ -64,9 +65,7 @@ class Report_Outcome(UserControl):
                 header.update()
 
             # Create two text buttons.
-            button_1 = Text(
-                "Báo cáo", color="white"
-            )
+            button_1 = Text("Báo cáo", color="white")
 
             # Add on_click event listeners to the buttons.
             button_1.on_click = lambda event: change_button_colors(button_1)
@@ -78,11 +77,8 @@ class Report_Outcome(UserControl):
                     Row(
                         controls=[
                             button_1,
-                            # button_2,
                         ]
                     ),
-                    # Icon(icons.SEARCH),
-                    IconButton(icons.SEARCH, icon_color="white"),
                 ],
             )
             return header
@@ -105,7 +101,7 @@ class Report_Outcome(UserControl):
                 if current_month > 12:
                     current_month = 1
                     current_year += 1
-                data = fetch_data_from_db(current_year,current_month)
+                data = fetch_data_from_db(current_year, current_month)
                 # print(data)
                 update_date_display()
                 update_views()
@@ -119,7 +115,7 @@ class Report_Outcome(UserControl):
                 if current_month < 1:
                     current_month = 12
                     current_year -= 1
-                data = fetch_data_from_db(current_year,current_month)
+                data = fetch_data_from_db(current_year, current_month)
                 # print(data)
                 update_date_display()
                 update_views()
@@ -258,14 +254,20 @@ class Report_Outcome(UserControl):
 
             # Create two text buttons.
             button_1 = TextButton(
-                text="Chi tiêu", 
-                style=ButtonStyle(color="white",bgcolor=PINK),
-                on_click= lambda e: (change_button_colors(button_1, button_2), self.page.go("/report_outcome")),
+                text="Chi tiêu",
+                style=ButtonStyle(color="white", bgcolor=PINK),
+                on_click=lambda e: (
+                    change_button_colors(button_1, button_2),
+                    self.page.go("/report_outcome"),
+                ),
             )
             button_2 = TextButton(
-                text="Thu nhập", 
+                text="Thu nhập",
                 style=ButtonStyle(color="White"),
-                on_click= lambda e: (change_button_colors(button_2, button_1), self.page.go("/report_income")),
+                on_click=lambda e: (
+                    change_button_colors(button_2, button_1),
+                    self.page.go("/report_income"),
+                ),
             )
 
             # Add on_click event listeners to the buttons.
@@ -360,7 +362,11 @@ class Report_Outcome(UserControl):
                     * 100
                 )
                 khac = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Khác" and row[5] == "Tiền chi")
+                    sum(
+                        row[3]
+                        for row in month_data
+                        if row[4] == "Khác" and row[5] == "Tiền chi"
+                    )
                     / total_expense
                     * 100
                 )
@@ -480,7 +486,11 @@ class Report_Outcome(UserControl):
             giaoduc = sum(row[3] for row in month_data if row[4] == "Giáo dục")
             dilai = sum(row[3] for row in month_data if row[4] == "Đi lại")
             tiennuoc = sum(row[3] for row in month_data if row[4] == "Tiền nước")
-            khac = sum(row[3] for row in month_data if row[4] == "Khác" and row[5] == "Tiền chi")
+            khac = sum(
+                row[3]
+                for row in month_data
+                if row[4] == "Khác" and row[5] == "Tiền chi"
+            )
 
             def create_thongke_row(category, icon, text, icon_color):
                 thongke_row = Container(
@@ -511,16 +521,23 @@ class Report_Outcome(UserControl):
                 )
                 return thongke_row
 
-            thongke.controls.extend([
+            thongke.controls.extend(
+                [
                     create_thongke_row(tiennha, icons.HOUSE, "Tiền nhà", "yellow"),
-                    create_thongke_row(tiendien, icons.ELECTRIC_BOLT, "Tiền điện", "purple"),
+                    create_thongke_row(
+                        tiendien, icons.ELECTRIC_BOLT, "Tiền điện", "purple"
+                    ),
                     create_thongke_row(quanao, icons.CHECKROOM, "Quần áo", "blue"),
                     create_thongke_row(anuong, icons.LOCAL_DINING, "Ăn uống", "green"),
-                    create_thongke_row(giadung, icons.HOME_REPAIR_SERVICE, "Gia dụng", "red"),
+                    create_thongke_row(
+                        giadung, icons.HOME_REPAIR_SERVICE, "Gia dụng", "red"
+                    ),
                     create_thongke_row(yte, icons.EMERGENCY, "Y tế", "orange"),
                     create_thongke_row(giaoduc, icons.SCHOOL, "Giáo dục", "pink"),
                     create_thongke_row(dilai, icons.DIRECTIONS_BUS, "Đi lại", "grey"),
-                    create_thongke_row(tiennuoc, icons.WATER_DROP, "Tiền nước", "brown"),
+                    create_thongke_row(
+                        tiennuoc, icons.WATER_DROP, "Tiền nước", "brown"
+                    ),
                     create_thongke_row(khac, icons.QUESTION_MARK, "Khác", "black"),
                 ]
             )
