@@ -1,16 +1,7 @@
 import sqlite3
 from flet import *
-import datetime
-# import pandas as pd
-# import os
-# import smtplib
-# from email.mime.multipart import MIMEMultipart
-# from email.mime.base import MIMEBase
-# from email import encoders
 import csv
-BG_COLOR = "#191919"
-GREY_COLOR = "#3f3f3f"
-PINK = "#eb06ff"
+from const import *
 
 
 class Exportdata(UserControl):
@@ -20,20 +11,6 @@ class Exportdata(UserControl):
 
     def build(self):
         def export_data_from_db():
-            # conn = sqlite3.connect("db/app.db")
-            # cursor = conn.cursor()
-
-            # sql_query = """SELECT * FROM financial_transaction"""
-            # df = pd.read_sql(sql_query, conn)
-            # output_dir = 'D:\Xuatfile\Data_CSV'
-            # os.makedirs(output_dir, exist_ok=True)
-            # csv_file_path = os.path.join(output_dir, 'data.csv')
-            # df.to_csv(csv_file_path, index=False)
-
-            # # Lưu DataFrame ra tệp CSV
-            # # df.to_csv('output.csv', index=False)
-            # # Đóng kết nối với cơ sở dữ liệu
-            # conn.close()
             conn = sqlite3.connect("db/app.db")
             cursor = conn.cursor()
             data1 = cursor.execute("""SELECT * FROM financial_transaction""")
@@ -42,9 +19,18 @@ class Exportdata(UserControl):
 
             with open(csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
                 # writer = csv.writer(file)
-                writer = csv.writer(file, delimiter=',')
+                writer = csv.writer(file, delimiter=",")
                 # Write the header row
-                writer.writerow(["ID", "Date", "Description", "Amount", "Category", "Transaction Type"])
+                writer.writerow(
+                    [
+                        "ID",
+                        "Date",
+                        "Description",
+                        "Amount",
+                        "Category",
+                        "Transaction Type",
+                    ]
+                )
 
                 # Write the data rows
                 for row in data:
@@ -52,7 +38,6 @@ class Exportdata(UserControl):
 
             print(f"Data has been written to {csv_file}")
             conn.close()
-            
 
         def create_header():
             # Create a function to change the background color of the buttons.
@@ -97,7 +82,9 @@ class Exportdata(UserControl):
             dlg_modal = AlertDialog(
                 modal=True,
                 title=Text("Vui lòng xác nhận"),
-                content=Text("Bạn có chắc chắn muốn xuất tất cả dữ liệu dưới dạng csv không"),
+                content=Text(
+                    "Bạn có chắc chắn muốn xuất tất cả dữ liệu dưới dạng csv không"
+                ),
                 actions=[
                     TextButton("Yes", on_click=lambda e: export_data_and_close_dlg(e)),
                     TextButton("No", on_click=lambda e: close_dlg(e)),
@@ -115,8 +102,7 @@ class Exportdata(UserControl):
                 ),
                 content=Row(
                     controls=[
-                        
-                        Text("Xuất toàn bộ dữ liệu",color="yellow"),
+                        Text("Xuất toàn bộ dữ liệu", color="yellow"),
                     ]
                 ),
                 on_click=lambda e: open_dlg(e),
@@ -133,8 +119,8 @@ class Exportdata(UserControl):
         )
 
         exportdata_page = Container(
-            width=400,
-            height=712,
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
             border_radius=35,
             bgcolor=BG_COLOR,
             content=Column(

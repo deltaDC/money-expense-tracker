@@ -3,6 +3,7 @@ from flet import *
 import datetime
 import calendar
 from utils.navbar import create_navbar
+from const import *
 
 
 BG_COLOR = "#191919"
@@ -181,6 +182,7 @@ class Calendar(UserControl):
                     content=Text(report_text),
                     on_dismiss=lambda e: print("Dialog dismissed!"),
                 )
+                print(dlg.title)
 
                 def open_dlg():
                     self.page.dialog = dlg
@@ -309,8 +311,8 @@ class Calendar(UserControl):
         )
 
         calendar_page = Container(
-            width=400,
-            height=712,
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
             border_radius=35,
             bgcolor=BG_COLOR,
             content=Column(

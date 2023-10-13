@@ -183,11 +183,10 @@ class Outcome(UserControl):
             category_header = Text("Danh mục")
 
             category_content = GridView(
-                # expand=True,
                 expand=0,
                 runs_count=3,
-                max_extent=100,
-                child_aspect_ratio=1.0,
+                max_extent=90,
+                child_aspect_ratio=1.09,
                 spacing=5,
                 run_spacing=5,
                 controls=[
@@ -283,7 +282,7 @@ class Outcome(UserControl):
 
                 # popup msg
                 dlg = AlertDialog(
-                    title=Text("Ghi nhận thành công"),
+                    title=Text("Ghi nhận thành công", color="white", size=16),
                     on_dismiss=lambda e: print("Dialog dismissed!"),
                 )
 
@@ -333,8 +332,8 @@ class Outcome(UserControl):
 
         # define page 1 properties
         page_1 = Container(
-            width=400,
-            height=712,
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
             border_radius=35,
             bgcolor=BG_COLOR,
             content=Column(

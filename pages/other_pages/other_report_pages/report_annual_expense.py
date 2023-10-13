@@ -1,13 +1,7 @@
 import sqlite3
 from flet import *
-import flet as ft
 import datetime
-
-
-BG_COLOR = "#191919"
-GREY_COLOR = "#3f3f3f"
-PINK = "#eb06ff"
-BLUE = "#0077b6"
+from const import *
 
 
 class Report_During_The_Year_Expense(UserControl):
@@ -246,232 +240,232 @@ class Report_During_The_Year_Expense(UserControl):
                     thang9_expense
                 ) = thang10_expense = thang11_expense = thang12_expense = "0.00"
 
-            chart = ft.BarChart(
+            chart = BarChart(
                 bar_groups=[
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=0,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang1_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 1",
                                 border_radius=0,
                             )
                         ],
                     ),
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=1,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang2_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 2",
                                 border_radius=0,
                             )
                         ],
                     ),
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=2,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang3_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 3",
                                 border_radius=0,
                             )
                         ],
                     ),
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=3,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang4_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 4",
                                 border_radius=0,
                             )
                         ],
                     ),
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=4,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang5_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 5",
                                 border_radius=0,
                             )
                         ],
                     ),
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=5,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang6_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 6",
                                 border_radius=0,
                             )
                         ],
                     ),
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=6,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang7_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 7",
                                 border_radius=0,
                             )
                         ],
                     ),
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=7,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang8_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 8",
                                 border_radius=0,
                             )
                         ],
                     ),
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=8,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang9_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 9",
                                 border_radius=0,
                             )
                         ],
                     ),
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=9,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang10_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 10",
                                 border_radius=0,
                             )
                         ],
                     ),
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=10,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang11_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 11",
                                 border_radius=0,
                             )
                         ],
                     ),
-                    ft.BarChartGroup(
+                    BarChartGroup(
                         x=11,
                         bar_rods=[
-                            ft.BarChartRod(
+                            BarChartRod(
                                 from_y=0,
                                 to_y=f"{thang12_expense}",
                                 width=10,
-                                color=ft.colors.BLUE,
+                                color=colors.BLUE,
                                 tooltip="Tháng 12",
                                 border_radius=0,
                             )
                         ],
                     ),
                 ],
-                border=ft.border.all(1, ft.colors.GREY_400),
-                bottom_axis=ft.ChartAxis(
+                border=border.all(1, colors.GREY_400),
+                bottom_axis=ChartAxis(
                     labels=[
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=0,
-                            label=ft.Container(ft.Text("T1"), padding=2),
+                            label=Container(Text("T1"), padding=2),
                         ),
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=1,
-                            label=ft.Container(ft.Text("T2"), padding=2),
+                            label=Container(Text("T2"), padding=2),
                         ),
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=2,
-                            label=ft.Container(ft.Text("T3"), padding=2),
+                            label=Container(Text("T3"), padding=2),
                         ),
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=3,
-                            label=ft.Container(ft.Text("T4"), padding=2),
+                            label=Container(Text("T4"), padding=2),
                         ),
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=4,
-                            label=ft.Container(ft.Text("T5"), padding=2),
+                            label=Container(Text("T5"), padding=2),
                         ),
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=5,
-                            label=ft.Container(ft.Text("T6"), padding=2),
+                            label=Container(Text("T6"), padding=2),
                         ),
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=6,
-                            label=ft.Container(ft.Text("T7"), padding=2),
+                            label=Container(Text("T7"), padding=2),
                         ),
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=7,
-                            label=ft.Container(ft.Text("T8"), padding=2),
+                            label=Container(Text("T8"), padding=2),
                         ),
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=8,
-                            label=ft.Container(ft.Text("T9"), padding=2),
+                            label=Container(Text("T9"), padding=2),
                         ),
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=9,
-                            label=ft.Container(ft.Text("T10"), padding=2),
+                            label=Container(Text("T10"), padding=2),
                         ),
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=10,
-                            label=ft.Container(ft.Text("T11"), padding=2),
+                            label=Container(Text("T11"), padding=2),
                         ),
-                        ft.ChartAxisLabel(
+                        ChartAxisLabel(
                             value=11,
-                            label=ft.Container(ft.Text("T12"), padding=2),
+                            label=Container(Text("T12"), padding=2),
                         ),
                     ],
                     labels_size=20,
                 ),
-                left_axis=ft.ChartAxis(
+                left_axis=ChartAxis(
                     labels=[
-                        ft.ChartAxisLabel(value=20, label=ft.Text("2")),
-                        ft.ChartAxisLabel(value=40, label=ft.Text("4")),
-                        ft.ChartAxisLabel(value=60, label=ft.Text("6")),
-                        ft.ChartAxisLabel(value=80, label=ft.Text("8")),
-                        ft.ChartAxisLabel(value=100, label=ft.Text("10")),
+                        ChartAxisLabel(value=20, label=Text("2")),
+                        ChartAxisLabel(value=40, label=Text("4")),
+                        ChartAxisLabel(value=60, label=Text("6")),
+                        ChartAxisLabel(value=80, label=Text("8")),
+                        ChartAxisLabel(value=100, label=Text("10")),
                     ],
                 ),
-                horizontal_grid_lines=ft.ChartGridLines(
-                    color=ft.colors.GREY_300, width=1, dash_pattern=[3, 3]
+                horizontal_grid_lines=ChartGridLines(
+                    color=colors.GREY_300, width=1, dash_pattern=[3, 3]
                 ),
-                tooltip_bgcolor=ft.colors.with_opacity(0.5, ft.colors.GREY_300),
+                tooltip_bgcolor=colors.with_opacity(0.5, colors.GREY_300),
                 max_y=110,
                 interactive=True,
                 expand=False,
@@ -563,8 +557,8 @@ class Report_During_The_Year_Expense(UserControl):
         statistical = create_thongke(data)
 
         baocaotrongnam = Container(
-            width=400,
-            height=712,
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
             border_radius=35,
             bgcolor=BG_COLOR,
             padding=padding.only(left=30, top=30, right=30),

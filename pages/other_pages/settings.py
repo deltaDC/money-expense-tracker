@@ -1,6 +1,6 @@
 import sqlite3
 from flet import *
-import datetime
+from const import *
 
 
 BG_COLOR = "#191919"
@@ -108,8 +108,8 @@ class Settings(UserControl):
         )
 
         setting_page = Container(
-            width=400,
-            height=712,
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
             border_radius=35,
             bgcolor=BG_COLOR,
             content=Column(

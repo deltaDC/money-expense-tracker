@@ -22,18 +22,6 @@ class Other(UserControl):
             )
 
             return row
-        # def xuatfile():
-        #     conn = sqlite3.connect("db/app.db")
-        #     # cursor = conn.cursor()
-        #     query = """SELECT * FROM financial_transaction"""
-            
-        #     df = pd.read_sql(query, conn)
-
-        #     # Lưu DataFrame ra tệp CSV
-        #     df.to_csv('output.csv', index=False)
-
-        #     # Đóng kết nối với cơ sở dữ liệu
-        #     conn.close()
 
         buttons = Column(
             spacing=15,
@@ -46,12 +34,20 @@ class Other(UserControl):
                 Column(
                     spacing=0,
                     controls=[
-                        create_row(icons.BAR_CHART, "Báo cáo trong năm", "/report_annual_expense"),
                         create_row(
-                            icons.PIE_CHART, "Báo cáo danh mục trong năm", "/report_year_outcome"
+                            icons.BAR_CHART,
+                            "Báo cáo trong năm",
+                            "/report_annual_expense",
                         ),
                         create_row(
-                            icons.INSERT_CHART_OUTLINED, "Báo cáo toàn kì", "/report_all_time"
+                            icons.PIE_CHART,
+                            "Báo cáo danh mục trong năm",
+                            "/report_year_outcome",
+                        ),
+                        create_row(
+                            icons.INSERT_CHART_OUTLINED,
+                            "Báo cáo toàn kì",
+                            "/report_all_time",
                         ),
                         create_row(
                             icons.PIE_CHART_OUTLINE,
@@ -63,7 +59,7 @@ class Other(UserControl):
                 Column(
                     spacing=0,
                     controls=[
-                        create_row(icons.DOWNLOAD, "Đầu ra dữ liệu","/export_data"),
+                        create_row(icons.DOWNLOAD, "Đầu ra dữ liệu", "/export_data"),
                         create_row(icons.CLOUD_DOWNLOAD, "Sao lưu dữ liệu", "/"),
                     ],
                 ),
@@ -80,8 +76,8 @@ class Other(UserControl):
         navbar = create_navbar(self.page, 3)
 
         other_page = Container(
-            width=400,
-            height=712,
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
             border_radius=35,
             bgcolor="#0d0d0d",
             content=Column(alignment="spaceBetween", controls=[buttons, navbar]),

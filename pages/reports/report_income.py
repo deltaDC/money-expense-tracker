@@ -1,8 +1,8 @@
 import sqlite3
 from flet import *
-import flet as ft
 import datetime
 from utils.navbar import create_navbar
+from const import *
 
 
 BG_COLOR = "#191919"
@@ -299,17 +299,17 @@ class Report_Income(UserControl):
         def create_bieudotron(month_data):
             normal_radius = 50
             hover_radius = 60
-            normal_title_style = ft.TextStyle(
-                size=10, color=ft.colors.WHITE, weight=ft.FontWeight.BOLD
+            normal_title_style = TextStyle(
+                size=10, color=colors.WHITE, weight=FontWeight.BOLD
             )
-            normal_title_style2 = ft.TextStyle(
-                size=9, color=ft.colors.WHITE, weight=ft.FontWeight.BOLD
+            normal_title_style2 = TextStyle(
+                size=9, color=colors.WHITE, weight=FontWeight.BOLD
             )
-            hover_title_style = ft.TextStyle(
+            hover_title_style = TextStyle(
                 size=10,
-                color=ft.colors.WHITE,
-                weight=ft.FontWeight.BOLD,
-                shadow=ft.BoxShadow(blur_radius=2, color=ft.colors.BLACK54),
+                color=colors.WHITE,
+                weight=FontWeight.BOLD,
+                shadow=BoxShadow(blur_radius=2, color=colors.BLACK54),
             )
             # total_expense = sum(row[3] for row in month_data if row[5] == "Tiền chi")
             total_income = sum(row[3] for row in month_data if row[5] == "Tiền thu")
@@ -352,7 +352,7 @@ class Report_Income(UserControl):
             else:
                 tienluong = phucap = thuong = dautu = lamthem = khac = "0.00"
 
-            def on_chart_event(e: ft.PieChartEvent):
+            def on_chart_event(e: PieChartEvent):
                 for idx, section in enumerate(chart.sections):
                     if idx == e.section_index:
                         section.radius = hover_radius
@@ -362,54 +362,54 @@ class Report_Income(UserControl):
                         section.title_style = normal_title_style
                 chart.update()
 
-            chart = ft.PieChart(
+            chart = PieChart(
                 sections=[
-                    ft.PieChartSection(
+                    PieChartSection(
                         tienluong,
                         title="Tiền lương" + str(f"{tienluong}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.BLUE,
+                        color=colors.BLUE,
                         radius=normal_radius,
                     ),
-                    ft.PieChartSection(
+                    PieChartSection(
                         phucap,
                         title="Phụ cấp" + str(f"{phucap}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.YELLOW,
+                        color=colors.YELLOW,
                         radius=normal_radius,
                     ),
-                    ft.PieChartSection(
+                    PieChartSection(
                         thuong,
                         title="Thưởng" + str(f"{thuong}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.PURPLE,
+                        color=colors.PURPLE,
                         radius=normal_radius,
                     ),
-                    ft.PieChartSection(
+                    PieChartSection(
                         dautu,
                         title="Đầu tư" + str(f"{dautu}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.GREEN,
+                        color=colors.GREEN,
                         radius=normal_radius,
                     ),
-                    ft.PieChartSection(
+                    PieChartSection(
                         lamthem,
                         title="Làm thêm" + str(f"{lamthem}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.RED,
+                        color=colors.RED,
                         radius=normal_radius,
                     ),
-                    ft.PieChartSection(
+                    PieChartSection(
                         khac,
                         title="Khác" + str(f"{khac}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.BLACK,
+                        color=colors.BLACK,
                         radius=normal_radius,
                     ),
                 ],
                 sections_space=0,
                 center_space_radius=70,
-                # size=ft.size(150, 150),
+                # size=size(150, 150),
                 on_chart_event=on_chart_event,
                 expand=False,
             )
@@ -499,8 +499,8 @@ class Report_Income(UserControl):
         )
 
         page_3 = Container(
-            width=400,
-            height=712,
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
             border_radius=35,
             bgcolor=BG_COLOR,
             content=Column(

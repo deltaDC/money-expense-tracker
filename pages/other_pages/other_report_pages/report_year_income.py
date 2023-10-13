@@ -1,13 +1,7 @@
 import sqlite3
 from flet import *
-import flet as ft
 import datetime
-
-
-
-BG_COLOR = "#191919"
-GREY_COLOR = "#3f3f3f"
-PINK = "#eb06ff"
+from const import *
 
 
 class Report_Year_Income(UserControl):
@@ -19,8 +13,6 @@ class Report_Year_Income(UserControl):
         def fetch_data_from_db(year=datetime.datetime.now().year):
             conn = sqlite3.connect("db/app.db")
             cursor = conn.cursor()
-
-           
 
             # Build the SQL query to filter by year and month
             sql_query = (
@@ -64,9 +56,7 @@ class Report_Year_Income(UserControl):
                 header.update()
 
             # Create two text buttons.
-            button_1 = Text(
-                "Báo cáo danh mục trong năm", color="white"
-            )
+            button_1 = Text("Báo cáo danh mục trong năm", color="white")
 
             # Add on_click event listeners to the buttons.
             button_1.on_click = lambda event: change_button_colors(button_1)
@@ -75,10 +65,11 @@ class Report_Year_Income(UserControl):
             header = Row(
                 alignment="spaceBetween",
                 controls=[
-                    IconButton(icons.ARROW_BACK, 
-                               icon_color="white",
-                               on_click=lambda e:self.page.go('/other')
-                               ),
+                    IconButton(
+                        icons.ARROW_BACK,
+                        icon_color="white",
+                        on_click=lambda e: self.page.go("/other"),
+                    ),
                     button_1,
                     IconButton(icons.SEARCH, icon_color="white"),
                 ],
@@ -94,7 +85,7 @@ class Report_Year_Income(UserControl):
                 date_header.update()
 
             def get_next_year():
-                global  current_year, data
+                global current_year, data
                 # Tăng tháng
                 current_year += 1
 
@@ -149,7 +140,6 @@ class Report_Year_Income(UserControl):
 
             return date_header
 
-        
         def create_bieudo_label():
             def change_button_colors(button_1: TextButton, button_2: TextButton):
                 button_1.style.bgcolor = PINK
@@ -158,17 +148,22 @@ class Report_Year_Income(UserControl):
 
             # Create two text buttons.
             button_1 = TextButton(
-                text="Chi tiêu", 
+                text="Chi tiêu",
                 style=ButtonStyle(color="white"),
-                on_click= lambda e: (change_button_colors(button_1, button_2), self.page.go("/report_year_outcome")),
+                on_click=lambda e: (
+                    change_button_colors(button_1, button_2),
+                    self.page.go("/report_year_outcome"),
+                ),
             )
             button_2 = TextButton(
-                text="Thu nhập", 
-                style=ButtonStyle(color="White",bgcolor=PINK),
-                on_click= lambda e: (change_button_colors(button_2, button_1), self.page.go("/report_year_income")),
+                text="Thu nhập",
+                style=ButtonStyle(color="White", bgcolor=PINK),
+                on_click=lambda e: (
+                    change_button_colors(button_2, button_1),
+                    self.page.go("/report_year_income"),
+                ),
             )
 
-            
             bieudo1 = Column(
                 controls=[
                     Row(
@@ -198,17 +193,17 @@ class Report_Year_Income(UserControl):
         def create_bieudotron(month_data):
             normal_radius = 50
             hover_radius = 60
-            normal_title_style = ft.TextStyle(
-                size=10, color=ft.colors.WHITE, weight=ft.FontWeight.BOLD
+            normal_title_style = TextStyle(
+                size=10, color=colors.WHITE, weight=FontWeight.BOLD
             )
-            normal_title_style2 = ft.TextStyle(
-                size=9, color=ft.colors.WHITE, weight=ft.FontWeight.BOLD
+            normal_title_style2 = TextStyle(
+                size=9, color=colors.WHITE, weight=FontWeight.BOLD
             )
-            hover_title_style = ft.TextStyle(
+            hover_title_style = TextStyle(
                 size=10,
-                color=ft.colors.WHITE,
-                weight=ft.FontWeight.BOLD,
-                shadow=ft.BoxShadow(blur_radius=2, color=ft.colors.BLACK54),
+                color=colors.WHITE,
+                weight=FontWeight.BOLD,
+                shadow=BoxShadow(blur_radius=2, color=colors.BLACK54),
             )
             # total_expense = sum(row[3] for row in month_data if row[5] == "Tiền chi")
             total_income = sum(row[3] for row in month_data if row[5] == "Tiền thu")
@@ -239,21 +234,19 @@ class Report_Year_Income(UserControl):
                     * 100
                 )
                 khac = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Khác" and row[5] == "Tiền thu")
+                    sum(
+                        row[3]
+                        for row in month_data
+                        if row[4] == "Khác" and row[5] == "Tiền thu"
+                    )
                     / total_income
                     * 100
                 )
-                
-            else:
-                tienluong = (
-                    phucap
-                ) = (
-                    thuong
-                ) = (
-                    dautu
-                ) = lamthem = khac = "0.00"
 
-            def on_chart_event(e: ft.PieChartEvent):
+            else:
+                tienluong = phucap = thuong = dautu = lamthem = khac = "0.00"
+
+            def on_chart_event(e: PieChartEvent):
                 for idx, section in enumerate(chart.sections):
                     if idx == e.section_index:
                         section.radius = hover_radius
@@ -263,54 +256,54 @@ class Report_Year_Income(UserControl):
                         section.title_style = normal_title_style
                 chart.update()
 
-            chart = ft.PieChart(
+            chart = PieChart(
                 sections=[
-                    ft.PieChartSection(
+                    PieChartSection(
                         tienluong,
                         title="Tiền lương" + str(f"{tienluong}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.BLUE,
+                        color=colors.BLUE,
                         radius=normal_radius,
                     ),
-                    ft.PieChartSection(
+                    PieChartSection(
                         phucap,
                         title="Phụ cấp" + str(f"{phucap}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.YELLOW,
+                        color=colors.YELLOW,
                         radius=normal_radius,
                     ),
-                    ft.PieChartSection(
+                    PieChartSection(
                         thuong,
                         title="Thưởng" + str(f"{thuong}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.PURPLE,
+                        color=colors.PURPLE,
                         radius=normal_radius,
                     ),
-                    ft.PieChartSection(
+                    PieChartSection(
                         dautu,
                         title="Đầu tư" + str(f"{dautu}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.GREEN,
+                        color=colors.GREEN,
                         radius=normal_radius,
                     ),
-                    ft.PieChartSection(
+                    PieChartSection(
                         lamthem,
                         title="Làm thêm" + str(f"{lamthem}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.RED,
+                        color=colors.RED,
                         radius=normal_radius,
                     ),
-                    ft.PieChartSection(
+                    PieChartSection(
                         khac,
                         title="Khác" + str(f"{khac}") + "%",
                         title_style=normal_title_style2,
-                        color=ft.colors.BLACK,
+                        color=colors.BLACK,
                         radius=normal_radius,
                     ),
                 ],
                 sections_space=0,
                 center_space_radius=70,
-                # size=ft.size(150, 150),
+                # size=size(150, 150),
                 on_chart_event=on_chart_event,
                 expand=False,
             )
@@ -328,7 +321,11 @@ class Report_Year_Income(UserControl):
             thuong = sum(row[3] for row in month_data if row[4] == "Thưởng")
             dautu = sum(row[3] for row in month_data if row[4] == "Đầu tư")
             lamthem = sum(row[3] for row in month_data if row[4] == "Làm thêm")
-            khac = sum(row[3] for row in month_data if row[4] == "Khác"and row[5] == "Tiền thu")
+            khac = sum(
+                row[3]
+                for row in month_data
+                if row[4] == "Khác" and row[5] == "Tiền thu"
+            )
 
             def create_thongke_row(category, icon, text, icon_color):
                 thongke_row = Container(
@@ -359,8 +356,11 @@ class Report_Year_Income(UserControl):
                 )
                 return thongke_row
 
-            thongke.controls.extend([
-                    create_thongke_row(tienluong, icons.ACCOUNT_BALANCE_WALLET, "Tiền lương", "blue"),
+            thongke.controls.extend(
+                [
+                    create_thongke_row(
+                        tienluong, icons.ACCOUNT_BALANCE_WALLET, "Tiền lương", "blue"
+                    ),
                     create_thongke_row(phucap, icons.ATTACH_MONEY, "Phụ cấp", "yellow"),
                     create_thongke_row(thuong, icons.CARD_GIFTCARD, "Thưởng", "purple"),
                     create_thongke_row(dautu, icons.DIAMOND, "Đầu tư", "green"),
@@ -371,14 +371,12 @@ class Report_Year_Income(UserControl):
 
             return thongke
 
-
         header = create_header()
         date_row = create_date()
         # chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi(data)
         bieu_do_label = create_bieudo_label()
         bieu_do_tron = create_bieudotron(data)
         thongke1 = create_thongke(data)
-       
 
         page_3_child_container = Container(
             padding=padding.only(left=10, top=30, right=30),
@@ -394,8 +392,8 @@ class Report_Year_Income(UserControl):
         )
 
         page_3 = Container(
-            width=400,
-            height=712,
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
             border_radius=35,
             bgcolor=BG_COLOR,
             content=Column(
@@ -404,7 +402,6 @@ class Report_Year_Income(UserControl):
                 controls=[
                     page_3_child_container,
                     thongke1,
-                    
                 ],
             ),
         )

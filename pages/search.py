@@ -1,7 +1,6 @@
 import sqlite3
 from flet import *
 import flet as ft
-import datetime
 
 
 BG_COLOR = "#191919"
