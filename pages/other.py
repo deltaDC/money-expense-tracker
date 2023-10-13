@@ -22,6 +22,18 @@ class Other(UserControl):
             )
 
             return row
+        # def xuatfile():
+        #     conn = sqlite3.connect("db/app.db")
+        #     # cursor = conn.cursor()
+        #     query = """SELECT * FROM financial_transaction"""
+            
+        #     df = pd.read_sql(query, conn)
+
+        #     # Lưu DataFrame ra tệp CSV
+        #     df.to_csv('output.csv', index=False)
+
+        #     # Đóng kết nối với cơ sở dữ liệu
+        #     conn.close()
 
         buttons = Column(
             spacing=15,
@@ -51,7 +63,7 @@ class Other(UserControl):
                 Column(
                     spacing=0,
                     controls=[
-                        create_row(icons.DOWNLOAD, "Đầu ra dữ liệu", "/"),
+                        create_row(icons.DOWNLOAD, "Đầu ra dữ liệu","/export_data"),
                         create_row(icons.CLOUD_DOWNLOAD, "Sao lưu dữ liệu", "/"),
                     ],
                 ),
