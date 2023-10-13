@@ -2,9 +2,7 @@ from flet import *
 from pages.other_pages.other_report_pages.report_annual_expense import (
     Report_During_The_Year_Expense,
 )
-from pages.other_pages.other_report_pages.report_annual_income import (
-    Report_During_The_Year_Income,
-)
+from pages.other_pages.other_report_pages.report_annual_income import Report_During_The_Year_Income
 from pages.outcome import Outcome
 from pages.income import Income
 from pages.calendar import Calendar
@@ -21,46 +19,26 @@ from pages.other_pages.other_report_pages.report_income_category_all_time import
     Report_Income_Category_All_Time,
 )
 from pages.other_pages.settings import Settings
-from pages.search import Search
-
+from pages.other_pages.export_data import Exportdata
 
 def views_handler(page):
     return {
-        "/": View(
-            route="/", 
-            controls=[Outcome(page)]
-        ),
-        "/page_2": View(
-            route="/page_2", 
-            controls=[Income(page)]
-        ),
-        "/calendar": View(
-            route="/calendar", 
-            controls=[Calendar(page)]
-        ),
+        "/": View(route="/", controls=[Outcome(page)]),
+        "/page_2": View(route="/page_2", controls=[Income(page)]),
+        "/calendar": View(route="/calendar", controls=[Calendar(page)]),
         "/report_outcome": View(
-            route="/report_outcome", 
-            controls=[Report_Outcome(page)]
+            route="/report_outcome", controls=[Report_Outcome(page)]
         ),
-        "/report_income": View(
-            route="/report_income", 
-            controls=[Report_Income(page)]
-        ),
-        "/other": View(
-            route="/other", 
-            controls=[Other(page)]
-        ),
+        "/report_income": View(route="/report_income", controls=[Report_Income(page)]),
+        "/other": View(route="/other", controls=[Other(page)]),
         "/report_year_outcome": View(
-            route="/report_year_outcome", 
-            controls=[Report_Year_Outcome(page)]
+            route="/report_year_outcome", controls=[Report_Year_Outcome(page)]
         ),
         "/report_year_income": View(
-            route="/report_year_income", 
-            controls=[Report_Year_Income(page)]
+            route="/report_year_income", controls=[Report_Year_Income(page)]
         ),
         "/report_all_time": View(
-            route="/report_all_time", 
-            controls=[Report_All_Time(page)]
+            route="/report_all_time", controls=[Report_All_Time(page)]
         ),
         "/report_outcome_category_all_time": View(
             route="/report_outcome_category_all_time",
@@ -78,12 +56,6 @@ def views_handler(page):
             route="/report_annual_income",
             controls=[Report_During_The_Year_Income(page)],
         ),
-        "/settings": View(
-            route="/settings", 
-            controls=[Settings(page)]
-        ),
-        "/search": View(
-            route="/search", 
-            controls=[Search(page)]
-        ),
+        "/settings": View(route="/settings", controls=[Settings(page)]),
+        "/export_data": View(route="/export_data", controls=[Exportdata(page)]),
     }
