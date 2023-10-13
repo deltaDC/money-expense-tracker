@@ -5,7 +5,6 @@ import datetime
 from utils.navbar import create_navbar
 
 
-
 class Income(UserControl):
     def __init__(self, page):
         super().__init__()
@@ -21,14 +20,20 @@ class Income(UserControl):
 
             # Create two text buttons.
             button_1 = TextButton(
-                text="Tiền chi", 
+                text="Tiền chi",
                 style=ButtonStyle(color="White"),
-                on_click= lambda e: (change_button_colors(button_1, button_2), self.page.go("/")),
-            ) 
+                on_click=lambda e: (
+                    change_button_colors(button_1, button_2),
+                    self.page.go("/"),
+                ),
+            )
             button_2 = TextButton(
-                text="Tiền thu", 
+                text="Tiền thu",
                 style=ButtonStyle(color="White", bgcolor=GREY_COLOR),
-                on_click= lambda e: (change_button_colors(button_2, button_1), self.page.go("/page_2")),
+                on_click=lambda e: (
+                    change_button_colors(button_2, button_1),
+                    self.page.go("/page_2"),
+                ),
             )
 
             # Add the buttons to the page.
@@ -45,7 +50,6 @@ class Income(UserControl):
                 ],
             )
             return header
-
 
         def create_date():
             def get_next_date(curr_date):
@@ -90,7 +94,6 @@ class Income(UserControl):
 
             return date_header
 
-
         def create_note():
             note_header = Row(
                 alignment="spaceBetween",
@@ -110,7 +113,6 @@ class Income(UserControl):
 
             return note_header
 
-
         def create_money_input():
             money_input = Row(
                 alignment="spaceBetween",
@@ -120,10 +122,12 @@ class Income(UserControl):
                         controls=[
                             TextField(
                                 hint_text="Nhập số tiền",
-                                hint_style=TextStyle(color="White", weight=FontWeight.NORMAL, size=14),
+                                hint_style=TextStyle(
+                                    color="White", weight=FontWeight.NORMAL, size=14
+                                ),
                                 border="underline",
                                 width=200,
-                                height=40
+                                height=40,
                             ),
                             Text("đ", size=16, color="white"),
                         ]
@@ -189,7 +193,9 @@ class Income(UserControl):
                 spacing=5,
                 run_spacing=5,
                 controls=[
-                    create_category_button("Tiền lương", icons.ACCOUNT_BALANCE_WALLET, "#d78638"),
+                    create_category_button(
+                        "Tiền lương", icons.ACCOUNT_BALANCE_WALLET, "#d78638"
+                    ),
                     create_category_button("Phụ cấp", icons.ATTACH_MONEY, "#049c4b"),
                     create_category_button("Thưởng", icons.CARD_GIFTCARD, "#c9ae1d"),
                     create_category_button("Đầu tư", icons.DIAMOND, "#c1455c"),
@@ -204,15 +210,13 @@ class Income(UserControl):
         def create_submit():
             submit_button = TextButton(
                 text="Nhập Khoản Tiền",
-                style=ButtonStyle(
-                    color="White", bgcolor=GREY_COLOR
-                ),
+                style=ButtonStyle(color="White", bgcolor=GREY_COLOR),
                 width=350,
-                on_click=lambda e: submit(date_row, note_row, money_row)
+                on_click=lambda e: submit(date_row, note_row, money_row),
             )
 
             return submit_button
-        
+
         def submit(date, note, money):
             global selected_category
 
@@ -227,6 +231,21 @@ class Income(UserControl):
             category_value = selected_category
             cash_flow = "Tiền thu"
 
+            # Check if money_value is empty or negative
+            if not money_value or int(money_value) < 0:
+                dlg = AlertDialog(
+                    title=Text("Lỗi nhập số tiền"),
+                    on_dismiss=lambda e: print("Dialog dismissed!"),
+                )
+
+                def open_dlg():
+                    self.page.dialog = dlg
+                    dlg.open = True
+                    self.page.update()
+
+                open_dlg()
+                return False
+
             note.controls[1].value = ""
             money.controls[1].controls[0].value = ""
             note.update()
@@ -234,22 +253,26 @@ class Income(UserControl):
 
             try:
                 # Kết nối đến cơ sở dữ liệu SQLite
-                conn = sqlite3.connect('db/app.db')
+                conn = sqlite3.connect("db/app.db")
                 cursor = conn.cursor()
 
                 # Sử dụng câu lệnh SQL để tạo bảng nếu chưa tồn tại
-                cursor.execute('''CREATE TABLE IF NOT EXISTS financial_transaction (
+                cursor.execute(
+                    """CREATE TABLE IF NOT EXISTS financial_transaction (
                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                                     date TEXT,
                                     note TEXT,
                                     money REAL,
                                     category TEXT,
                                     cash_flow TEXT
-                                )''')
+                                )"""
+                )
 
                 # Sử dụng câu lệnh SQL để chèn dữ liệu vào bảng
-                cursor.execute("INSERT INTO financial_transaction (date, note, money, category, cash_flow) VALUES (?, ?, ?, ?, ?)",
-                            (date_value, note_value, money_value, category_value, cash_flow))
+                cursor.execute(
+                    "INSERT INTO financial_transaction (date, note, money, category, cash_flow) VALUES (?, ?, ?, ?, ?)",
+                    (date_value, note_value, money_value, category_value, cash_flow),
+                )
 
                 # Lưu thay đổi và đóng kết nối
                 conn.commit()
@@ -258,25 +281,30 @@ class Income(UserControl):
 
                 # popup msg
                 dlg = AlertDialog(
-                    title=Text("Ghi nhận thành công"), on_dismiss=lambda e: print("Dialog dismissed!")
+                    title=Text("Ghi nhận thành công"),
+                    on_dismiss=lambda e: print("Dialog dismissed!"),
                 )
+
                 def open_dlg():
                     self.page.dialog = dlg
                     dlg.open = True
                     self.page.update()
-                open_dlg()
 
+                open_dlg()
 
                 return True  # Trả về True nếu thành công
             except Exception as e:
                 print("Lỗi khi thực hiện thao tác chèn dữ liệu:", str(e))
                 dlg = AlertDialog(
-                    title=Text(f"Lỗi {str(e)}"), on_dismiss=lambda e: print("Dialog dismissed!")
+                    title=Text(f"Lỗi {str(e)}"),
+                    on_dismiss=lambda e: print("Dialog dismissed!"),
                 )
+
                 def open_dlg():
                     self.page.dialog = dlg
                     dlg.open = True
                     self.page.update()
+
                 open_dlg()
                 return False  # Trả về False nếu có lỗi
 
@@ -298,7 +326,7 @@ class Income(UserControl):
                     money_row,
                     category_row,
                 ]
-            )
+            ),
         )
 
         # define page 1 properties
@@ -310,14 +338,8 @@ class Income(UserControl):
             content=Column(
                 alignment="spaceBetween",
                 horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[
-                    page_1_child_container,
-                    submit_row,
-                    nav_bar_row
-                ]
+                controls=[page_1_child_container, submit_row, nav_bar_row],
             ),
         )
-        
-        return page_1
 
-        
+        return page_1
