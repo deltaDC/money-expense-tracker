@@ -20,7 +20,7 @@ from pages.other_pages.other_report_pages.report_income_category_all_time import
 )
 from pages.other_pages.settings import Settings
 from pages.other_pages.export_data import Exportdata
-
+from pages.search import Search
 def views_handler(page):
     return {
         "/": View(route="/", controls=[Outcome(page)]),
@@ -58,4 +58,5 @@ def views_handler(page):
         ),
         "/settings": View(route="/settings", controls=[Settings(page)]),
         "/export_data": View(route="/export_data", controls=[Exportdata(page)]),
+        "/search": View(route="/search", controls=[Search(page)]),
     }
