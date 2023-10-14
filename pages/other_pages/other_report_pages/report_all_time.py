@@ -104,7 +104,7 @@ class Report_All_Time(UserControl):
         header = create_header()
         chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi()
 
-        page_3_child_container = Container(
+        report_all_time_page_child_container = Container(
             padding=padding.only(left=10, top=30, right=30),
             content=Column(
                 controls=[
@@ -112,14 +112,33 @@ class Report_All_Time(UserControl):
                 ]
             ),
         )
-        page_3 = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            content=Column(
-                controls=[page_3_child_container, chitieu_thunhap_thuchi],
-            ),
+
+        def update_size(e):
+            report_all_time_page.controls[0].height = self.page.height
+            report_all_time_page.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            report_all_time_page.update()
+
+        self.page.on_resize = update_size
+
+        report_all_time_page = ResponsiveRow(
+            [
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    content=Column(
+                        controls=[
+                            report_all_time_page_child_container,
+                            chitieu_thunhap_thuchi,
+                        ],
+                    ),
+                )
+            ]
         )
 
-        return page_3
+        return report_all_time_page

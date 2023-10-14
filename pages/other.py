@@ -75,12 +75,29 @@ class Other(UserControl):
 
         navbar = create_navbar(self.page, 3)
 
-        other_page = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor="#0d0d0d",
-            content=Column(alignment="spaceBetween", controls=[buttons, navbar]),
+        def update_size(e):
+            other_page.controls[0].height = self.page.height
+            other_page.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            other_page.update()
+
+        self.page.on_resize = update_size
+
+        other_page = ResponsiveRow(
+            [
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor="#0d0d0d",
+                    content=Column(
+                        alignment="spaceBetween", controls=[buttons, navbar]
+                    ),
+                )
+            ]
         )
 
         return other_page

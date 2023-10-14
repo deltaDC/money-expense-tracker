@@ -189,7 +189,7 @@ class Income(UserControl):
                 expand=0,
                 runs_count=3,
                 max_extent=90,
-                child_aspect_ratio=1.09,
+                child_aspect_ratio=1.0,
                 spacing=5,
                 run_spacing=5,
                 controls=[
@@ -316,7 +316,7 @@ class Income(UserControl):
         submit_row = create_submit()
         nav_bar_row = create_navbar(self.page, 0)
 
-        page_1_child_container = Container(
+        income_page_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),
             content=Column(
                 controls=[
@@ -329,17 +329,32 @@ class Income(UserControl):
             ),
         )
 
+        def update_size(e):
+            income_page.controls[0].height = self.page.height
+            income_page.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            income_page.update()
+
+        self.page.on_resize = update_size
+
         # define page 1 properties
-        page_1 = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            content=Column(
-                alignment="spaceBetween",
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[page_1_child_container, submit_row, nav_bar_row],
-            ),
+        income_page = ResponsiveRow(
+            [
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    content=Column(
+                        alignment="spaceBetween",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        controls=[income_page_child_container, submit_row, nav_bar_row],
+                    ),
+                )
+            ]
         )
 
-        return page_1
+        return income_page

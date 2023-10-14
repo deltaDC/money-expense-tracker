@@ -1,6 +1,6 @@
 import sqlite3
 from flet import *
-import flet as ft
+from const import *
 
 
 BG_COLOR = "#191919"
@@ -33,7 +33,7 @@ class Search(UserControl):
 
         def update_views():
             search_report_row_new = create_search_report(user_input, data)
-            search_page.content.controls[2] = search_report_row_new
+            search_page.controls[0].content.controls[2] = search_report_row_new
             search_page.update()
             self.page.update()
 
@@ -66,6 +66,7 @@ class Search(UserControl):
                 update_views()
 
             text_field = Row(
+                alignment="spaceBetween",
                 controls=[
                     TextField(
                         label="Nhập từ khóa",
@@ -222,17 +223,32 @@ class Search(UserControl):
         text_field_row = create_search_textfield()
         search_report_row = create_search_report(user_input, data)
 
-        search_page = Container(
-            width=400,
-            height=712,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            padding=padding.only(left=30, top=30, right=30),
-            content=Column(
-                # alignment="spaceBetween",
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[header, text_field_row, search_report_row],
-            ),
+        def update_size(e):
+            search_page.controls[0].height = self.page.height
+            search_page.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            search_page.update()
+
+        self.page.on_resize = update_size
+
+        search_page = ResponsiveRow(
+            [
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    padding=padding.only(left=30, top=30, right=30),
+                    content=Column(
+                        # alignment="spaceBetween",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        controls=[header, text_field_row, search_report_row],
+                    ),
+                )
+            ]
         )
 
         return search_page

@@ -107,18 +107,33 @@ class Settings(UserControl):
             content=Column(controls=[header, delete_row]),
         )
 
-        setting_page = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            content=Column(
-                alignment="spaceBetween",
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[
-                    setting_page_child_container,
-                ],
-            ),
+        def update_size(e):
+            setting_page.controls[0].height = self.page.height
+            setting_page.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            setting_page.update()
+
+        self.page.on_resize = update_size
+
+        setting_page = ResponsiveRow(
+            [
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    content=Column(
+                        alignment="spaceBetween",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        controls=[
+                            setting_page_child_container,
+                        ],
+                    ),
+                )
+            ]
         )
 
         return setting_page

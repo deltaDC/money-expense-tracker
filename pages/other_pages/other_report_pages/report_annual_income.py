@@ -40,8 +40,8 @@ class Report_During_The_Year_Income(UserControl):
             # bieu_do_tron.update()
             # thongke1.update()
             # page_3_child_container.content.controls[2] = chitieu_thunhap_thuchi
-            baocaotrongnam.content.controls[3] = bieu_do_cot
-            baocaotrongnam.content.controls[4] = thongke1
+            baocaotrongnam.controls[0].content.controls[3] = bieu_do_cot
+            baocaotrongnam.controls[0].content.controls[4] = thongke1
             baocaotrongnam.update()
             self.page.update()
 
@@ -556,17 +556,38 @@ class Report_During_The_Year_Income(UserControl):
         bieu_do_cot = create_bieudocot(data)
         statistical = create_thongke(data)
 
-        baocaotrongnam = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            padding=padding.only(left=30, top=30, right=30),
-            content=Column(
-                # alignment="spaceBetween",
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[header, date_row, bieudo_label, bieu_do_cot, statistical],
-            ),
+        def update_size(e):
+            baocaotrongnam.controls[0].height = self.page.height
+            baocaotrongnam.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            baocaotrongnam.update()
+
+        self.page.on_resize = update_size
+
+        baocaotrongnam = ResponsiveRow(
+            [
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    padding=padding.only(left=30, top=30, right=30),
+                    content=Column(
+                        # alignment="spaceBetween",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        controls=[
+                            header,
+                            date_row,
+                            bieudo_label,
+                            bieu_do_cot,
+                            statistical,
+                        ],
+                    ),
+                )
+            ]
         )
 
         return baocaotrongnam

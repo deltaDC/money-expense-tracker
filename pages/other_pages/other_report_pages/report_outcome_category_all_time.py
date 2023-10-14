@@ -20,19 +20,6 @@ class Report_Outcome_Category_All_Time(UserControl):
         global data
         data = fetch_data_from_db()
 
-        def update_views():
-            print("this is rp3")
-            print(data)
-
-            bieu_do_tron = create_bieudotron(data)
-            thongke1 = create_thongke(data)
-
-            page_3_child_container.content.controls[2] = bieu_do_tron
-            page_3.content.controls[1] = thongke1
-            page_3_child_container.update()
-            page_3.update()
-            self.page.update()
-
         def create_header():
             # Create a function to change the background color of the buttons.
             def change_button_colors(button_1: TextButton):
@@ -358,7 +345,7 @@ class Report_Outcome_Category_All_Time(UserControl):
         bieu_do_tron = create_bieudotron(data)
         thongke1 = create_thongke(data)
 
-        page_3_child_container = Container(
+        report_outcome_category_all_time_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),
             content=Column(
                 controls=[
@@ -369,19 +356,34 @@ class Report_Outcome_Category_All_Time(UserControl):
             ),
         )
 
-        page_3 = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            content=Column(
-                alignment="spaceBetween",
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[
-                    page_3_child_container,
-                    thongke1,
-                ],
-            ),
+        def update_size(e):
+            report_outcome_category_all_time_page.controls[0].height = self.page.height
+            report_outcome_category_all_time_page.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            report_outcome_category_all_time_page.update()
+
+        self.page.on_resize = update_size
+
+        report_outcome_category_all_time_page = ResponsiveRow(
+            [
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    content=Column(
+                        alignment="spaceBetween",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        controls=[
+                            report_outcome_category_all_time_child_container,
+                            thongke1,
+                        ],
+                    ),
+                )
+            ]
         )
 
-        return page_3
+        return report_outcome_category_all_time_page

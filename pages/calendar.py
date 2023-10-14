@@ -4,11 +4,7 @@ import datetime
 import calendar
 from utils.navbar import create_navbar
 from const import *
-
-
-BG_COLOR = "#191919"
-GREY_COLOR = "#3f3f3f"
-PINK = "#eb06ff"
+import time
 
 
 class Calendar(UserControl):
@@ -49,19 +45,14 @@ class Calendar(UserControl):
             month_new_report = create_month_report(data)
             calendar_page_child_container.content.controls[2] = calendar_new_UI
             # calendar_page_child_container.content.controls[3] = month_new_report
-            calendar_page.content.controls[1] = month_new_report
+            calendar_page.controls[0].content.controls[1] = month_new_report
             calendar_page_child_container.update()
             calendar_page.update()
             self.page.update()
 
         def create_header():
-            # Create a function to change the background color of the buttons.
-            def change_button_colors(button_1: TextButton):
-                button_1.style.bgcolor = GREY_COLOR
-                header.update()
-
             # Create two text buttons.
-            button_1 = Text("Lịch", color="white")
+            calendar_header = Text("Lịch", color="white")
 
             # Add the buttons to the page.
             header = Row(
@@ -69,7 +60,7 @@ class Calendar(UserControl):
                 controls=[
                     Row(
                         controls=[
-                            button_1,
+                            calendar_header,
                         ]
                     ),
                     IconButton(
@@ -178,11 +169,15 @@ class Calendar(UserControl):
                 report_text = f"TIỀN THU:\n{day_income_report_text}\nTIỀN CHI:\n{day_outcome_report_text}"
 
                 dlg = AlertDialog(
-                    title=Text(f"Báo cáo ngày {day}/{current_month}/{current_year}"),
-                    content=Text(report_text),
+                    title=Text(
+                        f"Báo cáo ngày {day}/{current_month}/{current_year}",
+                        color="white",
+                    ),
+                    content=Text(report_text, color="white"),
                     on_dismiss=lambda e: print("Dialog dismissed!"),
                 )
-                print(dlg.title)
+                # print(dlg.title)
+                # print(dlg.content)
 
                 def open_dlg():
                     self.page.dialog = dlg
@@ -218,7 +213,7 @@ class Calendar(UserControl):
                     day_widget.content.controls.append(
                         Text(
                             f"{'{:,}'.format(int(one_day_income_money))}",
-                            size=9,
+                            size=8,
                             color="#50b4d1",
                         )
                     )
@@ -226,7 +221,7 @@ class Calendar(UserControl):
                     day_widget.content.controls.append(
                         Text(
                             f"{'{:,}'.format(int(one_day_outcome_money))}",
-                            size=9,
+                            size=8,
                             color="red",
                         )
                     )
@@ -310,20 +305,35 @@ class Calendar(UserControl):
             ),
         )
 
-        calendar_page = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            content=Column(
-                alignment="spaceBetween",
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[
-                    calendar_page_child_container,
-                    month_report_row,
-                    navbar,
-                ],
-            ),
+        # def update_size(e):
+        #     calendar_page.controls[0].height = self.page.height
+        #     calendar_page.controls[0].width = self.page.width
+
+        #     print(f"self.page.height is: {self.page.height}")
+        #     print(f"self.page.width is: {self.page.width}")
+
+        #     calendar_page.update()
+
+        # self.page.on_resize = update_size
+
+        calendar_page = ResponsiveRow(
+            controls=[
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    content=Column(
+                        alignment="spaceBetween",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        controls=[
+                            calendar_page_child_container,
+                            month_report_row,
+                            navbar,
+                        ],
+                    ),
+                )
+            ]
         )
 
         return calendar_page

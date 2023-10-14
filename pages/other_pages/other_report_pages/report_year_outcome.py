@@ -34,19 +34,15 @@ class Report_Year_Outcome(UserControl):
         current_month = datetime.date.today().month
         current_year = datetime.date.today().year
         data = fetch_data_from_db(year=current_year)
-        # print(f"data is: {data}")
 
         def update_views():
-            print("this is rp2")
-            print(data)
-
             bieu_do_tron = create_bieudotron(data)
             thongke1 = create_thongke(data)
 
-            page_3_child_container.content.controls[3] = bieu_do_tron
-            page_3.content.controls[1] = thongke1
-            page_3_child_container.update()
-            page_3.update()
+            report_year_outcome_page_child_container.content.controls[3] = bieu_do_tron
+            report_year_outcome_page.controls[0].content.controls[1] = thongke1
+            report_year_outcome_page_child_container.update()
+            report_year_outcome_page.update()
             self.page.update()
 
         def create_header():
@@ -443,7 +439,7 @@ class Report_Year_Outcome(UserControl):
         bieu_do_tron = create_bieudotron(data)
         thongke1 = create_thongke(data)
 
-        page_3_child_container = Container(
+        report_year_outcome_page_child_container = Container(
             padding=padding.only(left=10, top=30, right=30),
             content=Column(
                 controls=[
@@ -456,19 +452,34 @@ class Report_Year_Outcome(UserControl):
             ),
         )
 
-        page_3 = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            content=Column(
-                alignment="spaceBetween",
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[
-                    page_3_child_container,
-                    thongke1,
-                ],
-            ),
+        def update_size(e):
+            report_year_outcome_page.controls[0].height = self.page.height
+            report_year_outcome_page.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            report_year_outcome_page.update()
+
+        self.page.on_resize = update_size
+
+        report_year_outcome_page = ResponsiveRow(
+            controls=[
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    content=Column(
+                        alignment="spaceBetween",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        controls=[
+                            report_year_outcome_page_child_container,
+                            thongke1,
+                        ],
+                    ),
+                )
+            ]
         )
 
-        return page_3
+        return report_year_outcome_page

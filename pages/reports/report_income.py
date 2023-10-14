@@ -52,11 +52,13 @@ class Report_Income(UserControl):
             # chitieu_thunhap_thuchi.update()
             # bieu_do_tron.update()
             # thongke1.update()
-            page_3_child_container.content.controls[2] = chitieu_thunhap_thuchi
-            page_3_child_container.content.controls[4] = bieu_do_tron
-            page_3.content.controls[1] = thongke1
-            page_3_child_container.update()
-            page_3.update()
+            report_income_page_child_container.content.controls[
+                2
+            ] = chitieu_thunhap_thuchi
+            report_income_page_child_container.content.controls[4] = bieu_do_tron
+            report_income_page.controls[0].content.controls[1] = thongke1
+            report_income_page_child_container.update()
+            report_income_page.update()
             self.page.update()
 
         def create_header():
@@ -485,7 +487,7 @@ class Report_Income(UserControl):
         thongke1 = create_thongke(data)
         navbar = create_navbar(self.page, 2)
 
-        page_3_child_container = Container(
+        report_income_page_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),
             content=Column(
                 controls=[
@@ -498,20 +500,35 @@ class Report_Income(UserControl):
             ),
         )
 
-        page_3 = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            content=Column(
-                alignment="spaceBetween",
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[
-                    page_3_child_container,
-                    thongke1,
-                    navbar,
-                ],
-            ),
+        def update_size(e):
+            report_income_page.controls[0].height = self.page.height
+            report_income_page.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            report_income_page.update()
+
+        self.page.on_resize = update_size
+
+        report_income_page = ResponsiveRow(
+            [
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    content=Column(
+                        alignment="spaceBetween",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        controls=[
+                            report_income_page_child_container,
+                            thongke1,
+                            navbar,
+                        ],
+                    ),
+                )
+            ]
         )
 
-        return page_3
+        return report_income_page

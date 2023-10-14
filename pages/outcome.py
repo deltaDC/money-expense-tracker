@@ -221,11 +221,6 @@ class Outcome(UserControl):
         def submit(date, note, money):
             global selected_category
 
-            # print(f"ngay la: {date.controls[0].value}")
-            # print(f"note la: {note.controls[1].value}")
-            # print(f"tien la: {money.controls[1].controls[0].value}")
-            # print(selected_category)
-
             date_value = date.controls[0].value
             note_value = note.controls[1].value
             money_value = money.controls[1].controls[0].value
@@ -317,7 +312,7 @@ class Outcome(UserControl):
         submit_row = create_submit()
         nav_bar_row = create_navbar(self.page, 0)
 
-        page_1_child_container = Container(
+        outcome_page_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),
             content=Column(
                 controls=[
@@ -326,21 +321,43 @@ class Outcome(UserControl):
                     note_row,
                     money_row,
                     category_row,
-                ]
+                ],
+                # expand=True
             ),
+            # expand=True
         )
+
+        def update_size(e):
+            outcome_page.controls[0].height = self.page.height
+            outcome_page.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            outcome_page.update()
+            outcome_page.page = self.page
+
+        self.page.on_resize = update_size
 
         # define page 1 properties
-        page_1 = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            content=Column(
-                alignment="spaceBetween",
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[page_1_child_container, submit_row, nav_bar_row],
-            ),
+        outcome_page = ResponsiveRow(
+            controls=[
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    content=Column(
+                        alignment="spaceBetween",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        controls=[
+                            outcome_page_child_container,
+                            submit_row,
+                            nav_bar_row,
+                        ],
+                    ),
+                )
+            ],
         )
 
-        return page_1
+        return outcome_page

@@ -10,6 +10,7 @@ def main(page: Page):
         page.views.append(views_handler(page)[page.route])
 
     page.on_route_change = route_change
+
     page.go("/")
 
 
