@@ -15,11 +15,10 @@ class Exportdata(UserControl):
             cursor = conn.cursor()
             data1 = cursor.execute("""SELECT * FROM financial_transaction""")
             data = [row for row in data1]
-            csv_file = "sample.csv"
+            csv_file = "data.csv"
 
             with open(csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
-                # writer = csv.writer(file)
-                writer = csv.writer(file, delimiter=",")
+                writer = csv.writer(file)
                 # Write the header row
                 writer.writerow(
                     [
@@ -118,33 +117,18 @@ class Exportdata(UserControl):
             content=Column(controls=[header, delete_row]),
         )
 
-        def update_size(e):
-            exportdata_page.controls[0].height = self.page.height
-            exportdata_page.controls[0].width = self.page.width
-
-            print(f"self.page.height is: {self.page.height}")
-            print(f"self.page.width is: {self.page.width}")
-
-            exportdata_page.update()
-
-        self.page.on_resize = update_size
-
-        exportdata_page = ResponsiveRow(
-            [
-                Container(
-                    width=self.page.width,
-                    height=self.page.height,
-                    border_radius=35,
-                    bgcolor=BG_COLOR,
-                    content=Column(
-                        alignment="spaceBetween",
-                        horizontal_alignment=CrossAxisAlignment.CENTER,
-                        controls=[
-                            exportdata_page_child_container,
-                        ],
-                    ),
-                )
-            ]
+        exportdata_page = Container(
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
+            border_radius=35,
+            bgcolor=BG_COLOR,
+            content=Column(
+                alignment="spaceBetween",
+                horizontal_alignment=CrossAxisAlignment.CENTER,
+                controls=[
+                    exportdata_page_child_container,
+                ],
+            ),
         )
 
         return exportdata_page
