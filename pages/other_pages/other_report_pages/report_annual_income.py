@@ -34,15 +34,15 @@ class Report_During_The_Year_Income(UserControl):
             print("this is baocaotrongnam")
             print(data)
             # chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi(data)
-            bieu_do_cot = create_bieudocot(data)
-            thongke1 = create_thongke(data)
+            bieu_do_cot = create_barchart(data)
+            thongke1 = create_statistics(data)
             # chitieu_thunhap_thuchi.update()
             # bieu_do_tron.update()
             # thongke1.update()
             # page_3_child_container.content.controls[2] = chitieu_thunhap_thuchi
-            baocaotrongnam.controls[0].content.controls[3] = bieu_do_cot
-            baocaotrongnam.controls[0].content.controls[4] = thongke1
-            baocaotrongnam.update()
+            report_annual.controls[0].content.controls[3] = bieu_do_cot
+            report_annual.controls[0].content.controls[4] = thongke1
+            report_annual.update()
             self.page.update()
 
         def create_header():
@@ -136,12 +136,12 @@ class Report_During_The_Year_Income(UserControl):
 
             return date_header
 
-        def create_bieudo_label():
+        def create_chart_label():
             def change_button_colors(button_1: TextButton, button_2: TextButton):
                 button_1.style.bgcolor = GREY_COLOR
                 button_2.style.bgcolor = BG_COLOR
                 # button_3.style.bgcolor = BLUE
-                bieudo.update()
+                label.update()
 
             button_1 = TextButton(
                 text="Chi tiêu",
@@ -165,7 +165,7 @@ class Report_During_The_Year_Income(UserControl):
             #     text="Tổng", style=ButtonStyle(color="white", bgcolor=GREY_COLOR)
             # )
 
-            bieudo = Column(
+            label = Column(
                 alignment=MainAxisAlignment.START,
                 controls=[
                     Row(
@@ -190,9 +190,9 @@ class Report_During_The_Year_Income(UserControl):
                 ],
             )
 
-            return bieudo
+            return label
 
-        def create_bieudocot(data):
+        def create_barchart(data):
             total_expense = sum(row[3] for row in data if row[5] == "Tiền chi")
             total_income = sum(row[3] for row in data if row[5] == "Tiền thu")
 
@@ -472,8 +472,8 @@ class Report_During_The_Year_Income(UserControl):
             )
             return chart
 
-        def create_thongke(data):
-            thongke = ListView(
+        def create_statistics(data):
+            statistics = ListView(
                 height=150,
                 width=340,
                 # scroll='auto',
@@ -503,8 +503,8 @@ class Report_During_The_Year_Income(UserControl):
             thang11 = create_money(11)
             thang12 = create_money(12)
 
-            def create_thongke_row(month, money):
-                thongke_row = Container(
+            def create_statistics_row(month, money):
+                statistics_row = Container(
                     width=340,
                     height=35,
                     border_radius=5,
@@ -529,45 +529,45 @@ class Report_During_The_Year_Income(UserControl):
                         ],
                     ),
                 )
-                return thongke_row
+                return statistics_row
 
-            thongke.controls.extend(
+            statistics.controls.extend(
                 [
-                    create_thongke_row("Tháng 1", thang1),
-                    create_thongke_row("Tháng 2", thang2),
-                    create_thongke_row("Tháng 3", thang3),
-                    create_thongke_row("Tháng 4", thang4),
-                    create_thongke_row("Tháng 5", thang5),
-                    create_thongke_row("Tháng 6", thang6),
-                    create_thongke_row("Tháng 7", thang7),
-                    create_thongke_row("Tháng 8", thang8),
-                    create_thongke_row("Tháng 9", thang9),
-                    create_thongke_row("Tháng 10", thang10),
-                    create_thongke_row("Tháng 11", thang11),
-                    create_thongke_row("Tháng 12", thang12),
+                    create_statistics_row("Tháng 1", thang1),
+                    create_statistics_row("Tháng 2", thang2),
+                    create_statistics_row("Tháng 3", thang3),
+                    create_statistics_row("Tháng 4", thang4),
+                    create_statistics_row("Tháng 5", thang5),
+                    create_statistics_row("Tháng 6", thang6),
+                    create_statistics_row("Tháng 7", thang7),
+                    create_statistics_row("Tháng 8", thang8),
+                    create_statistics_row("Tháng 9", thang9),
+                    create_statistics_row("Tháng 10", thang10),
+                    create_statistics_row("Tháng 11", thang11),
+                    create_statistics_row("Tháng 12", thang12),
                 ]
             )
 
-            return thongke
+            return statistics
 
         header = create_header()
         date_row = create_date()
-        bieudo_label = create_bieudo_label()
-        bieu_do_cot = create_bieudocot(data)
-        statistical = create_thongke(data)
+        label = create_chart_label()
+        barchart = create_barchart(data)
+        statistical = create_statistics(data)
 
         def update_size(e):
-            baocaotrongnam.controls[0].height = self.page.height
-            baocaotrongnam.controls[0].width = self.page.width
+            report_annual.controls[0].height = self.page.height
+            report_annual.controls[0].width = self.page.width
 
             print(f"self.page.height is: {self.page.height}")
             print(f"self.page.width is: {self.page.width}")
 
-            baocaotrongnam.update()
+            report_annual.update()
 
         self.page.on_resize = update_size
 
-        baocaotrongnam = ResponsiveRow(
+        report_annual = ResponsiveRow(
             [
                 Container(
                     width=self.page.width,
@@ -581,8 +581,8 @@ class Report_During_The_Year_Income(UserControl):
                         controls=[
                             header,
                             date_row,
-                            bieudo_label,
-                            bieu_do_cot,
+                            label,
+                            barchart,
                             statistical,
                         ],
                     ),
@@ -590,4 +590,4 @@ class Report_During_The_Year_Income(UserControl):
             ]
         )
 
-        return baocaotrongnam
+        return report_annual
