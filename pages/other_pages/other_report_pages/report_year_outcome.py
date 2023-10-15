@@ -36,11 +36,10 @@ class Report_Year_Outcome(UserControl):
         data = fetch_data_from_db(year=current_year)
 
         def update_views():
-            bieu_do_tron = create_bieudotron(data)
-            thongke1 = create_thongke(data)
-
-            report_year_outcome_page_child_container.content.controls[3] = bieu_do_tron
-            report_year_outcome_page.controls[0].content.controls[1] = thongke1
+            piechart = create_piechart(data)
+            statistics = create_statistics(data)
+            report_year_outcome_page_child_container.content.controls[3] = piechart
+            report_year_outcome_page.content.controls[1] = statistics
             report_year_outcome_page_child_container.update()
             report_year_outcome_page.update()
             self.page.update()
@@ -82,29 +81,17 @@ class Report_Year_Outcome(UserControl):
 
             def get_next_year():
                 global current_year, data
-                # Tăng tháng
+                # Tăng năm
                 current_year += 1
-
-                # Nếu tháng là 13, thì tăng năm và đặt lại tháng về 1
-                # if current_month > 12:
-                #     current_month = 1
-                #     current_year += 1
                 data = fetch_data_from_db(current_year)
-                # print(data)
                 update_date_display()
                 update_views()
 
             def get_prev_year():
                 global current_year, data
-                # Giảm tháng
+                # Giảm năm
                 current_year -= 1
-
-                # Nếu tháng là 0, thì giảm năm và đặt lại tháng về 12
-                # if current_month < 1:
-                #     current_month = 12
-                #     current_year -= 1
                 data = fetch_data_from_db(current_year)
-                # print(data)
                 update_date_display()
                 update_views()
 
@@ -136,11 +123,11 @@ class Report_Year_Outcome(UserControl):
 
             return date_header
 
-        def create_bieudo_label():
+        def create_chart_label():
             def change_button_colors(button_1: TextButton, button_2: TextButton):
                 button_1.style.bgcolor = PINK
                 button_2.style.bgcolor = GREY_COLOR
-                bieudo1.update()
+                label.update()
 
             # Create two text buttons.
             button_1 = TextButton(
@@ -163,7 +150,7 @@ class Report_Year_Outcome(UserControl):
             # Add on_click event listeners to the buttons.
             # button_1.on_click = lambda event: change_button_colors(button_1, button_2)
             # button_2.on_click = lambda event: change_button_colors(button_2, button_1)
-            bieudo1 = Column(
+            label = Column(
                 controls=[
                     Row(
                         alignment="spaceAround",
@@ -187,9 +174,9 @@ class Report_Year_Outcome(UserControl):
                 ]
             )
 
-            return bieudo1
+            return label
 
-        def create_bieudotron(month_data):
+        def create_piechart(month_data):
             normal_radius = 50
             hover_radius = 60
             normal_title_style = TextStyle(
@@ -360,8 +347,8 @@ class Report_Year_Outcome(UserControl):
             )
             return chart
 
-        def create_thongke(year_data):
-            thongke = ListView(
+        def create_statistics(year_data):
+            statistics = ListView(
                 height=150,
                 width=340,
                 # scroll='auto',
@@ -380,10 +367,10 @@ class Report_Year_Outcome(UserControl):
                 row[3] for row in year_data if row[4] == "Khác" and row[5] == "Tiền chi"
             )
 
-            def create_thongke_row(category, icon, text, icon_color):
-                thongke_row = Container(
+            def create_statistics_row(category, icon, text, icon_color):
+                statistics_row = Container(
                     width=340,
-                    height=35,
+                    height=36,
                     border_radius=5,
                     bgcolor=GREY_COLOR,
                     padding=5,
@@ -407,37 +394,36 @@ class Report_Year_Outcome(UserControl):
                         ],
                     ),
                 )
-                return thongke_row
+                return statistics_row
 
-            thongke.controls.extend(
+            statistics.controls.extend(
                 [
-                    create_thongke_row(tiennha, icons.HOUSE, "Tiền nhà", "yellow"),
-                    create_thongke_row(
+                    create_statistics_row(tiennha, icons.HOUSE, "Tiền nhà", "yellow"),
+                    create_statistics_row(
                         tiendien, icons.ELECTRIC_BOLT, "Tiền điện", "purple"
                     ),
-                    create_thongke_row(quanao, icons.CHECKROOM, "Quần áo", "blue"),
-                    create_thongke_row(anuong, icons.LOCAL_DINING, "Ăn uống", "green"),
-                    create_thongke_row(
+                    create_statistics_row(quanao, icons.CHECKROOM, "Quần áo", "blue"),
+                    create_statistics_row(anuong, icons.LOCAL_DINING, "Ăn uống", "green"),
+                    create_statistics_row(
                         giadung, icons.HOME_REPAIR_SERVICE, "Gia dụng", "red"
                     ),
-                    create_thongke_row(yte, icons.EMERGENCY, "Y tế", "orange"),
-                    create_thongke_row(giaoduc, icons.SCHOOL, "Giáo dục", "pink"),
-                    create_thongke_row(dilai, icons.DIRECTIONS_BUS, "Đi lại", "grey"),
-                    create_thongke_row(
+                    create_statistics_row(yte, icons.EMERGENCY, "Y tế", "orange"),
+                    create_statistics_row(giaoduc, icons.SCHOOL, "Giáo dục", "pink"),
+                    create_statistics_row(dilai, icons.DIRECTIONS_BUS, "Đi lại", "grey"),
+                    create_statistics_row(
                         tiennuoc, icons.WATER_DROP, "Tiền nước", "brown"
                     ),
-                    create_thongke_row(khac, icons.QUESTION_MARK, "Khác", "black"),
+                    create_statistics_row(khac, icons.QUESTION_MARK, "Khác", "black"),
                 ]
             )
 
-            return thongke
+            return statistics
 
         header = create_header()
         date_row = create_date()
-        # chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi(data)
-        bieu_do_label = create_bieudo_label()
-        bieu_do_tron = create_bieudotron(data)
-        thongke1 = create_thongke(data)
+        label = create_chart_label()
+        piechart = create_piechart(data)
+        statistics = create_statistics(data)
 
         report_year_outcome_page_child_container = Container(
             padding=padding.only(left=10, top=30, right=30),
@@ -445,41 +431,25 @@ class Report_Year_Outcome(UserControl):
                 controls=[
                     header,
                     date_row,
-                    # chitieu_thunhap_thuchi,
-                    bieu_do_label,
-                    bieu_do_tron,
+                    label,
+                    piechart,
                 ]
             ),
         )
 
-        def update_size(e):
-            report_year_outcome_page.controls[0].height = self.page.height
-            report_year_outcome_page.controls[0].width = self.page.width
-
-            print(f"self.page.height is: {self.page.height}")
-            print(f"self.page.width is: {self.page.width}")
-
-            report_year_outcome_page.update()
-
-        self.page.on_resize = update_size
-
-        report_year_outcome_page = ResponsiveRow(
-            controls=[
-                Container(
-                    width=self.page.width,
-                    height=self.page.height,
-                    border_radius=35,
-                    bgcolor=BG_COLOR,
-                    content=Column(
-                        alignment="spaceBetween",
-                        horizontal_alignment=CrossAxisAlignment.CENTER,
-                        controls=[
-                            report_year_outcome_page_child_container,
-                            thongke1,
-                        ],
-                    ),
-                )
-            ]
+        report_year_outcome_page = Container(
+            width=SCREEN_WIDTH,
+            height=SCREEN_HEIGHT,
+            border_radius=35,
+            bgcolor=BG_COLOR,
+            content=Column(
+                alignment="spaceBetween",
+                horizontal_alignment=CrossAxisAlignment.CENTER,
+                controls=[
+                    report_year_outcome_page_child_container,
+                    statistics,
+                ],
+            ),
         )
 
         return report_year_outcome_page
