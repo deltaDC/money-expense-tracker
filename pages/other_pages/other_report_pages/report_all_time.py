@@ -1,6 +1,5 @@
 import sqlite3
 from flet import *
-from utils.navbar import create_navbar
 from const import *
 
 
@@ -40,7 +39,7 @@ class Report_All_Time(UserControl):
             )
             return header
 
-        def create_chitieu_thunhap_thuchi():
+        def create_outcome_income_sum():
             data = fetch_data_from_db()
             # Create two text buttons.
             button_1 = Text("Chi tiêu", color="White")
@@ -51,7 +50,7 @@ class Report_All_Time(UserControl):
             total_expense = sum(row[3] for row in data if row[5] == "Tiền chi")
             total_income = sum(row[3] for row in data if row[5] == "Tiền thu")
 
-            chitieu_thunhap_tong1 = Column(
+            outcome_income_sum = Column(
                 alignment="spaceBetween",
                 controls=[
                     Container(
@@ -99,10 +98,10 @@ class Report_All_Time(UserControl):
                 ],
             )
 
-            return chitieu_thunhap_tong1
+            return outcome_income_sum
 
         header = create_header()
-        chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi()
+        outcome_income_sum = create_outcome_income_sum()
 
         report_all_time_page_child_container = Container(
             padding=padding.only(left=10, top=30, right=30),
@@ -112,7 +111,6 @@ class Report_All_Time(UserControl):
                 ]
             ),
         )
-
         def update_size(e):
             report_all_time_page.controls[0].height = self.page.height
             report_all_time_page.controls[0].width = self.page.width
@@ -134,7 +132,7 @@ class Report_All_Time(UserControl):
                     content=Column(
                         controls=[
                             report_all_time_page_child_container,
-                            chitieu_thunhap_thuchi,
+                            outcome_income_sum,
                         ],
                     ),
                 )
@@ -142,3 +140,4 @@ class Report_All_Time(UserControl):
         )
 
         return report_all_time_page
+
