@@ -47,11 +47,11 @@ class Report_Outcome_Category_All_Time(UserControl):
             )
             return header
 
-        def create_chart_label():
+        def create_bieudo_label():
             def change_button_colors(button_1: TextButton, button_2: TextButton):
                 button_1.style.bgcolor = PINK
                 button_2.style.bgcolor = GREY_COLOR
-                label.update()
+                bieudo1.update()
 
             # Create two text buttons.
             button_1 = TextButton(
@@ -71,11 +71,13 @@ class Report_Outcome_Category_All_Time(UserControl):
                 ),
             )
 
-            label = Column(
+            bieudo1 = Column(
                 controls=[
                     Row(
                         alignment="spaceAround",
                         controls=[
+                            # Text('Chi tiêu'),
+                            # Text('Thu nhập'),
                             button_1,
                             button_2,
                         ],
@@ -93,9 +95,9 @@ class Report_Outcome_Category_All_Time(UserControl):
                 ]
             )
 
-            return label
+            return bieudo1
 
-        def create_piechart(data):
+        def create_bieudotron(data):
             normal_radius = 50
             hover_radius = 60
             normal_title_style = TextStyle(
@@ -266,8 +268,8 @@ class Report_Outcome_Category_All_Time(UserControl):
             )
             return chart
 
-        def create_statistics(data):
-            statistics = ListView(
+        def create_thongke(data):
+            thongke = ListView(
                 height=150,
                 width=340,
                 # scroll='auto',
@@ -286,8 +288,8 @@ class Report_Outcome_Category_All_Time(UserControl):
                 row[3] for row in data if row[4] == "Khác" and row[5] == "Tiền chi"
             )
 
-            def create_statistics_row(category, icon, text, icon_color):
-                statistics_row = Container(
+            def create_thongke_row(category, icon, text, icon_color):
+                thongke_row = Container(
                     width=340,
                     height=35,
                     border_radius=5,
@@ -313,60 +315,75 @@ class Report_Outcome_Category_All_Time(UserControl):
                         ],
                     ),
                 )
-                return statistics_row
+                return thongke_row
 
-            statistics.controls.extend(
+            thongke.controls.extend(
                 [
-                    create_statistics_row(tiennha, icons.HOUSE, "Tiền nhà", "yellow"),
-                    create_statistics_row(
+                    create_thongke_row(tiennha, icons.HOUSE, "Tiền nhà", "yellow"),
+                    create_thongke_row(
                         tiendien, icons.ELECTRIC_BOLT, "Tiền điện", "purple"
                     ),
-                    create_statistics_row(quanao, icons.CHECKROOM, "Quần áo", "blue"),
-                    create_statistics_row(anuong, icons.LOCAL_DINING, "Ăn uống", "green"),
-                    create_statistics_row(
+                    create_thongke_row(quanao, icons.CHECKROOM, "Quần áo", "blue"),
+                    create_thongke_row(anuong, icons.LOCAL_DINING, "Ăn uống", "green"),
+                    create_thongke_row(
                         giadung, icons.HOME_REPAIR_SERVICE, "Gia dụng", "red"
                     ),
-                    create_statistics_row(yte, icons.EMERGENCY, "Y tế", "orange"),
-                    create_statistics_row(giaoduc, icons.SCHOOL, "Giáo dục", "pink"),
-                    create_statistics_row(dilai, icons.DIRECTIONS_BUS, "Đi lại", "grey"),
-                    create_statistics_row(
+                    create_thongke_row(yte, icons.EMERGENCY, "Y tế", "orange"),
+                    create_thongke_row(giaoduc, icons.SCHOOL, "Giáo dục", "pink"),
+                    create_thongke_row(dilai, icons.DIRECTIONS_BUS, "Đi lại", "grey"),
+                    create_thongke_row(
                         tiennuoc, icons.WATER_DROP, "Tiền nước", "brown"
                     ),
-                    create_statistics_row(khac, icons.QUESTION_MARK, "Khác", "black"),
+                    create_thongke_row(khac, icons.QUESTION_MARK, "Khác", "black"),
                 ]
             )
 
-            return statistics
+            return thongke
 
         header = create_header()
-        label = create_chart_label()
-        piechart = create_piechart(data)
-        statistics = create_statistics(data)
+        bieu_do_label = create_bieudo_label()
+        bieu_do_tron = create_bieudotron(data)
+        thongke1 = create_thongke(data)
 
-        report_outcome_category_all_time_page_child_container = Container(
+        report_outcome_category_all_time_child_container = Container(
             padding=padding.only(left=30, top=30, right=30),
             content=Column(
                 controls=[
                     header,
-                    label,
-                    piechart,
+                    bieu_do_label,
+                    bieu_do_tron,
                 ]
             ),
         )
 
-        report_outcome_category_all_time_page = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            content=Column(
-                alignment="spaceBetween",
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[
-                    report_outcome_category_all_time_page_child_container,
-                    statistics,
-                ],
-            ),
+        def update_size(e):
+            report_outcome_category_all_time_page.controls[0].height = self.page.height
+            report_outcome_category_all_time_page.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            report_outcome_category_all_time_page.update()
+
+        self.page.on_resize = update_size
+
+        report_outcome_category_all_time_page = ResponsiveRow(
+            [
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    content=Column(
+                        alignment="spaceBetween",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        controls=[
+                            report_outcome_category_all_time_child_container,
+                            thongke1,
+                        ],
+                    ),
+                )
+            ]
         )
 
         return report_outcome_category_all_time_page

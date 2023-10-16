@@ -31,15 +31,14 @@ class Report_Year_Income(UserControl):
         current_month = datetime.date.today().month
         current_year = datetime.date.today().year
         data = fetch_data_from_db(year=current_year)
-        # print(f"data is: {data}")
 
         def update_views():
-            piechart = create_piechart(data)
-            statistics = create_statistics(data)
-            report_year_income_page_child_container.content.controls[3] = piechart
-            report_year_income_page.content.controls[1] = statistics
-            report_year_income_page_child_container.update()
-            report_year_income_page.update()
+            bieu_do_tron = create_bieudotron(data)
+            thongke1 = create_thongke(data)
+            report_year_income_child_container.content.controls[3] = bieu_do_tron
+            report_year_income.controls[0].content.controls[1] = thongke1
+            report_year_income_child_container.update()
+            report_year_income.update()
             self.page.update()
 
         def create_header():
@@ -71,23 +70,37 @@ class Report_Year_Income(UserControl):
 
         def create_date():
             def update_date_display():
-                # Cập nhật năm trên giao diện
+                # Định dạng tháng với số 0 trước nếu nhỏ hơn 10
+                # formatted_month = str(current_month).zfill(2)
+                # Cập nhật ngày tháng trên giao diện
                 date_header.controls[0].value = f"{current_year}"
                 date_header.update()
 
             def get_next_year():
                 global current_year, data
-                # Tăng năm
+                # Tăng tháng
                 current_year += 1
+
+                # Nếu tháng là 13, thì tăng năm và đặt lại tháng về 1
+                # if current_month > 12:
+                #     current_month = 1
+                #     current_year += 1
                 data = fetch_data_from_db(current_year)
+                # print(data)
                 update_date_display()
                 update_views()
 
             def get_prev_year():
                 global current_year, data
-                # Giảm năm
+                # Giảm tháng
                 current_year -= 1
+
+                # Nếu tháng là 0, thì giảm năm và đặt lại tháng về 12
+                # if current_month < 1:
+                #     current_month = 12
+                #     current_year -= 1
                 data = fetch_data_from_db(current_year)
+                # print(data)
                 update_date_display()
                 update_views()
 
@@ -119,11 +132,11 @@ class Report_Year_Income(UserControl):
 
             return date_header
 
-        def create_chart_label():
+        def create_bieudo_label():
             def change_button_colors(button_1: TextButton, button_2: TextButton):
                 button_1.style.bgcolor = PINK
                 button_2.style.bgcolor = GREY_COLOR
-                label.update()
+                bieudo1.update()
 
             # Create two text buttons.
             button_1 = TextButton(
@@ -143,11 +156,13 @@ class Report_Year_Income(UserControl):
                 ),
             )
 
-            label = Column(
+            bieudo1 = Column(
                 controls=[
                     Row(
                         alignment="spaceAround",
                         controls=[
+                            # Text('Chi tiêu'),
+                            # Text('Thu nhập'),
                             button_1,
                             button_2,
                         ],
@@ -157,7 +172,7 @@ class Report_Year_Income(UserControl):
                         height=5,
                         border_radius=5,
                         bgcolor="white12",
-                        padding=padding.only(left=170),
+                        padding=padding.only(right=170),
                         content=Container(
                             bgcolor=PINK,
                         ),
@@ -165,9 +180,9 @@ class Report_Year_Income(UserControl):
                 ]
             )
 
-            return label
+            return bieudo1
 
-        def create_piechart(month_data):
+        def create_bieudotron(month_data):
             normal_radius = 50
             hover_radius = 60
             normal_title_style = TextStyle(
@@ -186,7 +201,7 @@ class Report_Year_Income(UserControl):
             total_income = sum(row[3] for row in month_data if row[5] == "Tiền thu")
             if total_income != 0:
                 tienluong = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Lương")
+                    sum(row[3] for row in month_data if row[4] == "Tiền lương")
                     / total_income
                     * 100
                 )
@@ -286,14 +301,14 @@ class Report_Year_Income(UserControl):
             )
             return chart
 
-        def create_statistics(month_data):
-            statistics = ListView(
+        def create_thongke(month_data):
+            thongke = ListView(
                 height=150,
                 width=340,
                 # scroll='auto',
                 spacing=1,
             )
-            tienluong = sum(row[3] for row in month_data if row[4] == "Lương")
+            tienluong = sum(row[3] for row in month_data if row[4] == "Tiền lương")
             phucap = sum(row[3] for row in month_data if row[4] == "Phụ cấp")
             thuong = sum(row[3] for row in month_data if row[4] == "Thưởng")
             dautu = sum(row[3] for row in month_data if row[4] == "Đầu tư")
@@ -304,10 +319,10 @@ class Report_Year_Income(UserControl):
                 if row[4] == "Khác" and row[5] == "Tiền thu"
             )
 
-            def create_statistics_row(category, icon, text, icon_color):
-                statistics_row = Container(
+            def create_thongke_row(category, icon, text, icon_color):
+                thongke_row = Container(
                     width=340,
-                    height=36,
+                    height=35,
                     border_radius=5,
                     bgcolor=GREY_COLOR,
                     padding=5,
@@ -331,54 +346,69 @@ class Report_Year_Income(UserControl):
                         ],
                     ),
                 )
-                return statistics_row
+                return thongke_row
 
-            statistics.controls.extend(
+            thongke.controls.extend(
                 [
-                    create_statistics_row(
+                    create_thongke_row(
                         tienluong, icons.ACCOUNT_BALANCE_WALLET, "Tiền lương", "blue"
                     ),
-                    create_statistics_row(phucap, icons.ATTACH_MONEY, "Phụ cấp", "yellow"),
-                    create_statistics_row(thuong, icons.CARD_GIFTCARD, "Thưởng", "purple"),
-                    create_statistics_row(dautu, icons.DIAMOND, "Đầu tư", "green"),
-                    create_statistics_row(lamthem, icons.WORK, "Làm thêm", "red"),
-                    create_statistics_row(khac, icons.QUESTION_MARK, "Khác", "black"),
+                    create_thongke_row(phucap, icons.ATTACH_MONEY, "Phụ cấp", "yellow"),
+                    create_thongke_row(thuong, icons.CARD_GIFTCARD, "Thưởng", "purple"),
+                    create_thongke_row(dautu, icons.DIAMOND, "Đầu tư", "green"),
+                    create_thongke_row(lamthem, icons.WORK, "Làm thêm", "red"),
+                    create_thongke_row(khac, icons.QUESTION_MARK, "Khác", "black"),
                 ]
             )
 
-            return statistics
+            return thongke
 
         header = create_header()
         date_row = create_date()
-        label = create_chart_label()
-        piechart = create_piechart(data)
-        statistics = create_statistics(data)
+        bieu_do_label = create_bieudo_label()
+        bieu_do_tron = create_bieudotron(data)
+        thongke1 = create_thongke(data)
 
-        report_year_income_page_child_container = Container(
+        report_year_income_child_container = Container(
             padding=padding.only(left=10, top=30, right=30),
             content=Column(
                 controls=[
                     header,
                     date_row,
-                    label,
-                    piechart,
+                    bieu_do_label,
+                    bieu_do_tron,
                 ]
             ),
         )
 
-        report_year_income_page = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            content=Column(
-                alignment="spaceBetween",
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                controls=[
-                    report_year_income_page_child_container,
-                    statistics,
-                ],
-            ),
+        def update_size(e):
+            report_year_income.controls[0].height = self.page.height
+            report_year_income.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            report_year_income.update()
+
+        self.page.on_resize = update_size
+
+        report_year_income = ResponsiveRow(
+            controls=[
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    content=Column(
+                        alignment="spaceBetween",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        controls=[
+                            report_year_income_child_container,
+                            thongke1,
+                        ],
+                    ),
+                )
+            ]
         )
 
-        return report_year_income_page
+        return report_year_income

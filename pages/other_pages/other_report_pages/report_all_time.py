@@ -1,5 +1,6 @@
 import sqlite3
 from flet import *
+from utils.navbar import create_navbar
 from const import *
 
 
@@ -39,7 +40,7 @@ class Report_All_Time(UserControl):
             )
             return header
 
-        def create_outcome_income_sum():
+        def create_chitieu_thunhap_thuchi():
             data = fetch_data_from_db()
             # Create two text buttons.
             button_1 = Text("Chi tiêu", color="White")
@@ -50,7 +51,7 @@ class Report_All_Time(UserControl):
             total_expense = sum(row[3] for row in data if row[5] == "Tiền chi")
             total_income = sum(row[3] for row in data if row[5] == "Tiền thu")
 
-            outcome_income_sum = Column(
+            chitieu_thunhap_tong1 = Column(
                 alignment="spaceBetween",
                 controls=[
                     Container(
@@ -98,10 +99,10 @@ class Report_All_Time(UserControl):
                 ],
             )
 
-            return outcome_income_sum
+            return chitieu_thunhap_tong1
 
         header = create_header()
-        outcome_income_sum = create_outcome_income_sum()
+        chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi()
 
         report_all_time_page_child_container = Container(
             padding=padding.only(left=10, top=30, right=30),
@@ -111,14 +112,33 @@ class Report_All_Time(UserControl):
                 ]
             ),
         )
-        report_all_time_page = Container(
-            width=SCREEN_WIDTH,
-            height=SCREEN_HEIGHT,
-            border_radius=35,
-            bgcolor=BG_COLOR,
-            content=Column(
-                controls=[report_all_time_page_child_container, outcome_income_sum],
-            ),
+
+        def update_size(e):
+            report_all_time_page.controls[0].height = self.page.height
+            report_all_time_page.controls[0].width = self.page.width
+
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
+
+            report_all_time_page.update()
+
+        self.page.on_resize = update_size
+
+        report_all_time_page = ResponsiveRow(
+            [
+                Container(
+                    width=self.page.width,
+                    height=self.page.height,
+                    border_radius=35,
+                    bgcolor=BG_COLOR,
+                    content=Column(
+                        controls=[
+                            report_all_time_page_child_container,
+                            chitieu_thunhap_thuchi,
+                        ],
+                    ),
+                )
+            ]
         )
 
         return report_all_time_page
