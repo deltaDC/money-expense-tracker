@@ -45,33 +45,20 @@ class Report_Income(UserControl):
         # print(f"data is: {data}")
 
         def update_views():
-            print(data)
-            chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi(data)
-            bieu_do_tron = create_bieudotron(data)
-            thongke1 = create_thongke(data)
-            # chitieu_thunhap_thuchi.update()
-            # bieu_do_tron.update()
-            # thongke1.update()
-            report_income_page_child_container.content.controls[
-                2
-            ] = chitieu_thunhap_thuchi
-            report_income_page_child_container.content.controls[4] = bieu_do_tron
-            report_income_page.controls[0].content.controls[1] = thongke1
+            outcome_income_expenses = create_outcome_income_expenses(data)
+            piechart = create_piechart(data)
+            statistics = create_statistics(data)
+            report_income_page_child_container.content.controls[2] = outcome_income_expenses
+            report_income_page_child_container.content.controls[4] = piechart
+            report_income_page.controls[0].content.controls[1]  = statistics
             report_income_page_child_container.update()
             report_income_page.update()
             self.page.update()
 
         def create_header():
-            # Create a function to change the background color of the buttons.
-            def change_button_colors(button_1: TextButton):
-                button_1.style.bgcolor = GREY_COLOR
-                header.update()
-
-            # Create two text buttons.
+            
+            # Create one text buttons.
             button_1 = Text("Báo cáo", color="white")
-
-            # Add on_click event listeners to the buttons.
-            button_1.on_click = lambda event: change_button_colors(button_1)
 
             # Add the buttons to the page.
             header = Row(
@@ -152,109 +139,84 @@ class Report_Income(UserControl):
 
             return date_header
 
-        def create_chitieu_thunhap_thuchi(month_data):
-            def change_button_colors(button_1: TextButton, button_2: TextButton):
-                button_1.style.bgcolor = GREY_COLOR
-                button_2.style.bgcolor = BG_COLOR
-                chitieu_thunhap1.update()
-
-            # Create two text buttons.
-            button_1 = TextButton(
-                text="Chi tiêu", style=ButtonStyle(color="White", bgcolor=GREY_COLOR)
+        def create_outcome_income_expenses(month_data):
+            # Create three text buttons.
+            button_1 = Text(
+                "Chi tiêu",color="White"
             )
-            button_2 = TextButton(
-                text="Thu nhập", style=ButtonStyle(color="White", bgcolor=GREY_COLOR)
+            button_2 = Text(
+                "Thu nhập", color="White"
             )
-
+            button_3 = Text(
+                "Thu chi", color="White"
+            )
             # Calculate and format the total expense and income from the data
             total_expense = sum(row[3] for row in month_data if row[5] == "Tiền chi")
             total_income = sum(row[3] for row in month_data if row[5] == "Tiền thu")
-
-            # Add on_click event listeners to the buttons.
-            button_1.on_click = lambda event: change_button_colors(button_1, button_2)
-            button_2.on_click = lambda event: change_button_colors(button_2, button_1)
-
-            # Update the text on the buttons with the calculated totals
-            # button_1.text = f"Chi tiêu: {total_expense}đ"
-            # button_2.text = f"Thu nhập: {total_income}đ"
-
-            chitieu_thunhap1 = Row(
-                alignment="spaceBetween",
+            
+            outcome_income_expenses = Column(
                 controls=[
-                    Container(
-                        width=168,
-                        height=30,
-                        border_radius=5,
-                        bgcolor=GREY_COLOR,
-                        padding=1,
-                        content=Row(
-                            alignment="spaceBetween",
-                            controls=[
-                                button_1,
-                                Text(f"{total_expense} đ", color="white"),
-                            ],
-                        ),
+                    Row(
+                        alignment="spaceBetween",
+                        controls=[
+                            Container(
+                                width=170,
+                                height=30,
+                                border_radius=5,
+                                bgcolor=GREY_COLOR,
+                                padding=1,
+                                content=Row(
+                                    alignment="spaceBetween",
+                                    controls=[
+                                        button_1,
+                                        Text(f"{total_expense} đ", color="white"),
+                                    ],
+                                ),
+                            ),
+                            Container(
+                                width=170,
+                                height=30,
+                                border_radius=5,
+                                bgcolor=GREY_COLOR,
+                                padding=1,
+                                content=Row(
+                                    alignment="spaceBetween",
+                                    controls=[
+                                        button_2,
+                                        Text(f"{total_income} đ", color="white"),
+                                    ],
+                                ),
+                            ),
+                        ],
                     ),
-                    Container(
-                        width=168,
-                        height=30,
-                        border_radius=5,
-                        bgcolor=GREY_COLOR,
-                        padding=1,
-                        content=Row(
-                            alignment="spaceBetween",
-                            controls=[
-                                button_2,
-                                Text(f"{total_income} đ", color="white"),
-                            ],
-                        ),
-                    ),
-                ],
-            )
-
-            def change_button_colors1(button_3: TextButton):
-                button_3.style.bgcolor = GREY_COLOR
-                thu_chi1.update()
-
-            # Create two text buttons.
-            button_3 = TextButton(
-                text="Thu chi", style=ButtonStyle(color="White", bgcolor=GREY_COLOR)
-            )
-
-            # Add on_click event listeners to the buttons.
-            button_3.on_click = lambda event: change_button_colors1(button_3)
-
-            thu_chi1 = Row(
-                controls=[
-                    Container(
-                        width=340,
-                        height=30,
-                        border_radius=5,
-                        bgcolor=GREY_COLOR,
-                        padding=1,
-                        content=Row(
-                            alignment="spaceBetween",
-                            controls=[
-                                button_3,
-                                Text(f"{total_income-total_expense} đ", color="white"),
-                            ],
-                        ),
+                    Row(
+                        controls=[
+                            Container(
+                                width=340,
+                                height=30,
+                                border_radius=5,
+                                bgcolor=GREY_COLOR,
+                                padding=1,
+                                content=Row(
+                                    alignment="spaceBetween",
+                                    controls=[
+                                        button_3,
+                                        Text(f"{total_income-total_expense} đ", color="white"),
+                                    ],
+                                ),
+                            )
+                        ]
                     )
-                ]
-            )
-            chitieuthunhapthuchi = Column(
-                controls=[
-                    chitieu_thunhap1,
-                    thu_chi1,
-                ]
-            )
-            return chitieuthunhapthuchi
 
-        def create_bieudo_label():
+                ]
+            )
+            return outcome_income_expenses
+
+        def create_chart_label():
             def change_button_colors(button_1: TextButton, button_2: TextButton):
                 button_1.style.bgcolor = PINK
                 button_2.style.bgcolor = GREY_COLOR
-                bieudo1.update()
+                label.update()
 
             # Create two text buttons.
             button_1 = TextButton(
@@ -274,7 +236,7 @@ class Report_Income(UserControl):
                 ),
             )
 
-            bieudo1 = Column(
+            label = Column(
                 controls=[
                     Row(
                         alignment="spaceAround",
@@ -296,9 +258,9 @@ class Report_Income(UserControl):
                 ]
             )
 
-            return bieudo1
+            return label
 
-        def create_bieudotron(month_data):
+        def create_piechart(month_data):
             normal_radius = 50
             hover_radius = 60
             normal_title_style = TextStyle(
@@ -317,7 +279,7 @@ class Report_Income(UserControl):
             total_income = sum(row[3] for row in month_data if row[5] == "Tiền thu")
             if total_income != 0:
                 tienluong = "{:.2f}".format(
-                    sum(row[3] for row in month_data if row[4] == "Tiền lương")
+                    sum(row[3] for row in month_data if row[4] == "Lương")
                     / total_income
                     * 100
                 )
@@ -417,14 +379,14 @@ class Report_Income(UserControl):
             )
             return chart
 
-        def create_thongke(month_data):
-            thongke = ListView(
+        def create_statistics(month_data):
+            statistics= ListView(
                 height=65,
                 width=340,
                 # scroll='auto',
                 spacing=1,
             )
-            tienluong = sum(row[3] for row in month_data if row[4] == "Tiền lương")
+            tienluong = sum(row[3] for row in month_data if row[4] == "Lương")
             phucap = sum(row[3] for row in month_data if row[4] == "Phụ cấp")
             thuong = sum(row[3] for row in month_data if row[4] == "Thưởng")
             dautu = sum(row[3] for row in month_data if row[4] == "Đầu tư")
@@ -435,8 +397,8 @@ class Report_Income(UserControl):
                 if row[4] == "Khác" and row[5] == "Tiền thu"
             )
 
-            def create_thongke_row(category, icon, text, icon_color):
-                thongke_row = Container(
+            def create_statistics_row(category, icon, text, icon_color):
+                statistics_row = Container(
                     width=340,
                     height=21,
                     border_radius=5,
@@ -462,29 +424,29 @@ class Report_Income(UserControl):
                         ],
                     ),
                 )
-                return thongke_row
+                return statistics_row
 
-            thongke.controls.extend(
+            statistics.controls.extend(
                 [
-                    create_thongke_row(
+                    create_statistics_row(
                         tienluong, icons.ACCOUNT_BALANCE_WALLET, "Tiền lương", "blue"
                     ),
-                    create_thongke_row(phucap, icons.ATTACH_MONEY, "Phụ cấp", "yellow"),
-                    create_thongke_row(thuong, icons.CARD_GIFTCARD, "Thưởng", "purple"),
-                    create_thongke_row(dautu, icons.DIAMOND, "Đầu tư", "green"),
-                    create_thongke_row(lamthem, icons.WORK, "Làm thêm", "red"),
-                    create_thongke_row(khac, icons.QUESTION_MARK, "Khác", "black"),
+                    create_statistics_row(phucap, icons.ATTACH_MONEY, "Phụ cấp", "yellow"),
+                    create_statistics_row(thuong, icons.CARD_GIFTCARD, "Thưởng", "purple"),
+                    create_statistics_row(dautu, icons.DIAMOND, "Đầu tư", "green"),
+                    create_statistics_row(lamthem, icons.WORK, "Làm thêm", "red"),
+                    create_statistics_row(khac, icons.QUESTION_MARK, "Khác", "black"),
                 ]
             )
 
-            return thongke
+            return statistics
 
         header = create_header()
         date_row = create_date()
-        chitieu_thunhap_thuchi = create_chitieu_thunhap_thuchi(data)
-        bieu_do_label = create_bieudo_label()
-        bieu_do_tron = create_bieudotron(data)
-        thongke1 = create_thongke(data)
+        outcome_income_expenses = create_outcome_income_expenses(data)
+        label = create_chart_label()
+        piechart = create_piechart(data)
+        statistics = create_statistics(data)
         navbar = create_navbar(self.page, 2)
 
         report_income_page_child_container = Container(
@@ -493,9 +455,9 @@ class Report_Income(UserControl):
                 controls=[
                     header,
                     date_row,
-                    chitieu_thunhap_thuchi,
-                    bieu_do_label,
-                    bieu_do_tron,
+                    outcome_income_expenses,
+                    label,
+                    piechart,
                 ]
             ),
         )
@@ -523,7 +485,7 @@ class Report_Income(UserControl):
                         horizontal_alignment=CrossAxisAlignment.CENTER,
                         controls=[
                             report_income_page_child_container,
-                            thongke1,
+                            statistics,
                             navbar,
                         ],
                     ),
