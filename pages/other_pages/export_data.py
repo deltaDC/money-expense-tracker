@@ -15,7 +15,7 @@ class Exportdata(UserControl):
             cursor = conn.cursor()
             data1 = cursor.execute("""SELECT * FROM financial_transaction""")
             data = [row for row in data1]
-            csv_file = "sample.csv"
+            csv_file = "data.csv"
 
             with open(csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
                 # writer = csv.writer(file)
