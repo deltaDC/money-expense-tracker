@@ -4,7 +4,6 @@ import datetime
 import calendar
 from utils.navbar import create_navbar
 from const import *
-import time
 
 
 class Calendar(UserControl):
@@ -248,7 +247,9 @@ class Calendar(UserControl):
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls=[
                         Text("Tiền thu", weight="bold"),
-                        Text(value=f"{month_income}", color="#50b4d1"),
+                        Text(
+                            value=f"{'{:,}'.format(int(month_income))}", color="#50b4d1"
+                        ),
                     ],
                 ),
             )
@@ -305,16 +306,16 @@ class Calendar(UserControl):
             ),
         )
 
-        # def update_size(e):
-        #     calendar_page.controls[0].height = self.page.height
-        #     calendar_page.controls[0].width = self.page.width
+        def update_size(e):
+            calendar_page.controls[0].height = self.page.height
+            calendar_page.controls[0].width = self.page.width
 
-        #     print(f"self.page.height is: {self.page.height}")
-        #     print(f"self.page.width is: {self.page.width}")
+            print(f"self.page.height is: {self.page.height}")
+            print(f"self.page.width is: {self.page.width}")
 
-        #     calendar_page.update()
+            calendar_page.update()
 
-        # self.page.on_resize = update_size
+        self.page.on_resize = update_size
 
         calendar_page = ResponsiveRow(
             controls=[
