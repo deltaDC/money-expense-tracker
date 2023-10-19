@@ -5,6 +5,7 @@ from pages.other_pages.other_report_pages.report_annual_expense import (
 from pages.other_pages.other_report_pages.report_annual_income import (
     Report_During_The_Year_Income,
 )
+from pages.other_pages.to_buy import ToBuy
 from pages.outcome import Outcome
 from pages.income import Income
 from pages.calendar import Calendar
@@ -31,8 +32,8 @@ def views_handler(page):
             route="/", 
             controls=[Outcome(page)]
         ),
-        "/page_2": View(
-            route="/page_2", 
+        "/income": View(
+            route="/income", 
             controls=[Income(page)]
         ),
         "/calendar": View(
