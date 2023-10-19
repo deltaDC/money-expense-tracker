@@ -55,31 +55,67 @@ class Settings(UserControl):
             )
             return header
 
-        def create_delete_row():
-            def open_dlg(e):
-                self.page.dialog = dlg_modal
-                dlg_modal.open = True
-                self.page.update()
-
-            def close_dlg(e):
-                dlg_modal.open = False
-                self.page.update()
-
+        def on_row_click():
             def delete_data_and_close_dlg(e):
                 delete_all_data_from_db()
-                close_dlg(e)
+                close_bs(e)
 
-            dlg_modal = AlertDialog(
-                modal=True,
-                title=Text("Vui lòng xác nhận"),
-                content=Text("Bạn có chắc chắn muốn xóa tất cả dữ liệu không"),
-                actions=[
-                    TextButton("Yes", on_click=lambda e: delete_data_and_close_dlg(e)),
-                    TextButton("No", on_click=lambda e: close_dlg(e)),
-                ],
-                actions_alignment=MainAxisAlignment.END,
-                on_dismiss=lambda e: print("Modal dialog dismissed!"),
+            def bs_dismissed(e):
+                print("Dismissed!")
+
+            def show_bs(e):
+                bs.open = True
+                bs.update()
+
+            def close_bs(e):
+                bs.open = False
+                bs.update()
+
+            bs = BottomSheet(
+                Container(
+                    Column(
+                        [
+                            Text("Bạn có chắc chắn muốn xóa tất cả dữ liệu không"),
+                            ElevatedButton(
+                                "Yes", on_click=lambda e: delete_data_and_close_dlg(e)
+                            ),
+                            ElevatedButton("No", on_click=lambda e: close_bs(e)),
+                        ],
+                        tight=True,
+                    ),
+                    padding=20,
+                ),
+                open=True,
+                on_dismiss=bs_dismissed,
             )
+            self.page.overlay.append(bs)
+            self.page.add(ElevatedButton("", on_click=show_bs))
+
+        def create_delete_row():
+            # def open_dlg(e):
+            #     self.page.dialog = dlg_modal
+            #     dlg_modal.open = True
+            #     self.page.update()
+
+            # def close_dlg(e):
+            #     dlg_modal.open = False
+            #     self.page.update()
+
+            # def delete_data_and_close_dlg(e):
+            #     delete_all_data_from_db()
+            #     close_dlg(e)
+
+            # dlg_modal = AlertDialog(
+            #     modal=True,
+            #     title=Text("Vui lòng xác nhận"),
+            #     content=Text("Bạn có chắc chắn muốn xóa tất cả dữ liệu không"),
+            #     actions=[
+            #         TextButton("Yes", on_click=lambda e: delete_data_and_close_dlg(e)),
+            #         TextButton("No", on_click=lambda e: close_dlg(e)),
+            #     ],
+            #     actions_alignment=MainAxisAlignment.END,
+            #     on_dismiss=lambda e: print("Modal dialog dismissed!"),
+            # )
 
             row = Container(
                 bgcolor=BG_COLOR,
@@ -94,7 +130,7 @@ class Settings(UserControl):
                         Text("Xóa toàn bộ dữ liệu", color="red"),
                     ]
                 ),
-                on_click=lambda e: open_dlg(e),
+                on_click=lambda e: on_row_click(),
             )
 
             return row
