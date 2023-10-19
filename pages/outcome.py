@@ -12,89 +12,92 @@ class Outcome(UserControl):
 
     def build(self):
         def create_header():
-            # Create a function to change the background color of the buttons.
+            """This function builds the header for the page"""
+            # Define an inner function to change the background color of the buttons.
             def change_button_colors(button_1: TextButton, button_2: TextButton):
+                # Change the background color of button_1 to GREY_COLOR and button_2 to BG_COLOR.
                 button_1.style.bgcolor = GREY_COLOR
                 button_2.style.bgcolor = BG_COLOR
-                header.update()
+                header.update()  # Update the header to reflect the color changes.
 
             # Create two text buttons.
             button_1 = TextButton(
-                text="Tiền chi",
-                style=ButtonStyle(color="White", bgcolor=GREY_COLOR),
+                text="Tiền chi",  # Set the text for button_1
+                style=ButtonStyle(color="White", bgcolor=GREY_COLOR),  # Set initial background color to GREY_COLOR
                 on_click=lambda e: (
-                    change_button_colors(button_1, button_2),
-                    self.page.go("/"),
+                    change_button_colors(button_1, button_2),  # Call change_button_colors to update colors
+                    self.page.go("/"),  # Redirect to the home page
                 ),
             )
             button_2 = TextButton(
-                text="Tiền thu",
-                style=ButtonStyle(color="White"),
+                text="Tiền thu",  # Set the text for button_2
+                style=ButtonStyle(color="White"),  # Set initial background color to its default
                 on_click=lambda e: (
-                    change_button_colors(button_2, button_1),
-                    self.page.go("/page_2"),
+                    change_button_colors(button_2, button_1),  # Call change_button_colors to update colors
+                    self.page.go("/income"),  # Redirect to the income page
                 ),
             )
 
-            # Add the buttons to the page.
+            # Create a header that contains the two buttons and an edit icon.
             header = Row(
                 alignment="spaceBetween",
                 controls=[
                     Row(
                         controls=[
-                            button_1,
-                            button_2,
+                            button_1,  # Add the first button to the header
+                            button_2,  # Add the second button to the header
                         ]
                     ),
-                    Icon(name=icons.EDIT, color="White"),
+                    Icon(name=icons.EDIT, color="White"),  # Add an edit icon to the header
                 ],
             )
-            return header
+
+            return header  # Return the header as the result of the function.
 
         def create_date():
+            """Create a date row for client to change the date of money expense"""
+            # Define a function to get the next date and update the date header.
             def get_next_date(curr_date):
-                next_date = curr_date + datetime.timedelta(days=1)
-                date_header.controls[0].value = next_date
-                date_header.update()
+                next_date = curr_date + datetime.timedelta(days=1)  # Calculate the next date
+                date_header.controls[0].value = next_date  # Update the displayed date
+                date_header.update()  # Update the date header to reflect the changes
 
+            # Define a function to get the previous date and update the date header.
             def get_prev_date(curr_date):
-                prev_date = curr_date - datetime.timedelta(days=1)
-                date_header.controls[0].value = prev_date
-                date_header.update()
+                prev_date = curr_date - datetime.timedelta(days=1)  # Calculate the previous date
+                date_header.controls[0].value = prev_date  # Update the displayed date
+                date_header.update()  # Update the date header to reflect the changes
 
-            # Create a row to represent the date header.
+            # Create a row to represent the date header with date, arrows, and controls.
             date_header = Row(
                 alignment="spaceBetween",
                 controls=[
-                    # Create a text widget to display the datetime.datetime.
+                    # Create a text widget to display the current date (initialized to today's date).
                     Text(datetime.date.today(), color="white"),
-                    # Create a row to contain the arrow buttons.
+                    # Create a row to contain the arrow buttons for navigation.
                     Row(
                         controls=[
-                            # Create an icon button for the previous arrow.
+                            # Create an icon button for the previous arrow that goes to the previous date.
                             IconButton(
                                 icon=icons.ARROW_LEFT,
                                 icon_color="White",
-                                on_click=lambda event: get_prev_date(
-                                    date_header.controls[0].value
-                                ),
+                                on_click=lambda event: get_prev_date(date_header.controls[0].value),
                             ),
-                            # Create an icon button for the next arrow.
+                            # Create an icon button for the next arrow that goes to the next date.
                             IconButton(
                                 icon=icons.ARROW_RIGHT,
                                 icon_color=colors.WHITE,
-                                on_click=lambda event: get_next_date(
-                                    date_header.controls[0].value
-                                ),
+                                on_click=lambda event: get_next_date(date_header.controls[0].value),
                             ),
                         ]
                     ),
                 ],
             )
 
-            return date_header
+            return date_header  # Return the date header as the result of the function.
 
         def create_note():
+            # Create a header with a label ("Ghi chú") and a text input field.
             note_header = Row(
                 alignment="spaceBetween",
                 # spacing=20,

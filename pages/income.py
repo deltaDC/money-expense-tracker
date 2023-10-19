@@ -32,7 +32,7 @@ class Income(UserControl):
                 style=ButtonStyle(color="White", bgcolor=GREY_COLOR),
                 on_click=lambda e: (
                     change_button_colors(button_2, button_1),
-                    self.page.go("/page_2"),
+                    self.page.go("/income"),
                 ),
             )
 
