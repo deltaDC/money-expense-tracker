@@ -4,6 +4,7 @@ import datetime
 import calendar
 from utils.navbar import create_navbar
 from const import *
+import time
 
 
 class Calendar(UserControl):
@@ -167,23 +168,62 @@ class Calendar(UserControl):
 
                 report_text = f"TIỀN THU:\n{day_income_report_text}\nTIỀN CHI:\n{day_outcome_report_text}"
 
-                dlg = AlertDialog(
-                    title=Text(
-                        f"Báo cáo ngày {day}/{current_month}/{current_year}",
-                        color="white",
+                def bs_dismissed(e):
+                    print("Dismissed!")
+
+                def show_bs(e):
+                    bs.open = True
+                    bs.update()
+
+                def close_bs(e):
+                    bs.open = False
+                    bs.update()
+
+                bs = BottomSheet(
+                    Container(
+                        Column(
+                            [
+                                Text(report_text),
+                                ElevatedButton("Đóng", on_click=close_bs),
+                            ],
+                            tight=True,
+                        ),
+                        padding=20,
                     ),
-                    content=Text(report_text, color="white"),
-                    on_dismiss=lambda e: print("Dialog dismissed!"),
+                    open=True,
+                    on_dismiss=bs_dismissed,
                 )
+                self.page.overlay.append(bs)
+                self.page.add(ElevatedButton("", on_click=show_bs))
+
+                # dlg = AlertDialog(
+                #     title=Text(
+                #         f"Báo cáo ngày {day}/{current_month}/{current_year}",
+                #         color="white",
+                #     ),
+                #     content=Column(
+                #         controls=[
+                #             Text(
+                #                 report_text,
+                #                 color="white",
+                #                 font_family="Helvetica, Arial",
+                #             ),
+                #         ]
+                #     ),
+                #     on_dismiss=lambda e: print("Dialog dismissed!"),
+                # )
                 # print(dlg.title)
                 # print(dlg.content)
 
-                def open_dlg():
-                    self.page.dialog = dlg
-                    dlg.open = True
-                    self.page.update()
+                # def open_dlg(e):
+                #     # dlg.update()
+                #     self.page.dialog = dlg
+                #     dlg.open = True
+                #     self.page.update()
 
-                open_dlg()
+                # # open_dlg()
+                # self.page.overlay.append(dlg)
+                # self.page.add(ElevatedButton("", on_click=open_dlg))
 
             # Create a child widget for each day of the calendar_UI.
             for day in range(1, num_days + 1):

@@ -233,17 +233,34 @@ class Income(UserControl):
 
             # Check if money_value is empty or negative
             if not money_value or int(money_value) < 0:
-                dlg = AlertDialog(
-                    title=Text("Lỗi nhập số tiền"),
-                    on_dismiss=lambda e: print("Dialog dismissed!"),
+
+                def bs_dismissed(e):
+                    print("Dismissed!")
+
+                def show_bs(e):
+                    bs.open = True
+                    bs.update()
+
+                def close_bs(e):
+                    bs.open = False
+                    bs.update()
+
+                bs = BottomSheet(
+                    Container(
+                        Column(
+                            [
+                                Text("Lỗi nhập số tiền"),
+                                ElevatedButton("Đóng", on_click=close_bs),
+                            ],
+                            tight=True,
+                        ),
+                        padding=20,
+                    ),
+                    open=True,
+                    on_dismiss=bs_dismissed,
                 )
-
-                def open_dlg():
-                    self.page.dialog = dlg
-                    dlg.open = True
-                    self.page.update()
-
-                open_dlg()
+                self.page.overlay.append(bs)
+                self.page.add(ElevatedButton("", on_click=show_bs))
                 return False
 
             note.controls[1].value = ""
@@ -280,17 +297,45 @@ class Income(UserControl):
                 print("success")
 
                 # popup msg
-                dlg = AlertDialog(
-                    title=Text("Ghi nhận thành công"),
-                    on_dismiss=lambda e: print("Dialog dismissed!"),
+                # dlg = AlertDialog(
+                #     title=Text("Ghi nhận thành công"),
+                #     on_dismiss=lambda e: print("Dialog dismissed!"),
+                # )
+
+                # def open_dlg():
+                #     self.page.dialog = dlg
+                #     dlg.open = True
+                #     self.page.update()
+
+                # open_dlg()
+
+                def bs_dismissed(e):
+                    print("Dismissed!")
+
+                def show_bs(e):
+                    bs.open = True
+                    bs.update()
+
+                def close_bs(e):
+                    bs.open = False
+                    bs.update()
+
+                bs = BottomSheet(
+                    Container(
+                        Column(
+                            [
+                                Text("Ghi nhận thành công"),
+                                ElevatedButton("Đóng", on_click=close_bs),
+                            ],
+                            tight=True,
+                        ),
+                        padding=20,
+                    ),
+                    open=True,
+                    on_dismiss=bs_dismissed,
                 )
-
-                def open_dlg():
-                    self.page.dialog = dlg
-                    dlg.open = True
-                    self.page.update()
-
-                open_dlg()
+                self.page.overlay.append(bs)
+                self.page.add(ElevatedButton("", on_click=show_bs))
 
                 return True  # Trả về True nếu thành công
             except Exception as e:
