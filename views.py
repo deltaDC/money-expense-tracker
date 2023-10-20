@@ -5,7 +5,7 @@ from pages.other_pages.other_report_pages.report_annual_expense import (
 from pages.other_pages.other_report_pages.report_annual_income import (
     Report_During_The_Year_Income,
 )
-from pages.other_pages.to_buy import ToBuy
+
 from pages.outcome import Outcome
 from pages.income import Income
 from pages.calendar import Calendar
