@@ -70,7 +70,7 @@ class Report_Income_Category_All_Time(UserControl):
                     self.page.go("/report_income_category_all_time"),
                 ),
             )
-
+            container_width = self.page.width - 60
             label = Column(
                 controls=[
                     Row(
@@ -81,11 +81,11 @@ class Report_Income_Category_All_Time(UserControl):
                         ],
                     ),
                     Container(
-                        width=450,
+                        width=container_width,
                         height=5,
                         border_radius=5,
                         bgcolor="white12",
-                        padding=padding.only(left=170),
+                        padding=padding.only(left=container_width/2),
                         content=Container(
                             bgcolor=PINK,
                         ),
@@ -221,14 +221,14 @@ class Report_Income_Category_All_Time(UserControl):
                 # scroll='auto',
                 spacing=1,
             )
-            tienluong = sum(row[3] for row in data if row[4] == "Lương")
-            phucap = sum(row[3] for row in data if row[4] == "Phụ cấp")
-            thuong = sum(row[3] for row in data if row[4] == "Thưởng")
-            dautu = sum(row[3] for row in data if row[4] == "Đầu tư")
-            lamthem = sum(row[3] for row in data if row[4] == "Làm thêm")
-            khac = sum(
+            tienluong = (int)(sum(row[3] for row in data if row[4] == "Lương"))
+            phucap = (int)(sum(row[3] for row in data if row[4] == "Phụ cấp"))
+            thuong = (int)(sum(row[3] for row in data if row[4] == "Thưởng"))
+            dautu = (int)(sum(row[3] for row in data if row[4] == "Đầu tư"))
+            lamthem = (int)(sum(row[3] for row in data if row[4] == "Làm thêm"))
+            khac = (int)(sum(
                 row[3] for row in data if row[4] == "Khác" and row[5] == "Tiền thu"
-            )
+            ))
 
             def create_statistics_row(category, icon, text, icon_color):
                 statistics_row = Container(
@@ -250,7 +250,7 @@ class Report_Income_Category_All_Time(UserControl):
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{category}", color="white"),
+                                    Text(f"{'{:,}'.format(category)}", color="white"),
                                     Text("đ", color="white"),
                                 ],
                             ),

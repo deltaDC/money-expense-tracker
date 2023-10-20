@@ -47,8 +47,8 @@ class Report_All_Time(UserControl):
             button_3 = Text("Tổng", color="White")
 
             # Calculate and format the total expense and income from the data
-            total_expense = sum(row[3] for row in data if row[5] == "Tiền chi")
-            total_income = sum(row[3] for row in data if row[5] == "Tiền thu")
+            total_expense = (int)(sum(row[3] for row in data if row[5] == "Tiền chi"))
+            total_income = (int)(sum(row[3] for row in data if row[5] == "Tiền thu"))
 
             outcome_income_sum = Column(
                 alignment="spaceBetween",
@@ -63,7 +63,7 @@ class Report_All_Time(UserControl):
                             alignment="spaceBetween",
                             controls=[
                                 button_1,
-                                Text(f"{total_expense} đ", color="white"),
+                                Text(f"{'{:,}'.format(total_expense)} đ", color="white"),
                             ],
                         ),
                     ),
@@ -77,7 +77,7 @@ class Report_All_Time(UserControl):
                             alignment="spaceBetween",
                             controls=[
                                 button_2,
-                                Text(f"{total_income} đ", color="white"),
+                                Text(f"{'{:,}'.format(total_income)} đ", color="white"),
                             ],
                         ),
                     ),
@@ -91,7 +91,7 @@ class Report_All_Time(UserControl):
                             alignment="spaceBetween",
                             controls=[
                                 button_3,
-                                Text(f"{total_income-total_expense} đ", color="white"),
+                                Text(f"{'{:,}'.format(total_income-total_expense)} đ", color="white"),
                             ],
                         ),
                     ),

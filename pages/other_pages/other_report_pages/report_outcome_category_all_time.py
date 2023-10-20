@@ -70,7 +70,7 @@ class Report_Outcome_Category_All_Time(UserControl):
                     self.page.go("/report_income_category_all_time"),
                 ),
             )
-
+            container_width = self.page.width - 60
             label = Column(
                 controls=[
                     Row(
@@ -81,11 +81,11 @@ class Report_Outcome_Category_All_Time(UserControl):
                         ],
                     ),
                     Container(
-                        width=450,
+                        width=container_width,
                         height=5,
                         border_radius=5,
                         bgcolor="white12",
-                        padding=padding.only(right=170),
+                        padding=padding.only(right=container_width/2),
                         content=Container(
                             bgcolor=PINK,
                         ),
@@ -273,18 +273,18 @@ class Report_Outcome_Category_All_Time(UserControl):
                 # scroll='auto',
                 spacing=1,
             )
-            anuong = sum(row[3] for row in data if row[4] == "Ăn uống")
-            quanao = sum(row[3] for row in data if row[4] == "Quần áo")
-            tiennha = sum(row[3] for row in data if row[4] == "Tiền nhà")
-            tiendien = sum(row[3] for row in data if row[4] == "Tiền điện")
-            giadung = sum(row[3] for row in data if row[4] == "Gia dụng")
-            yte = sum(row[3] for row in data if row[4] == "Y tế")
-            giaoduc = sum(row[3] for row in data if row[4] == "Giáo dục")
-            dilai = sum(row[3] for row in data if row[4] == "Đi lại")
-            tiennuoc = sum(row[3] for row in data if row[4] == "Tiền nước")
-            khac = sum(
+            anuong = (int)(sum(row[3] for row in data if row[4] == "Ăn uống"))
+            quanao = (int)(sum(row[3] for row in data if row[4] == "Quần áo"))
+            tiennha = (int)(sum(row[3] for row in data if row[4] == "Tiền nhà"))
+            tiendien = (int)(sum(row[3] for row in data if row[4] == "Tiền điện"))
+            giadung = (int)(sum(row[3] for row in data if row[4] == "Gia dụng"))
+            yte = (int)(sum(row[3] for row in data if row[4] == "Y tế"))
+            giaoduc = (int)(sum(row[3] for row in data if row[4] == "Giáo dục"))
+            dilai = (int)(sum(row[3] for row in data if row[4] == "Đi lại"))
+            tiennuoc = (int)(sum(row[3] for row in data if row[4] == "Tiền nước"))
+            khac = (int)(sum(
                 row[3] for row in data if row[4] == "Khác" and row[5] == "Tiền chi"
-            )
+            ))
 
             def create_statistics_row(category, icon, text, icon_color):
                 statistics_row = Container(
@@ -306,7 +306,7 @@ class Report_Outcome_Category_All_Time(UserControl):
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{category}", color="white"),
+                                    Text(f"{'{:,}'.format(category)}", color="white"),
                                     Text("đ", color="white"),
                                 ],
                             ),
