@@ -455,11 +455,12 @@ class Report_During_The_Year_Expense(UserControl):
                 ),
                 left_axis=ChartAxis(
                     labels=[
-                        ChartAxisLabel(value=20, label=Text("2")),
-                        ChartAxisLabel(value=40, label=Text("4")),
-                        ChartAxisLabel(value=60, label=Text("6")),
-                        ChartAxisLabel(value=80, label=Text("8")),
-                        ChartAxisLabel(value=100, label=Text("10")),
+                        # ChartAxisLabel(value=20, label=Text("2")),
+                        # ChartAxisLabel(value=40, label=Text("4")),
+                        # ChartAxisLabel(value=60, label=Text("6")),
+                        # ChartAxisLabel(value=80, label=Text("8")),
+                        # ChartAxisLabel(value=100, label=Text("10")),
+                        labels_size=40, title=Text("Percent by month"), title_size=40
                     ],
                 ),
                 horizontal_grid_lines=ChartGridLines(
