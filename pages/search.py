@@ -1,12 +1,7 @@
 import sqlite3
 from flet import *
 from const import *
-
-
-BG_COLOR = "#191919"
-GREY_COLOR = "#3f3f3f"
-PINK = "#eb06ff"
-BLUE = "#0077b6"
+from datetime import datetime
 
 
 class Search(UserControl):
@@ -36,6 +31,161 @@ class Search(UserControl):
             search_page.controls[0].content.controls[2] = search_report_row_new
             search_page.update()
             self.page.update()
+
+        def delete_data_from_db_by_id(id):
+            global data
+            print(id)
+            conn = sqlite3.connect("db/app.db")
+            cursor = conn.cursor()
+            # Build the SQL query to delete a record by ID
+            sql_query = "DELETE FROM financial_transaction WHERE id = ?"
+            cursor.execute(sql_query, (id,))
+            conn.commit()
+            conn.close()
+            data = fetch_data_from_db()
+            update_views()
+
+        def update_data_from_db_by_id(id, date, category, note, amount):
+            def bs_dismissed(e):
+                print("Dismissed!")
+
+            def show_bs(e):
+                bs.open = True
+                bs.update()
+
+            def close_bs(e):
+                bs.open = False
+                bs.update()
+
+            bs = BottomSheet(
+                content=Container(
+                    content=Column(
+                        controls=[
+                            TextField(value=f"{date}", label="Ngày"),
+                            TextField(value=f"{note}", label="Ghi chú"),
+                            TextField(value=f"{int(abs(amount))}", label="Tiền"),
+                        ],
+                        tight=True,
+                    ),
+                    padding=20,
+                ),
+                open=True,
+                on_dismiss=bs_dismissed,
+            )
+
+            expense_radio_group = ListView(
+                height=100,
+                controls=[
+                    RadioGroup(
+                        content=Column(
+                            controls=[
+                                Radio(value="Ăn uống", label="Ăn uống"),
+                                Radio(value="Gia dụng", label="Gia dụng"),
+                                Radio(value="Quần áo", label="Quần áo"),
+                                Radio(value="Y tế", label="Y tế"),
+                                Radio(value="Giáo dục", label="Giáo dục"),
+                                Radio(value="Tiền điện", label="Tiền điện"),
+                                Radio(value="Tiền nhà", label="Tiền nhà"),
+                                Radio(value="Tiền nước", label="Tiền nước"),
+                                Radio(value="Đi lại", label="Đi lại"),
+                                Radio(value="Khác", label="Khác"),
+                            ]
+                        ),
+                    )
+                ],
+            )
+
+            income_radio_group = ListView(
+                height=100,
+                controls=[
+                    RadioGroup(
+                        content=Column(
+                            controls=[
+                                Radio(value="Lương", label="Lương"),
+                                Radio(value="Phụ cấp", label="Phụ cấp"),
+                                Radio(value="Thưởng", label="Thưởng"),
+                                Radio(value="Đầu tư", label="Đầu tư"),
+                                Radio(value="Làm thêm", label="Làm thêm"),
+                                Radio(value="Khác", label="Khác"),
+                            ]
+                        ),
+                    )
+                ],
+            )
+
+            if amount > 0:
+                bs.content.content.controls.append(income_radio_group)
+            else:
+                bs.content.content.controls.append(expense_radio_group)
+
+            bs.content.content.controls.extend(
+                [
+                    ElevatedButton("Cập nhật", on_click=lambda e: check_update()),
+                    ElevatedButton("Đóng", on_click=close_bs),
+                ]
+            )
+            self.page.overlay.append(bs)
+            self.page.add(ElevatedButton("", on_click=show_bs))
+
+            def check_date(date):
+                expected_format = "%Y-%m-%d"
+
+                try:
+                    parsed_date = datetime.strptime(date, expected_format)
+                    formatted_date = parsed_date.strftime(expected_format)
+
+                    if date == formatted_date:
+                        return True
+                    else:
+                        return False
+                except ValueError:
+                    return False
+
+            def check_update():
+                new_date = bs.content.content.controls[0].value
+                new_note = bs.content.content.controls[1].value
+                new_amount = bs.content.content.controls[2].value
+                new_category = bs.content.content.controls[3].controls[0].value
+                print(new_category)
+
+                if not check_date(new_date):
+                    bs.content.content.controls[0].border_color = "red"
+                    bs.update()
+                else:
+                    bs.content.content.controls[0].border_color = "green"
+                    bs.content.content.controls[1].border_color = "green"
+                    bs.update()
+                    if new_amount == "" or int(new_amount) <= 0:
+                        bs.content.content.controls[2].border_color = "red"
+                        bs.update()
+                    else:
+                        bs.content.content.controls[2].border_color = "green"
+                        bs.update()
+                        if new_category == None:
+                            print("haven't found new category")
+                        else:
+                            update_db(id, new_date, new_note, new_amount, new_category)
+
+            def update_db(id, new_date, new_note, new_amount, new_category):
+                global data
+                print(id, new_date, new_note, new_amount, new_category)
+                conn = sqlite3.connect("db/app.db")
+                cursor = conn.cursor()
+
+                # Build the SQL query to update the record
+                sql_query = "UPDATE financial_transaction SET date=?, note=?, money=?, category=? WHERE id=?"
+
+                # Execute the query with the new data and id
+                cursor.execute(
+                    sql_query, (new_date, new_note, new_amount, new_category, id)
+                )
+
+                conn.commit()
+                conn.close()
+                data = fetch_data_from_db()
+                update_views()
+                bs.open = False
+                bs.update()
 
         def create_header():
             # Create two text buttons.
@@ -90,6 +240,7 @@ class Search(UserControl):
                         result.append(item)
                         break  # Once a match is found, move to the next item
             # print(result)
+            # print(len(result))
             money_expense = 0
             money_income = 0
 
@@ -141,7 +292,7 @@ class Search(UserControl):
             else:
                 total_container.content.controls[1].color = "red"
 
-            def create_report_row(date, category, note, amount):
+            def create_report_row(id, date, category, note, amount):
                 report_row = Column(
                     spacing=0,
                     controls=[
@@ -151,13 +302,82 @@ class Search(UserControl):
                             bgcolor="#313131",
                             content=Row(controls=[Text(date, color="white")]),
                         ),
-                        Row(
-                            alignment="spaceBetween",
-                            controls=[
-                                Text(category, color="white"),
-                                Text(note, color="white"),
-                                Text(amount, color="white"),
-                            ],
+                        Container(
+                            content=Row(
+                                alignment="spaceBetween",
+                                controls=[
+                                    Text(category, color="white", size=12),
+                                    Text(note, color="white", size=12),
+                                    Text(
+                                        value=f"{'{:,}'.format(int(amount))}",
+                                        color="white",
+                                        size=12,
+                                    ),
+                                    Row(
+                                        alignment=MainAxisAlignment.END,
+                                        spacing=1,
+                                        controls=[
+                                            IconButton(
+                                                icons.EDIT,
+                                                on_click=lambda e: update_data_from_db_by_id(
+                                                    id, date, category, note, amount
+                                                ),
+                                                icon_size=12,
+                                            ),
+                                            IconButton(
+                                                icons.DELETE_OUTLINE,
+                                                on_click=lambda e: delete_data_from_db_by_id(
+                                                    id
+                                                ),
+                                                icon_size=12,
+                                            ),
+                                        ],
+                                    ),
+                                ],
+                            ),
+                            on_click=lambda e: print(id),
+                        ),
+                    ],
+                )
+                return report_row
+
+            def create_report_row_no_date(id, date, category, note, amount):
+                report_row = Column(
+                    spacing=0,
+                    controls=[
+                        Container(
+                            content=Row(
+                                alignment="spaceBetween",
+                                controls=[
+                                    Text(category, color="white", size=12),
+                                    Text(note, color="white", size=12),
+                                    Text(
+                                        value=f"{'{:,}'.format(int(amount))}",
+                                        color="white",
+                                        size=12,
+                                    ),
+                                    Row(
+                                        spacing=0,
+                                        controls=[
+                                            IconButton(
+                                                icons.EDIT,
+                                                on_click=lambda e: update_data_from_db_by_id(
+                                                    id, date, category, note, amount
+                                                ),
+                                                icon_size=12,
+                                            ),
+                                            IconButton(
+                                                icons.DELETE_OUTLINE,
+                                                on_click=lambda e: delete_data_from_db_by_id(
+                                                    id
+                                                ),
+                                                icon_size=12,
+                                            ),
+                                        ],
+                                    ),
+                                ],
+                            ),
+                            on_click=lambda e: print(id, category, note, amount),
                         ),
                     ],
                 )
@@ -166,6 +386,7 @@ class Search(UserControl):
             def create_report_list(result):
                 date_rows = {}
                 for item in result:
+                    id = item[0]
                     date = item[1]
                     category = item[4]
                     note = item[2]
@@ -176,26 +397,16 @@ class Search(UserControl):
 
                     if date not in date_rows:
                         date_rows[date] = create_report_row(
-                            date, category, note, amount
+                            id, date, category, note, amount
                         )
                     else:
-                        # Add the category, note, and amount to the existing date row.
                         date_rows[date].controls.append(
-                            Row(
-                                alignment="spaceBetween",
-                                controls=[
-                                    Text(category, color="white"),
-                                    Text(note, color="white"),
-                                    Text(amount, color="white"),
-                                ],
-                            )
+                            create_report_row_no_date(id, date, category, note, amount)
                         )
                 return list(date_rows.values())
 
             search_report_list_view = ListView(
-                height=300,
-                # width=340,
-                # scroll='auto',
+                height=400,
                 spacing=1,
             )
 
