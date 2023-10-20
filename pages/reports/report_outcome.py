@@ -13,6 +13,7 @@ PINK = "#eb06ff"
 class Report_Outcome(UserControl):
     def __init__(self, page):
         super().__init__()
+        self.cell_width = 0 
         self.page = page
 
     def build(self):
@@ -140,25 +141,25 @@ class Report_Outcome(UserControl):
         def create_outcome_income_expenses(month_data):
             # Create two text buttons.
             button_1 = Text(
-                "Chi tiêu",color="White"
+                "Chi tiêu",color="White",style=TextStyle(size=12)
             )
             button_2 = Text(
-                "Thu nhập", color="White"
+                "Thu nhập", color="White",style=TextStyle(size=12)
             )
             button_3 = Text(
-               "Thu chi", color="White"
+               "Thu chi", color="White",style=TextStyle(size=12)
             )
             # Calculate and format the total expense and income from the data
-            total_expense = sum(row[3] for row in month_data if row[5] == "Tiền chi")
-            total_income = sum(row[3] for row in month_data if row[5] == "Tiền thu")
-
+            total_expense = (int)(sum(row[3] for row in month_data if row[5] == "Tiền chi"))
+            total_income = (int)(sum(row[3] for row in month_data if row[5] == "Tiền thu"))
+            container_width = self.page.width - 60
             outcome_income_expenses = Column(
                 controls=[
                     Row(
                         alignment="spaceBetween",
                         controls=[
                             Container(
-                                width=170,
+                                width=container_width/2,
                                 height=30,
                                 border_radius=5,
                                 bgcolor=GREY_COLOR,
@@ -167,12 +168,12 @@ class Report_Outcome(UserControl):
                                     alignment="spaceBetween",
                                     controls=[
                                         button_1,
-                                        Text(f"{total_expense} đ", color="white"),
+                                        Text(f"{'{:,}'.format(total_expense)} đ", color="white"),
                                     ],
                                 ),
                             ),
                             Container(
-                                width=170,
+                                width=container_width/2,
                                 height=30,
                                 border_radius=5,
                                 bgcolor=GREY_COLOR,
@@ -181,7 +182,7 @@ class Report_Outcome(UserControl):
                                     alignment="spaceBetween",
                                     controls=[
                                         button_2,
-                                        Text(f"{total_income} đ", color="white"),
+                                        Text(f"{'{:,}'.format(total_income)} đ", color="white"),
                                     ],
                                 ),
                             ),
@@ -190,7 +191,7 @@ class Report_Outcome(UserControl):
                     Row(
                         controls=[
                             Container(
-                                width=340,
+                                width=container_width,
                                 height=30,
                                 border_radius=5,
                                 bgcolor=GREY_COLOR,
@@ -199,7 +200,7 @@ class Report_Outcome(UserControl):
                                     alignment="spaceBetween",
                                     controls=[
                                         button_3,
-                                        Text(f"{total_income-total_expense} đ", color="white"),
+                                        Text(f"{'{:,}'.format(total_income-total_expense)} đ", color="white"),
                                     ],
                                 ),
                             )
@@ -209,6 +210,7 @@ class Report_Outcome(UserControl):
                 ]
             )
             return outcome_income_expenses
+            
 
         def create_chart_label():
             def change_button_colors(button_1: TextButton, button_2: TextButton):
@@ -233,7 +235,7 @@ class Report_Outcome(UserControl):
                     self.page.go("/report_income"),
                 ),
             )
-
+            container_width=self.page.width - 60
             label = Column(
                 controls=[
                     Row(
@@ -246,11 +248,11 @@ class Report_Outcome(UserControl):
                         ],
                     ),
                     Container(
-                        width=450,
+                        width=container_width,
                         height=5,
                         border_radius=5,
                         bgcolor="white12",
-                        padding=padding.only(right=170),
+                        padding=padding.only(right=container_width/2),
                         content=Container(
                             bgcolor=PINK,
                         ),
@@ -438,20 +440,20 @@ class Report_Outcome(UserControl):
                 # scroll='auto',
                 spacing=1,
             )
-            anuong = sum(row[3] for row in month_data if row[4] == "Ăn uống")
-            quanao = sum(row[3] for row in month_data if row[4] == "Quần áo")
-            tiennha = sum(row[3] for row in month_data if row[4] == "Tiền nhà")
-            tiendien = sum(row[3] for row in month_data if row[4] == "Tiền điện")
-            giadung = sum(row[3] for row in month_data if row[4] == "Gia dụng")
-            yte = sum(row[3] for row in month_data if row[4] == "Y tế")
-            giaoduc = sum(row[3] for row in month_data if row[4] == "Giáo dục")
-            dilai = sum(row[3] for row in month_data if row[4] == "Đi lại")
-            tiennuoc = sum(row[3] for row in month_data if row[4] == "Tiền nước")
-            khac = sum(
+            anuong = (int)(sum(row[3] for row in month_data if row[4] == "Ăn uống"))
+            quanao = (int)(sum(row[3] for row in month_data if row[4] == "Quần áo"))
+            tiennha = (int)(sum(row[3] for row in month_data if row[4] == "Tiền nhà"))
+            tiendien = (int)(sum(row[3] for row in month_data if row[4] == "Tiền điện"))
+            giadung = (int)(sum(row[3] for row in month_data if row[4] == "Gia dụng"))
+            yte = (int)(sum(row[3] for row in month_data if row[4] == "Y tế"))
+            giaoduc = (int)(sum(row[3] for row in month_data if row[4] == "Giáo dục"))
+            dilai = (int)(sum(row[3] for row in month_data if row[4] == "Đi lại"))
+            tiennuoc = (int)(sum(row[3] for row in month_data if row[4] == "Tiền nước"))
+            khac = (int)(sum(
                 row[3]
                 for row in month_data
                 if row[4] == "Khác" and row[5] == "Tiền chi"
-            )
+            ))
 
             def create_statistics_row(category, icon, text, icon_color):
                 statistics_row = Container(
@@ -473,7 +475,7 @@ class Report_Outcome(UserControl):
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{category}", color="white"),
+                                    Text(f"{'{:,}'.format(category)}", color="white"),
                                     Text("đ", color="white"),
                                 ],
                             ),
@@ -529,10 +531,8 @@ class Report_Outcome(UserControl):
         def update_size(e):
             report_outcome_page.controls[0].height = self.page.height
             report_outcome_page.controls[0].width = self.page.width
-
             print(f"self.page.height is: {self.page.height}")
             print(f"self.page.width is: {self.page.width}")
-
             report_outcome_page.update()
 
         self.page.on_resize = update_size
