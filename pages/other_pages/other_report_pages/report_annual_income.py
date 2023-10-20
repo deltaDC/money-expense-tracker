@@ -1,3 +1,4 @@
+import math
 import sqlite3
 from flet import *
 import datetime
@@ -196,31 +197,45 @@ class Report_During_The_Year_Income(UserControl):
             total_expense = sum(row[3] for row in data if row[5] == "Tiền chi")
             total_income = sum(row[3] for row in data if row[5] == "Tiền thu")
 
-            def create_money(x, res):
+            def create_money(x):
                 month = "{:.2f}".format(
                     sum(
                         row[3]
                         for row in data
                         if int(row[1][5:7]) == x and row[5] == "Tiền thu"
                     )
-                    / res
-                    * 100
                 )
                 return month
+            month_max = 0
+            for i in range(1, 12):
+                if month_max < float(create_money(i)):
+                    month_max = float(create_money(i))
+            def round_up(num):
+                if num < 100:
+                    base = 10
+                elif num < 1000:  
+                    base = 100
+                elif num < 1000000:
+                    base = 1000
+                elif num < 100000000:
+                    base = 1000000
+                else:
+                    base = 100000000
 
+                return math.ceil(num/base) * base
             if total_income != 0:
-                thang1_income = str(create_money(1, total_income))
-                thang2_income = str(create_money(2, total_income))
-                thang3_income = str(create_money(3, total_income))
-                thang4_income = str(create_money(4, total_income))
-                thang5_income = str(create_money(5, total_income))
-                thang6_income = str(create_money(6, total_income))
-                thang7_income = str(create_money(7, total_income))
-                thang8_income = str(create_money(8, total_income))
-                thang9_income = str(create_money(9, total_income))
-                thang10_income = str(create_money(10, total_income))
-                thang11_income = str(create_money(11, total_income))
-                thang12_income = str(create_money(12, total_income))
+                thang1_income = str(create_money(1))
+                thang2_income = str(create_money(2))
+                thang3_income = str(create_money(3))
+                thang4_income = str(create_money(4))
+                thang5_income = str(create_money(5))
+                thang6_income = str(create_money(6))
+                thang7_income = str(create_money(7))
+                thang8_income = str(create_money(8))
+                thang9_income = str(create_money(9))
+                thang10_income = str(create_money(10))
+                thang11_income = str(create_money(11))
+                thang12_income = str(create_money(12))
             else:
                 thang1_income = (
                     thang2_income
@@ -454,20 +469,13 @@ class Report_During_The_Year_Income(UserControl):
                     labels_size=20,
                 ),
                 left_axis=ChartAxis(
-                    labels=[
-                        # ChartAxisLabel(value=20, label=Text("2")),
-                        # ChartAxisLabel(value=40, label=Text("4")),
-                        # ChartAxisLabel(value=60, label=Text("6")),
-                        # ChartAxisLabel(value=80, label=Text("8")),
-                        # ChartAxisLabel(value=100, label=Text("10")),
-                        labels_size=40, title=Text("Percent by month"), title_size=40
-                    ],
+                    labels_size=80
                 ),
                 horizontal_grid_lines=ChartGridLines(
                     color=colors.GREY_300, width=1, dash_pattern=[3, 3]
                 ),
                 tooltip_bgcolor=colors.with_opacity(0.5, colors.GREY_300),
-                max_y=110,
+                max_y=round_up(month_max),
                 interactive=True,
                 expand=False,
             )
