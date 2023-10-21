@@ -13,6 +13,7 @@ class Outcome(UserControl):
     def build(self):
         def create_header():
             """This function builds the header for the page"""
+
             # Define an inner function to change the background color of the buttons.
             def change_button_colors(button_1: TextButton, button_2: TextButton):
                 # Change the background color of button_1 to GREY_COLOR and button_2 to BG_COLOR.
@@ -23,17 +24,25 @@ class Outcome(UserControl):
             # Create two text buttons.
             button_1 = TextButton(
                 text="Tiền chi",  # Set the text for button_1
-                style=ButtonStyle(color="White", bgcolor=GREY_COLOR),  # Set initial background color to GREY_COLOR
+                style=ButtonStyle(
+                    color="White", bgcolor=GREY_COLOR
+                ),  # Set initial background color to GREY_COLOR
                 on_click=lambda e: (
-                    change_button_colors(button_1, button_2),  # Call change_button_colors to update colors
+                    change_button_colors(
+                        button_1, button_2
+                    ),  # Call change_button_colors to update colors
                     self.page.go("/"),  # Redirect to the home page
                 ),
             )
             button_2 = TextButton(
                 text="Tiền thu",  # Set the text for button_2
-                style=ButtonStyle(color="White"),  # Set initial background color to its default
+                style=ButtonStyle(
+                    color="White"
+                ),  # Set initial background color to its default
                 on_click=lambda e: (
-                    change_button_colors(button_2, button_1),  # Call change_button_colors to update colors
+                    change_button_colors(
+                        button_2, button_1
+                    ),  # Call change_button_colors to update colors
                     self.page.go("/income"),  # Redirect to the income page
                 ),
             )
@@ -48,7 +57,9 @@ class Outcome(UserControl):
                             button_2,  # Add the second button to the header
                         ]
                     ),
-                    Icon(name=icons.EDIT, color="White"),  # Add an edit icon to the header
+                    Icon(
+                        name=icons.EDIT, color="White"
+                    ),  # Add an edit icon to the header
                 ],
             )
 
@@ -56,24 +67,103 @@ class Outcome(UserControl):
 
         def create_date():
             """Create a date row for client to change the date of money expense"""
+
             # Define a function to get the next date and update the date header.
             def get_next_date(curr_date):
-                next_date = curr_date + datetime.timedelta(days=1)  # Calculate the next date
-                date_header.controls[0].value = next_date  # Update the displayed date
+                curr_date_dt = datetime.datetime.strptime(curr_date, "%Y-%m-%d")
+                next_date = curr_date_dt + datetime.timedelta(
+                    days=1
+                )  # Calculate the next date
+                next_date_str = next_date.strftime("%Y-%m-%d")
+                date_header.controls[
+                    0
+                ].text = next_date_str  # Update the displayed date
                 date_header.update()  # Update the date header to reflect the changes
 
             # Define a function to get the previous date and update the date header.
             def get_prev_date(curr_date):
-                prev_date = curr_date - datetime.timedelta(days=1)  # Calculate the previous date
-                date_header.controls[0].value = prev_date  # Update the displayed date
+                curr_date_dt = datetime.datetime.strptime(curr_date, "%Y-%m-%d")
+                prev_date = curr_date_dt - datetime.timedelta(
+                    days=1
+                )  # Calculate the previous date
+                prev_date_str = prev_date.strftime("%Y-%m-%d")
+                date_header.controls[
+                    0
+                ].text = prev_date_str  # Update the displayed date
                 date_header.update()  # Update the date header to reflect the changes
+
+            def get_input_date():
+                def bs_dismissed(e):
+                    print("Dismissed!")
+
+                def show_bs(e):
+                    bs.open = True
+                    bs.update()
+
+                def close_bs(e):
+                    bs.open = False
+                    bs.update()
+
+                def check_date(date):
+                    expected_format = "%Y-%m-%d"
+
+                    try:
+                        parsed_date = datetime.datetime.strptime(date, expected_format)
+                        formatted_date = parsed_date.strftime(expected_format)
+
+                        if date == formatted_date:
+                            return True
+                        else:
+                            return False
+                    except ValueError:
+                        return False
+
+                bs = BottomSheet(
+                    content=Container(
+                        content=Column(
+                            controls=[
+                                TextField(
+                                    value=f"{date_header.controls[0].text}",
+                                    label="Ngày",
+                                ),
+                                ElevatedButton(
+                                    "Xác nhận", on_click=lambda e: check_update_date()
+                                ),
+                                ElevatedButton("Đóng", on_click=close_bs),
+                            ],
+                            tight=True,
+                        ),
+                        padding=20,
+                    ),
+                    open=True,
+                    on_dismiss=bs_dismissed,
+                )
+                self.page.overlay.append(bs)
+                self.page.add(ElevatedButton("", on_click=show_bs))
+
+                def check_update_date():
+                    new_date = bs.content.content.controls[0].value
+                    if not check_date(new_date):
+                        bs.content.content.controls[0].border_color = "red"
+                        bs.update()
+                    else:
+                        bs.content.content.controls[0].border_color = "green"
+                        bs.update()
+                        bs.open = False
+                        bs.update()
+                        date_header.controls[0].text = new_date
+                        date_header.update()
 
             # Create a row to represent the date header with date, arrows, and controls.
             date_header = Row(
                 alignment="spaceBetween",
                 controls=[
                     # Create a text widget to display the current date (initialized to today's date).
-                    Text(datetime.date.today(), color="white"),
+                    TextButton(
+                        datetime.date.today(),
+                        # style=TextButtonStyle(color="white"),
+                        on_click=lambda e: get_input_date(),
+                    ),
                     # Create a row to contain the arrow buttons for navigation.
                     Row(
                         controls=[
@@ -81,13 +171,17 @@ class Outcome(UserControl):
                             IconButton(
                                 icon=icons.ARROW_LEFT,
                                 icon_color="White",
-                                on_click=lambda event: get_prev_date(date_header.controls[0].value),
+                                on_click=lambda event: get_prev_date(
+                                    str(date_header.controls[0].text)
+                                ),
                             ),
                             # Create an icon button for the next arrow that goes to the next date.
                             IconButton(
                                 icon=icons.ARROW_RIGHT,
                                 icon_color=colors.WHITE,
-                                on_click=lambda event: get_next_date(date_header.controls[0].value),
+                                on_click=lambda event: get_next_date(
+                                    str(date_header.controls[0].text)
+                                ),
                             ),
                         ]
                     ),
@@ -224,10 +318,12 @@ class Outcome(UserControl):
         def submit(date, note, money):
             global selected_category
 
-            date_value = date.controls[0].value
+            date_value = date.controls[0].text
             note_value = note.controls[1].value
             money_value = money.controls[1].controls[0].value
             category_value = selected_category
+            if category_value == None:
+                category_value = "Khác"
             cash_flow = "Tiền chi"
 
             # Check if money_value is empty or negative
