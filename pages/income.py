@@ -53,21 +53,100 @@ class Income(UserControl):
 
         def create_date():
             def get_next_date(curr_date):
-                next_date = curr_date + datetime.timedelta(days=1)
-                date_header.controls[0].value = next_date
-                date_header.update()
+                curr_date_dt = datetime.datetime.strptime(curr_date, "%Y-%m-%d")
+                next_date = curr_date_dt + datetime.timedelta(
+                    days=1
+                )  # Calculate the next date
+                next_date_str = next_date.strftime("%Y-%m-%d")
+                date_header.controls[
+                    0
+                ].text = next_date_str  # Update the displayed date
+                date_header.update()  # Update the date header to reflect the changes
 
+            # Define a function to get the previous date and update the date header.
             def get_prev_date(curr_date):
-                prev_date = curr_date - datetime.timedelta(days=1)
-                date_header.controls[0].value = prev_date
-                date_header.update()
+                curr_date_dt = datetime.datetime.strptime(curr_date, "%Y-%m-%d")
+                prev_date = curr_date_dt - datetime.timedelta(
+                    days=1
+                )  # Calculate the previous date
+                prev_date_str = prev_date.strftime("%Y-%m-%d")
+                date_header.controls[
+                    0
+                ].text = prev_date_str  # Update the displayed date
+                date_header.update()  # Update the date header to reflect the changes
+
+            def get_input_date():
+                def bs_dismissed(e):
+                    print("Dismissed!")
+
+                def show_bs(e):
+                    bs.open = True
+                    bs.update()
+
+                def close_bs(e):
+                    bs.open = False
+                    bs.update()
+
+                def check_date(date):
+                    expected_format = "%Y-%m-%d"
+
+                    try:
+                        parsed_date = datetime.datetime.strptime(date, expected_format)
+                        formatted_date = parsed_date.strftime(expected_format)
+
+                        if date == formatted_date:
+                            return True
+                        else:
+                            return False
+                    except ValueError:
+                        return False
+
+                bs = BottomSheet(
+                    content=Container(
+                        content=Column(
+                            controls=[
+                                TextField(
+                                    value=f"{date_header.controls[0].text}",
+                                    label="Ngày",
+                                ),
+                                ElevatedButton(
+                                    "Xác nhận", on_click=lambda e: check_update_date()
+                                ),
+                                ElevatedButton("Đóng", on_click=close_bs),
+                            ],
+                            tight=True,
+                        ),
+                        padding=20,
+                    ),
+                    open=True,
+                    on_dismiss=bs_dismissed,
+                )
+                self.page.overlay.append(bs)
+                self.page.add(ElevatedButton("", on_click=show_bs))
+
+                def check_update_date():
+                    new_date = bs.content.content.controls[0].value
+                    if not check_date(new_date):
+                        bs.content.content.controls[0].border_color = "red"
+                        bs.update()
+                    else:
+                        bs.content.content.controls[0].border_color = "green"
+                        bs.update()
+                        bs.open = False
+                        bs.update()
+                        date_header.controls[0].text = new_date
+                        date_header.update()
 
             # Create a row to represent the date header.
             date_header = Row(
                 alignment="spaceBetween",
                 controls=[
                     # Create a text widget to display the datetime.datetime.
-                    Text(datetime.date.today(), color="white"),
+                    TextButton(
+                        datetime.date.today(),
+                        # style=TextButtonStyle(color="white"),
+                        on_click=lambda e: get_input_date(),
+                    ),
                     # Create a row to contain the arrow buttons.
                     Row(
                         controls=[
@@ -76,7 +155,7 @@ class Income(UserControl):
                                 icon=icons.ARROW_LEFT,
                                 icon_color="White",
                                 on_click=lambda event: get_prev_date(
-                                    date_header.controls[0].value
+                                    str(date_header.controls[0].text)
                                 ),
                             ),
                             # Create an icon button for the next arrow.
@@ -84,7 +163,7 @@ class Income(UserControl):
                                 icon=icons.ARROW_RIGHT,
                                 icon_color=colors.WHITE,
                                 on_click=lambda event: get_next_date(
-                                    date_header.controls[0].value
+                                    str(date_header.controls[0].text)
                                 ),
                             ),
                         ]
@@ -220,15 +299,12 @@ class Income(UserControl):
         def submit(date, note, money):
             global selected_category
 
-            # print(f"ngay la: {date.controls[0].value}")
-            # print(f"note la: {note.controls[1].value}")
-            # print(f"tien la: {money.controls[1].controls[0].value}")
-            # print(selected_category)
-
-            date_value = date.controls[0].value
+            date_value = date.controls[0].text
             note_value = note.controls[1].value
             money_value = money.controls[1].controls[0].value
             category_value = selected_category
+            if category_value == None:
+                category_value = "Khác"
             cash_flow = "Tiền thu"
 
             # Check if money_value is empty or negative
