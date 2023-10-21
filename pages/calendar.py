@@ -156,17 +156,17 @@ class Calendar(UserControl):
                     if int(record[1][-2:]) == day:
                         if record[5] == "Tiền chi":
                             day_outcome_report_list.append(
-                                f" - {record[4]} {record[3]} ({record[2]})"
+                                f" - {record[4]} {int(record[3])}đ ({record[2]})"
                             )
                         elif record[5] == "Tiền thu":
                             day_income_report_list.append(
-                                f" - {record[4]} {record[3]} ({record[2]})"
+                                f" - {record[4]} {int(record[3])}đ ({record[2]})"
                             )
 
                 day_income_report_text = "\n".join(day_income_report_list)
                 day_outcome_report_text = "\n".join(day_outcome_report_list)
 
-                report_text = f"TIỀN THU:\n{day_income_report_text}\nTIỀN CHI:\n{day_outcome_report_text}"
+                report_text = f"BÁO CÁO NGÀY {day}\nTIỀN THU:\n{day_income_report_text}\nTIỀN CHI:\n{day_outcome_report_text}"
 
                 def bs_dismissed(e):
                     print("Dismissed!")
