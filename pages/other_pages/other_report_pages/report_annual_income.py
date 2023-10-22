@@ -165,7 +165,7 @@ class Report_During_The_Year_Income(UserControl):
             # button_3 = TextButton(
             #     text="Tổng", style=ButtonStyle(color="white", bgcolor=GREY_COLOR)
             # )
-
+            container_width = self.page.width
             label = Column(
                 alignment=MainAxisAlignment.START,
                 controls=[
@@ -179,11 +179,11 @@ class Report_During_The_Year_Income(UserControl):
                         ],
                     ),
                     Container(
-                        width=450,
+                        width=container_width,
                         height=5,
                         border_radius=5,
                         bgcolor="white12",
-                        padding=padding.only(right=170),
+                        # padding=padding.only(right=container_width/2),
                         # content=Container(
                         #     bgcolor=PINK,
                         # ),
@@ -490,7 +490,7 @@ class Report_During_The_Year_Income(UserControl):
             )
 
             def create_money(x):
-                money = "{:.2f}".format(
+                money = (int)(
                     sum(
                         row[3]
                         for row in data
@@ -531,7 +531,7 @@ class Report_During_The_Year_Income(UserControl):
                             Row(
                                 alignment="end",
                                 controls=[
-                                    Text(f"{money}", color="white"),
+                                    Text(f"{'{:,}'.format(money)}", color="white"),
                                     Text("đ", color="white"),
                                 ],
                             ),
