@@ -469,7 +469,7 @@ class Report_During_The_Year_Income(UserControl):
                     labels_size=20,
                 ),
                 left_axis=ChartAxis(
-                    labels_size=80
+                    labels_size=45
                 ),
                 horizontal_grid_lines=ChartGridLines(
                     color=colors.GREY_300, width=1, dash_pattern=[3, 3]
@@ -583,7 +583,7 @@ class Report_During_The_Year_Income(UserControl):
                     height=self.page.height,
                     border_radius=35,
                     bgcolor=BG_COLOR,
-                    padding=padding.only(left=30, top=30, right=30),
+                    padding=padding.only(top=30),
                     content=Column(
                         # alignment="spaceBetween",
                         horizontal_alignment=CrossAxisAlignment.CENTER,
