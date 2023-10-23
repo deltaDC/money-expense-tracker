@@ -196,7 +196,7 @@ class Report_During_The_Year_Expense(UserControl):
         def create_barchart(data):
             total_expense = sum(row[3] for row in data if row[5] == "Tiền chi")
             total_income = sum(row[3] for row in data if row[5] == "Tiền thu")
-            
+
             def create_money(x):
                 month = "{:.2f}".format(
                     sum(
@@ -206,14 +206,16 @@ class Report_During_The_Year_Expense(UserControl):
                     )
                 )
                 return month
+
             month_max = 0
             for i in range(1, 12):
                 if month_max < float(create_money(i)):
                     month_max = float(create_money(i))
+
             def round_up(num):
                 if num < 100:
                     base = 10
-                elif num < 1000:  
+                elif num < 1000:
                     base = 100
                 elif num < 1000000:
                     base = 1000
@@ -222,8 +224,8 @@ class Report_During_The_Year_Expense(UserControl):
                 else:
                     base = 100000000
 
-                return math.ceil(num/base) * base
-            
+                return math.ceil(num / base) * base
+
             if total_expense != 0:
                 thang1_expense = str(create_money(1))
                 thang2_expense = str(create_money(2))
@@ -420,58 +422,56 @@ class Report_During_The_Year_Expense(UserControl):
                     labels=[
                         ChartAxisLabel(
                             value=0,
-                            label=Container(Text("T1"), padding=2),
+                            label=Container(Text("T1", color="white"), padding=2),
                         ),
                         ChartAxisLabel(
                             value=1,
-                            label=Container(Text("T2"), padding=2),
+                            label=Container(Text("T2", color="white"), padding=2),
                         ),
                         ChartAxisLabel(
                             value=2,
-                            label=Container(Text("T3"), padding=2),
+                            label=Container(Text("T3", color="white"), padding=2),
                         ),
                         ChartAxisLabel(
                             value=3,
-                            label=Container(Text("T4"), padding=2),
+                            label=Container(Text("T4", color="white"), padding=2),
                         ),
                         ChartAxisLabel(
                             value=4,
-                            label=Container(Text("T5"), padding=2),
+                            label=Container(Text("T5", color="white"), padding=2),
                         ),
                         ChartAxisLabel(
                             value=5,
-                            label=Container(Text("T6"), padding=2),
+                            label=Container(Text("T6", color="white"), padding=2),
                         ),
                         ChartAxisLabel(
                             value=6,
-                            label=Container(Text("T7"), padding=2),
+                            label=Container(Text("T7", color="white"), padding=2),
                         ),
                         ChartAxisLabel(
                             value=7,
-                            label=Container(Text("T8"), padding=2),
+                            label=Container(Text("T8", color="white"), padding=2),
                         ),
                         ChartAxisLabel(
                             value=8,
-                            label=Container(Text("T9"), padding=2),
+                            label=Container(Text("T9", color="white"), padding=2),
                         ),
                         ChartAxisLabel(
                             value=9,
-                            label=Container(Text("T10"), padding=2),
+                            label=Container(Text("T10", color="white"), padding=2),
                         ),
                         ChartAxisLabel(
                             value=10,
-                            label=Container(Text("T11"), padding=2),
+                            label=Container(Text("T11", color="white"), padding=2),
                         ),
                         ChartAxisLabel(
                             value=11,
-                            label=Container(Text("T12"), padding=2),
+                            label=Container(Text("T12", color="white"), padding=2),
                         ),
                     ],
                     labels_size=20,
                 ),
-                left_axis=ChartAxis(
-                    labels_size=45
-                ),
+                left_axis=ChartAxis(labels_size=45),
                 horizontal_grid_lines=ChartGridLines(
                     color=colors.GREY_300, width=1, dash_pattern=[3, 3]
                 ),
@@ -572,7 +572,6 @@ class Report_During_The_Year_Expense(UserControl):
 
             print(f"self.page.height is: {self.page.height}")
             print(f"self.page.width is: {self.page.width}")
-
 
             baocaotrongnam.update()
 
