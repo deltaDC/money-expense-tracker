@@ -259,7 +259,7 @@ class Search(UserControl):
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls=[
                         Text("Tiền thu", weight="bold"),
-                        Text(value=f"{money_income}", color="#50b4d1"),
+                        Text(value=f"{'{:,}'.format(int(money_income))}", color="#50b4d1"),
                     ],
                 ),
             )
