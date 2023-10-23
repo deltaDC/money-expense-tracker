@@ -219,7 +219,9 @@ class Search(UserControl):
                 alignment="spaceBetween",
                 controls=[
                     TextField(
+                        color="white",
                         label="Nhập từ khóa",
+                        label_style=TextStyle(color="white"),
                         on_blur=lambda e: on_submit_search(),
                     ),
                     IconButton(
@@ -258,8 +260,10 @@ class Search(UserControl):
                     alignment=MainAxisAlignment.CENTER,
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls=[
-                        Text("Tiền thu", weight="bold"),
-                        Text(value=f"{'{:,}'.format(int(money_income))}", color="#50b4d1"),
+                        Text("Tiền thu", weight="bold", color="white"),
+                        Text(
+                            value=f"{'{:,}'.format(int(money_income))}", color="#50b4d1"
+                        ),
                     ],
                 ),
             )
@@ -269,7 +273,7 @@ class Search(UserControl):
                     alignment=MainAxisAlignment.CENTER,
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls=[
-                        Text("Tiền chi", weight="bold"),
+                        Text("Tiền chi", weight="bold", color="white"),
                         Text(value=f"{'{:,}'.format(int(money_expense))}", color="red"),
                     ],
                 )
@@ -281,13 +285,13 @@ class Search(UserControl):
                     alignment=MainAxisAlignment.CENTER,
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls=[
-                        Text("Tổng", weight="bold"),
+                        Text("Tổng", weight="bold", color="white"),
                         Text(value=f"{'{:,}'.format(int(money_total))}"),
                     ],
                 ),
             )
 
-            if money_total > 0:
+            if money_total >= 0:
                 total_container.content.controls[1].color = "#50b4d1"
             else:
                 total_container.content.controls[1].color = "red"

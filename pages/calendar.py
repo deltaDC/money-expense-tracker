@@ -233,7 +233,7 @@ class Calendar(UserControl):
                     padding=2,
                     content=Column(
                         controls=[
-                            Text(str(day), size=12),
+                            Text(str(day), size=12, color="white"),
                         ]
                     ),
                     on_click=lambda e, day=day: on_day_widget_click(day),
@@ -286,7 +286,7 @@ class Calendar(UserControl):
                     alignment=MainAxisAlignment.CENTER,
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls=[
-                        Text("Tiền thu", weight="bold"),
+                        Text("Tiền thu", weight="bold", color="white"),
                         Text(
                             value=f"{'{:,}'.format(int(month_income))}", color="#50b4d1"
                         ),
@@ -299,7 +299,7 @@ class Calendar(UserControl):
                     alignment=MainAxisAlignment.CENTER,
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls=[
-                        Text("Tiền chi", weight="bold"),
+                        Text("Tiền chi", weight="bold", color="white"),
                         Text(value=f"{'{:,}'.format(int(month_outcome))}", color="red"),
                     ],
                 )
@@ -311,7 +311,7 @@ class Calendar(UserControl):
                     alignment=MainAxisAlignment.CENTER,
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls=[
-                        Text("Tổng", weight="bold"),
+                        Text("Tổng", weight="bold", color="white"),
                         Text(value=f"{'{:,}'.format(int(month_total))}"),
                     ],
                 ),

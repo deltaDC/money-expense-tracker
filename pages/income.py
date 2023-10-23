@@ -200,6 +200,7 @@ class Income(UserControl):
                     Row(
                         controls=[
                             TextField(
+                                color="white",
                                 hint_text="Nhập số tiền",
                                 hint_style=TextStyle(
                                     color="White", weight=FontWeight.NORMAL, size=14

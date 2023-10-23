@@ -161,8 +161,8 @@ class Outcome(UserControl):
                     # Create a text widget to display the current date (initialized to today's date).
                     TextButton(
                         datetime.date.today(),
-                        # style=TextButtonStyle(color="white"),
                         on_click=lambda e: get_input_date(),
+                        # style=TextStyle(color="white"),
                     ),
                     # Create a row to contain the arrow buttons for navigation.
                     Row(
@@ -218,6 +218,7 @@ class Outcome(UserControl):
                     Row(
                         controls=[
                             TextField(
+                                color="white",
                                 hint_text="Nhập số tiền",
                                 hint_style=TextStyle(
                                     color="White", weight=FontWeight.NORMAL, size=14

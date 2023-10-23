@@ -17,7 +17,9 @@ class Other(UserControl):
                     bottom=border.BorderSide(0.5, "#3c3c3c"),
                     top=border.BorderSide(0.5, "#3c3c3c"),
                 ),
-                content=Row(controls=[Icon(icon, color="white"), Text(text)]),
+                content=Row(
+                    controls=[Icon(icon, color="white"), Text(text, color="white")]
+                ),
                 on_click=lambda e: self.page.go(route),
             )
 
