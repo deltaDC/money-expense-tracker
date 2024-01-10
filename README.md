@@ -41,4 +41,4 @@ To run the Money Expense Tracker project locally, follow these steps:
 
 ## Documentation
 
-For detailed documentation, please refer to the [User Manual](https://drive.google.com/file/d/1BAdVQX0tuNx0kFezgmIACgrF3ujIv7tp/view?usp=sharing).
+For detailed documentation, please refer to the [this PDF report](https://drive.google.com/file/d/1BAdVQX0tuNx0kFezgmIACgrF3ujIv7tp/view?usp=sharing).
